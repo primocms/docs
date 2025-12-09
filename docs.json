@@ -98,12 +98,7 @@
         "label": "Support",
         "href": "mailto:support@palacms.com"
       }
-    ],
-    "primary": {
-      "type": "button",
-      "label": "Cloud",
-      "href": "https://palacms.com"
-    }
+    ]
   },
   "contextual": {
     "options": [
