@@ -32,7 +32,7 @@ Pala solves this by coupling code and content in self-contained blocks that live
 3. **Block Library**
    - Build blocks once, reuse across all your sites
    - Browse the marketplace for starter sites and blocks
-   - Personal library of your best work
+   - Server library of your best work
 
 4. **Built-in Hosting**
    - Static site generation with hosting included
@@ -368,7 +368,7 @@ Fields are the content editing interface attached to blocks, page types, and sit
 - `pages`: Individual page instances
 - `page_sections`: Sections on pages (body slot blocks)
 - `page_section_entries`: Content values for page sections
-- `library_symbols`: Reusable blocks in personal library
+- `library_symbols`: Reusable blocks in server library
 - `library_symbol_groups`: Organization for library blocks
 
 **Data Flow:**
@@ -379,12 +379,7 @@ Fields are the content editing interface attached to blocks, page types, and sit
 
 ## Installation Options
 
-**Cloud (Recommended):**
-- URL: cloud.pala.so
-- Sign up → create site → done
-- Hosting included with automatic deployments, SSL certificates, global CDN
-
-**Self-Hosted (Production):**
+**Self-Hosted:**
 
 Since all code and content is stored in the database, Pala requires a persistent server environment. Local development is for testing only—you'll need a virtual machine or cloud hosting for production use.
 
