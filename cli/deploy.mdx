@@ -1,0 +1,139 @@
+---
+title: 'Deploy with the CLI'
+description: 'Ship a workspace as an editable CMS (primo deploy) or static site (primo build).'
+---
+
+The CLI offers two deployment paths depending on whether you want the deployed site to be editable:
+
+| You want… | Use |
+| --- | --- |
+| A CMS UI collaborators can edit through | `primo deploy` |
+| A static site on any static host | `primo build` |
+
+## `primo deploy` — Editable CMS
+
+Deploy your entire workspace (every site under `sites/`, plus `library/` and `server.yaml`) as one editable Primo instance:
+
+```bash
+primo deploy                 # Interactive provider selection
+primo deploy -p railway      # Deploy to Railway
+primo deploy -p fly          # Deploy to Fly.io
+primo deploy --dry-run       # Show what would be deployed
+```
+
+**Run from the workspace root** (the directory containing `server.yaml`).
+
+### Railway
+
+Railway is the easiest path — one command, automatic SSL, persistent volume included.
+
+**Prerequisites:**
+- [Railway CLI](https://docs.railway.com/guides/cli) installed and logged in (`railway login`)
+- A Railway account ($5/month minimum)
+
+```bash
+primo deploy -p railway
+```
+
+The CLI provisions a Railway project, attaches a persistent volume for `/app/pb_data`, and prints the deployed URL.
+
+### Fly.io
+
+Fly.io has a generous free tier and global edge regions.
+
+**Prerequisites:**
+- [Fly CLI](https://fly.io/docs/flyctl/install/) installed (`fly auth login`)
+- A Fly.io account
+
+```bash
+primo deploy -p fly
+```
+
+### Updating a Deployed Workspace
+
+Once deployed, push subsequent changes with `primo push`:
+
+```bash
+primo push https://my-app.up.railway.app
+```
+
+See [Push and Pull](/cli/sync) for the full sync workflow.
+
+## `primo build` — Static Site
+
+Build a single site as static HTML/CSS/JS for any static host:
+
+```bash
+primo build                  # Output to ./dist
+primo build -o ./public      # Custom output directory
+```
+
+The output is a self-contained folder you can deploy with any static-host CLI:
+
+```bash
+# Netlify
+npx netlify deploy --prod --dir=dist
+
+# Vercel
+npx vercel dist
+
+# Cloudflare Pages
+npx wrangler pages deploy dist
+
+# Or push to a repo connected to GitHub Pages, Netlify, etc.
+```
+
+<Warning>
+Static builds have no CMS — collaborators can't edit content through a UI. Use `primo deploy` if you need editor access.
+</Warning>
+
+## Choosing a Host
+
+<AccordionGroup>
+  <Accordion title="Railway (recommended for most teams)">
+    - One-command deploy from the CLI
+    - Automatic SSL and persistent storage
+    - From $5/month
+    - Best for: production sites with collaborators who edit content
+  </Accordion>
+
+  <Accordion title="Fly.io">
+    - Free tier with 3GB persistent volume
+    - Global edge deployment
+    - Best for: prototypes, low-traffic sites, regional latency requirements
+  </Accordion>
+
+  <Accordion title="VPS (Hetzner, DigitalOcean)">
+    - Full control, lowest cost at scale
+    - Manual setup via Docker
+    - See the [Deployment Guide](/reference/deployment) for instructions
+    - Best for: teams comfortable with Linux and Docker
+  </Accordion>
+
+  <Accordion title="Netlify / Vercel / Cloudflare Pages (static)">
+    - Free tiers, instant deploys, global CDN
+    - **No CMS** — use `primo build` and deploy the static output
+    - Best for: marketing sites where content is edited locally and shipped via Git
+  </Accordion>
+</AccordionGroup>
+
+## Backups
+
+Hosted Primo uses PocketBase's built-in backup system. Configure scheduled backups from `https://your-server.com/_/` under **Settings → Backups**. See the [Deployment Guide](/reference/deployment#database-backups) for details.
+
+For Git-based backups, `primo pull` produces a full snapshot:
+
+```bash
+primo pull https://my-app.up.railway.app -o ./backup-$(date +%Y%m%d)
+```
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Push and Pull" icon="arrows-rotate" href="/cli/sync">
+    Sync changes between local and deployed servers
+  </Card>
+  <Card title="Deployment Guide" icon="server" href="/reference/deployment">
+    Self-host Primo on a VPS or custom infrastructure
+  </Card>
+</CardGroup>

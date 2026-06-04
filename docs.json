@@ -34,6 +34,16 @@
         ]
       },
       {
+        "group": "CLI",
+        "icon": "terminal",
+        "pages": [
+          "cli/overview",
+          "cli/local-development",
+          "cli/sync",
+          "cli/deploy"
+        ]
+      },
+      {
         "group": "Collaboration",
         "icon": "users",
         "pages": [
@@ -69,6 +79,7 @@
           "reference/keyboard-shortcuts",
           "reference/environment-variables",
           "reference/deployment",
+          "reference/mcp-server",
           "reference/troubleshooting"
         ]
       }
@@ -87,10 +98,6 @@
         }
       ]
     }
-  },
-  "logo": {
-    "light": "/logo/light.svg",
-    "dark": "/logo/dark.svg"
   },
   "navbar": {
     "links": [

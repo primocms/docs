@@ -1,0 +1,121 @@
+---
+title: 'Push and Pull'
+description: 'Sync between local files and a hosted Primo server.'
+---
+
+`primo push` and `primo pull` move content and code between your local workspace and an already-deployed Primo server. Use them to keep production in sync with Git, or to grab a copy of a remote site for local development.
+
+## Authenticate First
+
+Before pushing or pulling against a hosted server, log in:
+
+```bash
+primo login https://cms.example.com
+primo login https://cms.example.com -e user@example.com
+```
+
+The CLI stores credentials per server and reuses them on subsequent commands.
+
+## `primo pull` — Hosted → Local
+
+Pull an entire server (every site plus the shared library) into local files:
+
+```bash
+primo pull https://cms.example.com
+primo pull https://cms.example.com -o ./my-workspace
+```
+
+**Options:**
+- `-o, --output <dir>` — Output directory (defaults to `./<server-hostname>`)
+- `-t, --token <token>` — Auth token (overrides stored credentials)
+
+The result is a complete workspace ready for `primo dev`. Image files in `uploads/` are pulled as real binaries — the directory is self-contained.
+
+## `primo push` — Local → Hosted
+
+Push local changes to a hosted server:
+
+```bash
+primo push https://cms.example.com
+primo push https://cms.example.com --site abc123
+primo push --only my-site         # Push just one site folder
+primo push --preview              # Preview changes without applying
+primo push --dry-run              # Show what would be sent
+```
+
+**Options:**
+- `-s, --server <url>` — Server URL
+- `--site <id>` — Push to a specific site ID
+- `--only <slug>` — Only push the named folder under `sites/` (skips `library/`)
+- `-d, --dir <dir>` — Workspace directory (default: `.`)
+- `-t, --token <token>` — Auth token
+- `--preview` — Preview-only push (doesn't publish)
+- `--dry-run` — Show planned operations without sending requests
+
+<Tip>
+Always run `primo push --dry-run` first when pushing to production. It surfaces import warnings (orphaned uploads, unresolved block references) before they hit the server.
+</Tip>
+
+## Library-Only Sync
+
+To move just the shared block library between workspaces and servers:
+
+```bash
+# Pull library into a workspace
+primo library pull https://cms.example.com
+primo library pull -o ./my-workspace
+
+# Push library to a server
+primo library push https://cms.example.com
+primo library push https://cms.example.com -d ./my-workspace
+```
+
+This is useful when curating a block library independently of any particular site.
+
+## What Gets Synced
+
+| Synced | Not synced |
+| --- | --- |
+| Blocks (code, fields, content) | The deployed `host` for a site |
+| Pages and page types | Authentication users and sessions |
+| Site fields and head/foot code | Server admin settings (set in PocketBase) |
+| Uploads in `uploads/` | Local-only `.env` files |
+| `library/` (with `library push/pull`) | Database backups |
+
+`site.yaml` metadata (name, group) round-trips. `host` is treated as per-environment routing config and is never overwritten by file sync.
+
+## Common Workflows
+
+### Edit in production, snapshot to Git
+
+```bash
+primo pull https://cms.example.com -o ./prod-backup
+cd prod-backup
+git add . && git commit -m "Snapshot $(date)"
+```
+
+### Edit locally, push to production
+
+```bash
+primo dev                                # Build and edit locally
+primo push --dry-run https://...         # Preview the push
+primo push https://cms.example.com       # Apply
+```
+
+### Move a site between servers
+
+```bash
+primo pull https://old-server.com -o ./workspace
+primo push https://new-server.com -d ./workspace
+```
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Deploy" icon="rocket" href="/cli/deploy">
+    Deploy a workspace as an editable CMS or static site
+  </Card>
+  <Card title="Local Development" icon="laptop-code" href="/cli/local-development">
+    Run the local CMS with file/CMS sync
+  </Card>
+</CardGroup>

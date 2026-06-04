@@ -1,0 +1,96 @@
+---
+title: 'CLI Overview'
+description: 'Develop Primo sites locally with code-first workflows using primo-cli.'
+---
+
+The Primo CLI (`primo-cli`) lets you build and edit Primo sites from local files using your own editor and version control. It runs a local CMS server, syncs file changes both directions, and ships your workspace to production.
+
+<Note>
+The CLI is optional. You can still build everything in the in-browser editor — the CLI is for developers who prefer working in files and Git.
+</Note>
+
+## Installation
+
+```bash
+npm install -g primo-cli
+```
+
+**Requirements:**
+- Node.js 18+
+- For `primo deploy`: [Railway CLI](https://docs.railway.com/guides/cli) or [Fly.io CLI](https://fly.io/docs/flyctl/install/)
+
+## Quick Start
+
+```bash
+# Create a new site and start the local CMS
+primo new my-site
+```
+
+This scaffolds a workspace and starts `primo dev` on `http://my-site.localhost:3000`.
+
+## Workspace Structure
+
+A Primo workspace contains one or more sites and a shared block library:
+
+```
+workspace/
+├── server.yaml          # Port, site groups, server-level config
+├── library/             # Shared blocks reusable across sites
+│   ├── marketing/
+│   │   └── hero/
+│   └── shared/
+│       └── footer/
+└── sites/
+    ├── site-one/
+    │   ├── site.yaml    # Site name, hostname, group
+    │   ├── blocks/      # Site-specific blocks
+    │   ├── pages/
+    │   ├── page-types/
+    │   ├── site/        # Site-wide fields, head, foot
+    │   └── uploads/     # Images and files synced to the CMS
+    └── site-two/
+        └── site.yaml
+```
+
+Each site is served on its own subdomain in dev: `site-one.localhost:3000`, `site-two.localhost:3000`.
+
+## Command Summary
+
+| Command | What it does |
+| --- | --- |
+| `primo init [name]` | Initialize a new workspace |
+| `primo new [name]` | Create a new site and start dev |
+| `primo dev` | Run the local CMS with file/CMS sync |
+| `primo pull <server>` | Pull a hosted server into local files |
+| `primo push <server>` | Push local changes to a hosted server |
+| `primo library pull/push` | Sync just the shared block library |
+| `primo login <server>` | Authenticate with a hosted instance |
+| `primo deploy` | Deploy the workspace to Railway or Fly.io |
+| `primo build` | Build a static site for any host |
+| `primo validate` | Check site structure for errors |
+
+## When to Use Which Command
+
+| You want to… | Use |
+| --- | --- |
+| Let collaborators edit content from a CMS UI | `primo deploy` |
+| Ship a static site to Netlify/Vercel/Cloudflare | `primo build` |
+| Sync local edits to an existing hosted server | `primo push` |
+| Pull a hosted server's content into Git | `primo pull` |
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Local Development" icon="laptop-code" href="/cli/local-development">
+    Run the local CMS and learn the file/CMS sync model
+  </Card>
+  <Card title="Sync with a Hosted Server" icon="arrows-rotate" href="/cli/sync">
+    Use `primo push` and `primo pull` against a deployed instance
+  </Card>
+  <Card title="Deploy" icon="rocket" href="/cli/deploy">
+    Deploy your workspace to Railway, Fly.io, or any static host
+  </Card>
+  <Card title="MCP Server" icon="robot" href="/reference/mcp-server">
+    Let AI agents work inside your Primo workspace safely
+  </Card>
+</CardGroup>

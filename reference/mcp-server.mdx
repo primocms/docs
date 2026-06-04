@@ -1,0 +1,125 @@
+---
+title: 'MCP Server'
+description: 'Let AI agents work inside Primo workspaces safely with the official primo-mcp server.'
+---
+
+`primo-mcp` is the official [Model Context Protocol](https://modelcontextprotocol.io/) server for Primo. It gives AI coding agents (Claude Code, Cursor, Cline, etc.) live access to Primo's docs, schemas, and validators so they can produce correct block and page files on the first try.
+
+<Note>
+The MCP server is optional. It's most useful when an agent is editing files in a Primo workspace export (a directory created by `primo new` or `primo pull`).
+</Note>
+
+## What It Does
+
+When an agent edits a `component.svelte`, `fields.yaml`, or page YAML, the MCP server:
+
+- Validates the change against Primo's schema and reports specific errors
+- Scaffolds new blocks and page types that are guaranteed to validate
+- Resolves raw field values to the canonical shape Primo expects
+- Surfaces the right docs section on demand instead of forcing the agent to grep
+- Builds a preview so the agent can verify a change rendered before reporting done
+
+## Installation
+
+```bash
+npm install -g primo-mcp
+```
+
+## Configure with Claude Code
+
+Register `primo-mcp` with the Claude Code CLI:
+
+```bash
+claude mcp add --transport stdio primo -- primo-mcp
+```
+
+By default this adds the server to your current project. Use `--scope user` to add it globally, or `--scope project` to commit the config to `.mcp.json` so your team picks it up.
+
+**Manual config (fallback):** add to `.mcp.json` (project) or `~/.claude.json` (user):
+
+```json
+{
+  "mcpServers": {
+    "primo": {
+      "type": "stdio",
+      "command": "primo-mcp"
+    }
+  }
+}
+```
+
+For other clients (Cursor, Cline, etc.), see the [MCP client docs](https://modelcontextprotocol.io/clients).
+
+## Available Tools
+
+| Tool | When the agent calls it |
+| --- | --- |
+| `list_docs` | Discover available docs sections |
+| `get_docs` | Read a specific docs section |
+| `validate_block` | After editing any file in a `blocks/<name>/` folder |
+| `validate_page` | After editing a `pages/*.yaml` or `page-types/*/config.yaml` |
+| `validate_site` | After editing `site/head.svelte` or `site/foot.svelte` |
+| `resolve_field_value` | When given a raw value that needs canonical shape |
+| `scaffold_block` | Creating a new block from scratch |
+| `scaffold_page_type` | Creating a new page type from scratch |
+| `build_preview` | Verifying a change rendered visually |
+
+The server ships with built-in instructions that tell the agent to run validators after every edit, so this happens automatically in well-behaved clients.
+
+## Typical Agent Workflow
+
+1. **Discover.** Agent calls `list_docs`, then `get_docs` for the section it needs.
+2. **Scaffold.** Agent calls `scaffold_block` or `scaffold_page_type` to produce a known-valid skeleton.
+3. **Edit.** Agent edits files in the workspace.
+4. **Validate.** Agent calls `validate_block` / `validate_page` / `validate_site` after each edit and addresses every error before moving on.
+5. **Preview.** Agent calls `build_preview` and loads the returned URL to verify visually.
+
+## Folder Conventions It Enforces
+
+The validators assume the standard workspace layout:
+
+```
+sites/my-site/
+├── site.yaml
+├── site/
+│   ├── head.svelte
+│   └── foot.svelte
+├── blocks/
+│   └── <block-name>/
+│       ├── component.svelte
+│       ├── fields.yaml
+│       └── content.yaml
+├── page-types/
+│   └── <page-type>/
+│       └── config.yaml
+└── pages/
+    └── <page-slug>.yaml
+```
+
+A few invariants worth knowing:
+
+- **Folder names are stable keys.** Renaming `blocks/hero/` to `blocks/banner/` breaks every page that references `hero`. Use a CMS rename or update references manually.
+- **`site/head.svelte` is injected into `<svelte:head>`.** Do **not** wrap its contents in `<svelte:head>` yourself — the validator rejects this.
+- **Field values have canonical shapes.** Image fields are `{ url, alt }`, links are `{ url, label }`, icons are SVG strings. Call `resolve_field_value` when in doubt.
+
+## Without an Agent
+
+You can also drive the same validators from `primo validate`:
+
+```bash
+primo validate
+primo validate --strict
+```
+
+This catches the same class of errors as the MCP validators, just at the workspace level instead of file by file.
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Local Development" icon="laptop-code" href="/cli/local-development">
+    Run the CMS and sync files while you (or an agent) edit
+  </Card>
+  <Card title="Field Types" icon="square-list" href="/reference/field-types">
+    Reference for the canonical field shapes the MCP validates
+  </Card>
+</CardGroup>

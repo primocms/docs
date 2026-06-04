@@ -1,0 +1,150 @@
+---
+title: 'Local Development'
+description: 'Run the Primo CMS locally with primo dev and sync changes between files and the editor.'
+---
+
+`primo dev` runs the full Primo CMS on your machine and keeps it in sync with your local files. You write blocks and content in your editor; the CMS picks up the changes. You make edits in the CMS; they're written back to disk.
+
+## Starting the Dev Server
+
+From a workspace root (the directory containing `server.yaml`):
+
+```bash
+primo dev
+```
+
+Each site is served on its own subdomain:
+
+- `http://my-site.localhost:3000` — the published site
+- `http://my-site.localhost:3000/admin` — the CMS editor
+
+<Tip>
+The dev server listens on all interfaces, so you can hit `http://<your-lan-ip>:3000` from a phone on the same network to test mobile layouts.
+</Tip>
+
+### Options
+
+```bash
+primo dev -p 8080            # Use a custom port
+primo dev --author files     # Default: files are source of truth
+primo dev --author cms       # CMS is source of truth
+primo dev --author both      # Bidirectional (beta)
+```
+
+## Author Modes
+
+`--author` controls which side wins when files and the CMS disagree. This is the most important concept in local dev — pick a mode that matches how you're working.
+
+<Tabs>
+  <Tab title="files (default)">
+    **Files are source of truth.**
+
+    - Edits to local files are imported into the CMS on save.
+    - The CMS UI is **read-only** for content that's tracked in files — you'll see a banner.
+    - Use this mode when you're building blocks or page types in your editor.
+
+    ```bash
+    primo dev --author files
+    ```
+  </Tab>
+
+  <Tab title="cms">
+    **CMS is source of truth.**
+
+    - Edits in the CMS are written to local files.
+    - Edits to local files get reverted on the next CMS write.
+    - Use this mode when you want to do most of your work in the browser editor and just want files for Git history.
+
+    ```bash
+    primo dev --author cms
+    ```
+  </Tab>
+
+  <Tab title="both (beta)">
+    **Bidirectional sync.**
+
+    - Both sides can write.
+    - On conflict, CMS edits are often lost in favor of file edits — treat this as preview-quality.
+
+    ```bash
+    primo dev --author both
+    ```
+  </Tab>
+</Tabs>
+
+## Site Layout
+
+Each site folder follows this layout:
+
+```
+sites/my-site/
+├── site.yaml          # Site name, hostname, group
+├── site/
+│   ├── fields.yaml    # Site-wide fields (logo, nav, etc.)
+│   ├── content.yaml   # Values for site fields
+│   ├── head.svelte    # Custom <head> content
+│   └── foot.svelte    # Custom end-of-body content
+├── blocks/
+│   └── hero/
+│       ├── component.svelte
+│       ├── fields.yaml
+│       └── content.yaml
+├── page-types/
+│   └── blog-post/
+│       └── config.yaml
+├── pages/
+│   └── index.yaml
+└── uploads/           # Images and files (see below)
+```
+
+See [Architecture](/reference/architecture) for the underlying data model.
+
+## Uploads
+
+Files dropped into `sites/my-site/uploads/` are automatically imported into the CMS as `site_uploads` records:
+
+```
+sites/my-site/uploads/
+├── hero.jpg
+└── logo.svg
+```
+
+- On import, new files become uploads with stable IDs.
+- Hash comparison skips re-upload when content is unchanged.
+- A file removed from `uploads/` becomes an orphan upload warning — clean it up in the CMS or remove the record from the file system to delete it.
+
+This means you can drop an image into `uploads/` and reference it from an image field without ever opening the CMS.
+
+## site.yaml and Hostname
+
+`site.yaml` holds the site name, hostname, and group. These round-trip between the CMS and files — editing the name in the dashboard updates `site.yaml`, and editing `site.yaml` updates the CMS.
+
+<Warning>
+`host` (the deployed hostname for a hosted server) is per-environment and is **not** overwritten by file sync. This prevents `primo push` from pointing your production site at `localhost`.
+</Warning>
+
+## Avatar Uploads
+
+iPhone HEIC photos are automatically converted to JPEG when uploaded as avatars — no manual conversion required.
+
+## Validating Your Work
+
+Run `primo validate` from the workspace root to check site structure:
+
+```bash
+primo validate
+primo validate --strict    # Treat warnings as errors
+```
+
+For AI-assisted development, the [MCP server](/reference/mcp-server) exposes per-file validators (`validate_block`, `validate_page`, `validate_site`) that agents call automatically.
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Sync with a Hosted Server" icon="arrows-rotate" href="/cli/sync">
+    Pull and push changes against a deployed Primo
+  </Card>
+  <Card title="Deploy" icon="rocket" href="/cli/deploy">
+    Ship your workspace to production
+  </Card>
+</CardGroup>
