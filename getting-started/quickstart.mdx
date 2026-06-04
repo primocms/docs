@@ -1,201 +1,151 @@
 ---
 title: 'Quickstart'
-description: 'Create and deploy your first Primo site in minutes.'
+description: 'Build your first Primo site in 5 minutes — locally with the CLI or deployed and pulled down.'
 ---
 
-This quickstart guide walks you through creating your first Primo site. You'll have a live site in under 5 minutes without a single terminal command.
-
-<Info>
-This guide assumes you've completed [installation](/getting-started/installation). If you haven't, start there first.
-</Info>
-
-## Step 1: Enter Site Name
-
-When you first access Primo (or click "Create Site"), you'll see the site creation wizard.
-
-<Steps>
-<Step title="Enter a name">
-  Provide a name for your site. This is for internal organization.
-
-  <Tip>
-  You can change the site name later in site settings.
-  </Tip>
-</Step>
-</Steps>
-
-## Step 2: Choose a Starter
-
-Starters give you a head start with pre-configured page types, blocks, and sample content.
-
-<Steps>
-<Step title="Pick a starter source">
-  Choose where to get your starter from:
-
-  **Your Existing Sites:**
-  - Clone one of your existing sites as a template
-  - Includes all page types, blocks, and structure
-  - Perfect for creating similar sites
-
-  **Marketplace Starters** (all free for now):
-  - **Blog** - Ready-to-go blog with posts, categories, and author pages
-  - **Portfolio** - Showcase your work with project pages and case studies
-  - **Restaurant** - Menu pages, location info, and reservation forms
-  - **Business** - Landing page, services, team, and contact pages
-  - **Blank** - Minimal starter to build from scratch
-</Step>
-
-<Step title="Select your starter">
-  Click on the starter you want to use. You'll see a preview and description.
-</Step>
-</Steps>
-
-<Check>
-Your starter is selected! It includes page types, sample pages, and pre-configured blocks.
-</Check>
-
-## Step 3: Add Additional Blocks (Optional)
-
-You can add extra blocks to your site from your server library or the marketplace.
-
-<Steps>
-<Step title="Browse available blocks">
-  - **Server Library**: Your personal collection of reusable blocks
-  - **Marketplace**: Community blocks (all free for now)
-</Step>
-
-<Step title="Select blocks to add">
-  Click blocks you want to include:
-  - Hero sections
-  - Text blocks
-  - Image galleries
-  - Call-to-action buttons
-  - Contact forms
-  - And more...
-
-  <Info>
-  These blocks get added to your site but won't be pre-connected to fields. You'll connect them manually as needed. The blocks included with your starter are already connected and ready to use.
-  </Info>
-</Step>
-
-<Step title="Finish creation">
-  Click "Create Site" to complete the setup.
-</Step>
-</Steps>
-
-<Check>
-Your site is created with your chosen starter and selected blocks!
-</Check>
-
-## Step 4: Explore Your New Site
-
-Your site is now ready to edit and customize.
-
-<Steps>
-<Step title="View the dashboard">
-  You'll see your site editor with:
-  - **Pages** - Sample pages from your starter
-  - **Page Types** - Pre-configured templates
-  - **Blocks** - All available blocks (from starter + your additions)
-  - **Site Fields** - Global content like logo and navigation
-</Step>
-
-<Step title="Edit a page">
-  Click "Pages" in the toolbar, then click on any page to edit it:
-  - Edit content by clicking on sections
-  - Add new sections from available blocks
-  - Reorder sections by dragging
-  - Fill in page fields like title and description
-</Step>
-
-<Step title="Customize content">
-  Update the sample content:
-  - Replace placeholder text with your content
-  - Upload your images
-  - Update site fields (logo, navigation, footer)
-  - Adjust colors and styling as needed
-</Step>
-</Steps>
-
-## Step 5: Publish Your Site
-
-When you're ready to go live:
-
-<Steps>
-<Step title="Review your changes">
-  Use the preview to see how your site looks.
-</Step>
-
-<Step title="Publish">
-  Click "Publish" (or press ⌘P). Primo will:
-  - Compile all your blocks
-  - Generate static HTML
-  - Deploy to your domain
-
-  <Check>
-  Your site is now live!
-  </Check>
-</Step>
-</Steps>
-
-<Info>
-Primo generates static HTML, CSS, and JavaScript for fast performance. For further optimization, run your site through [PageSpeed Insights](https://pagespeed.web.dev/) to identify improvements like image compression and WebP formats.
-</Info>
-
-## Accessing Your Site
-
-Your site is published and hosted from the same domain:
-
-- **Live site**: `https://yourdomain.com/`
-- **Primo admin**: `https://yourdomain.com/admin/`
-
-<Tip>
-The admin panel is always at `/admin/` on your domain. Your published site lives at the root.
-</Tip>
-
-## Learn More
-
-You've created your first Primo site! Here's where to go from here:
+Primo has two starting points. Pick the one that matches how you work:
 
 <CardGroup cols={2}>
-<Card title="Core Concepts" icon="lightbulb" href="/getting-started/core-concepts">
-  Understand how Primo's architecture works
-</Card>
-
-<Card title="Building from Scratch" icon="rocket" href="/building-sites/your-first-site">
-  Build a site from the ground up and learn the fundamentals
-</Card>
-
-<Card title="Writing Components" icon="code" href="/building-sites/writing-components">
-  Learn to build custom blocks with Svelte
-</Card>
-
-<Card title="Defining Page Types" icon="layer-group" href="/building-sites/defining-page-types">
-  Master page types to create content structures
-</Card>
+  <Card title="Start local" icon="laptop-code">
+    Run `primo new` to create a workspace on your machine. Build the site locally, then deploy when ready.
+  </Card>
+  <Card title="Start deployed" icon="cloud-arrow-up">
+    Deploy Primo to Railway or a VPS first, then pull it down to your laptop with `primo pull` for local edits.
+  </Card>
 </CardGroup>
 
-## Common Next Steps
+Both paths land at the same place: a workspace on disk that you can edit with code, AI agents, or the visual CMS.
 
-**Customize Your Site:**
-- Edit page content and add your own text/images
-- Adjust site fields (logo, navigation, footer)
-- Modify page types to fit your needs
+<Tabs>
+  <Tab title="Start local">
+    ## Path 1: Build locally, deploy later
 
-**Build New Blocks:**
-- Create custom blocks for your specific needs
-- Add them to your server library for reuse
-- Make them available to specific page types
+    Best for: starting from scratch, prototyping, or experimenting before committing to a host.
 
-**Create More Pages:**
-- Use existing page types to create new pages
-- Organize pages with parent/child relationships
-- Build out your site structure
+    <Steps>
+      <Step title="Install the CLI">
+        ```bash
+        npm install -g primo-cli
+        ```
 
-**Invite Collaborators:**
-- Add team members as editors
-- They can create and edit content without touching code
-- You maintain control over structure and design
+        Requires Node.js 18+.
+      </Step>
 
-<Tip>
-Blocks in your server library can be added to any site. They get copied in, giving you a starting point to customize for each site's needs.
-</Tip>
+      <Step title="Create a site">
+        ```bash
+        primo new my-site
+        ```
+
+        This scaffolds a workspace and starts the local CMS at `http://my-site.localhost:3000`.
+
+        <Tip>
+        Open `http://my-site.localhost:3000/admin` to use the visual editor. Edits round-trip to your files in real time.
+        </Tip>
+      </Step>
+
+      <Step title="Edit blocks and pages">
+        Open the workspace in your editor:
+
+        ```
+        my-site/
+        ├── server.yaml
+        ├── library/
+        └── sites/my-site/
+            ├── site.yaml
+            ├── blocks/
+            ├── pages/
+            ├── page-types/
+            └── site/
+        ```
+
+        Edit `blocks/<name>/component.svelte` in your editor — the CMS reflects changes immediately. See [Local Development](/cli/local-development) for the full workflow including `--author` modes.
+      </Step>
+
+      <Step title="Let AI agents help">
+        For Claude Code, Cursor, or other agents, install the MCP server so they can validate edits and scaffold blocks correctly:
+
+        ```bash
+        npm install -g primo-mcp
+        claude mcp add --transport stdio primo -- primo-mcp
+        ```
+
+        See the [MCP server reference](/reference/mcp-server) for details.
+      </Step>
+
+      <Step title="Deploy when ready">
+        ```bash
+        primo deploy
+        ```
+
+        Interactive picker for Railway or Fly.io. See [Deploy with the CLI](/cli/deploy) for other options.
+      </Step>
+    </Steps>
+  </Tab>
+
+  <Tab title="Start deployed">
+    ## Path 2: Deploy first, pull down to edit
+
+    Best for: when you want a shared server from day one — collaborators on a CMS UI, agents pulling/pushing files, your team editing visually.
+
+    <Steps>
+      <Step title="Self-host Primo">
+        Pick one:
+
+        - **[Railway](https://railway.com/deploy/primo?referralCode=RCPU7k)** — one-click deploy with persistent storage
+        - **[Fly.io](https://fly.io)** — generous free tier
+        - **Docker / VPS** — `docker run -d -p 8080:8080 ghcr.io/primocms/primo:latest`
+
+        See the [Installation Guide](/getting-started/installation) for full instructions.
+      </Step>
+
+      <Step title="Create a site in the browser">
+        Visit your deployed URL and follow the site creation wizard. Pick a starter (Blog, Portfolio, Restaurant, Business, or Blank) or clone an existing site.
+
+        <Tip>
+        You can build the entire site in the browser without ever installing the CLI. The CLI is optional.
+        </Tip>
+      </Step>
+
+      <Step title="Edit content visually">
+        Open `https://your-domain.com/admin` and edit pages by clicking on them. See [Using the Editor](/content-management/using-the-editor) for the full visual workflow.
+
+        <Tip>
+        The admin panel is always at `/admin/` on your domain. Your published site lives at the root.
+        </Tip>
+      </Step>
+
+      <Step title="(Optional) Pull to your laptop">
+        Once you want to edit blocks in code or hand things off to AI agents:
+
+        ```bash
+        npm install -g primo-cli
+        primo login https://your-domain.com
+        primo pull https://your-domain.com
+        ```
+
+        You'll get a full workspace on disk. Push changes back with `primo push`. See [Push and Pull](/cli/sync) for the sync model.
+      </Step>
+
+      <Step title="Publish changes">
+        Browser edits auto-save. To publish, click **Publish** (or press ⌘P / Ctrl+P). Primo compiles your blocks, generates static HTML, and serves it from your domain.
+      </Step>
+    </Steps>
+  </Tab>
+</Tabs>
+
+## What's Next
+
+<CardGroup cols={2}>
+  <Card title="Core Concepts" icon="lightbulb" href="/getting-started/core-concepts">
+    Sites, page types, pages, blocks, fields
+  </Card>
+  <Card title="Build from Scratch" icon="hammer" href="/building-sites/your-first-site">
+    Walk through building a complete site end-to-end
+  </Card>
+  <Card title="Local Development" icon="laptop-code" href="/cli/local-development">
+    `primo dev`, author modes, uploads folder
+  </Card>
+  <Card title="Invite Collaborators" icon="users" href="/collaboration/inviting-collaborators">
+    Hand the site off to non-technical editors
+  </Card>
+</CardGroup>

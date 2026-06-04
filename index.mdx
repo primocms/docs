@@ -1,54 +1,60 @@
 ---
 title: "Introduction"
-description: "Primo is a component-based CMS that streamlines the handoff between developers and content editors. Devs get full code control, clients get a foolproof editing experience."
+description: "Primo is a visual CMS where AI agents edit files and humans edit visually — same source of truth."
 ---
 
-## The Problem Primo Solves
+Primo is a visual CMS that represents your entire site as files. Pull it down, edit with Claude Code, Cursor, or any agent, push it back. Your team manages content visually in the browser.
 
-Traditional website development creates tension between developers and content editors:
+```bash
+docker run -d -p 8080:8080 ghcr.io/primocms/primo:latest
+```
 
-- Developers need code control and modern tooling
-- Clients need a simple, visual editing experience
-- WordPress lets clients break designs
-- Headless CMSs have terrible client UX
-- Webflow is expensive and limiting
+## What Makes Primo Different
 
-Primo solves this by coupling code and content in self-contained blocks that live together and can be used and updated visually by non-technical content editors.
-
-## Key Features
+Most web tools force a tradeoff: code control *or* visual editing. Primo keeps both in the same source of truth.
 
 <CardGroup cols={2}>
-  <Card title="Code-First Development" icon="code">
-    Write reusable blocks with Svelte and zero setup. Powerful in-browser IDE, instant responsive previews. Edit code, add fields, done.
+  <Card title="Files as the source of truth" icon="file-code">
+    Blocks, pages, fields, and content all live as YAML and Svelte on disk. Version them in Git, edit them in any editor.
   </Card>
-  <Card title="Client-Proof Editing" icon="shield-check">
-    Give clients full content control while keeping design and structure locked down. You define the guardrails, they work freely within them.
+  <Card title="AI agents edit files" icon="robot">
+    Any tool that reads files works — Claude Code, Cursor, Cline. The [official MCP server](/reference/mcp-server) gives agents live schema validation and scaffolding.
   </Card>
-  <Card title="Block Library" icon="layer-group">
-    Build blocks once, reuse across all your sites. Browse the marketplace for prebuilt starter sites and blocks.
+  <Card title="Humans edit visually" icon="pen-to-square">
+    Non-technical teammates open the site in the browser, click anything, and edit it. No code, no broken designs.
   </Card>
-  <Card title="Built-in Hosting" icon="server">
-    Static site generation with hosting included. Deploy blazing-fast, secure, SEO-optimized sites with ease.
+  <Card title="Self-hosted and open source" icon="server">
+    Run it on Railway, Fly, a VPS, or your laptop. MIT license, single Docker container, SQLite under the hood.
   </Card>
 </CardGroup>
 
+## How It Works
+
+1. **Build with code.** Write Svelte components and attach content fields with YAML. The [CLI](/cli/overview) runs the full CMS locally and watches your files.
+2. **Hand off visually.** Invite [collaborators](/collaboration/inviting-collaborators) — they edit content in the browser without touching code.
+3. **Edit anywhere, anytime.** Pull the site to your laptop, let an agent change a layout, push it back. Or stay in the browser. Same files either way.
+
 ## Who It's For
 
-Primo is perfect for:
+Primo is built for **developers who build sites for other people** — freelancers, agencies, and small teams who want full code control without leaving clients stranded.
 
-- Freelancers building sites for local businesses
-- Small agencies managing multiple client sites
-- In-house developers building internal & marketing sites
-- Weekend devs building sites for friends and family
-- Anyone tired of "the website broke 😩" texts
+## Quick Start
 
-## Why Svelte?
+<CardGroup cols={2}>
+  <Card title="Quickstart" icon="bolt" href="/getting-started/quickstart">
+    Build your first site in 5 minutes — local or deployed
+  </Card>
+  <Card title="Install" icon="rocket" href="/getting-started/installation">
+    Self-host with Docker, Railway, or Fly.io
+  </Card>
+  <Card title="Build with the CLI" icon="terminal" href="/cli/overview">
+    Develop sites locally with `primo dev` and files as the source of truth
+  </Card>
+  <Card title="MCP for AI Agents" icon="brain" href="/reference/mcp-server">
+    Wire up Claude Code, Cursor, or any MCP client
+  </Card>
+</CardGroup>
 
-Primo blocks are written in Svelte, a modern component framework. If you're new to Svelte, the [official tutorial](https://svelte.dev/tutorial) covers everything you need to know.
+## Built on Svelte
 
-**Benefits of Svelte:**
-
-- Simple syntax built on top of HTML, CSS, and JS
-- Scoped styles (no CSS conflicts across components)
-- Reactive JavaScript using runes (\$state, \$derived, \$effect)
-- Fast performance with small bundle sizes
+Primo blocks are written in Svelte 5. If you're new to Svelte, the [official tutorial](https://svelte.dev/tutorial) covers what you need: scoped styles, simple HTML-based syntax, and reactive runes (\$state, \$derived, \$effect).
