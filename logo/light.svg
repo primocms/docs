@@ -4,7 +4,7 @@
 
   <!-- Text group with modern software-style font -->
   <g font-family="'SF Pro Display', 'Segoe UI', 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif" font-weight="600" font-size="200" letter-spacing="-0.02em">
-    <!-- "primo" in white -->
-    <text x="0" y="150" fill="#0a0a0a">primo</text>
+    <!-- "Primo" in white -->
+    <text x="0" y="150" fill="#0a0a0a">Primo</text>
   </g>
 </svg>
