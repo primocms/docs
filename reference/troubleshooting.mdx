@@ -1,9 +1,9 @@
 ---
 title: 'Troubleshooting'
-description: 'Common issues and solutions for deploying and running Pala.'
+description: 'Common issues and solutions for deploying and running Primo.'
 ---
 
-This guide helps you solve common issues when deploying or running Pala.
+This guide helps you solve common issues when deploying or running Primo.
 
 ## Installation & Setup Issues
 
@@ -19,7 +19,7 @@ This guide helps you solve common issues when deploying or running Pala.
 
 <AccordionGroup>
   <Accordion title="Check if environment variables created a user">
-    If you set `PALA_SUPERUSER_EMAIL` and `PALA_SUPERUSER_PASSWORD`, a superuser was created automatically. Use those credentials to sign in.
+    If you set `PRIMO_SUPERUSER_EMAIL` and `PRIMO_SUPERUSER_PASSWORD`, a superuser was created automatically. Use those credentials to sign in.
   </Accordion>
 
   <Accordion title="Check if volume contains existing data">
@@ -28,10 +28,10 @@ This guide helps you solve common issues when deploying or running Pala.
     docker-compose down
 
     # Check volume
-    docker volume inspect palacms-data
+    docker volume inspect primo-data
 
     # If you want to start fresh, delete the volume
-    docker volume rm palacms-data
+    docker volume rm primo-data
 
     # Restart
     docker-compose up -d
@@ -45,16 +45,16 @@ This guide helps you solve common issues when deploying or running Pala.
 
 ### Can't access after deployment
 
-**Symptoms:** Browser can't reach your Pala instance
+**Symptoms:** Browser can't reach your Primo instance
 
 **Diagnostics:**
 
 ```bash
 # Check if container is running
-docker ps | grep palacms
+docker ps | grep primo
 
 # Check logs
-docker logs palacms
+docker logs primo
 
 # Check if port is accessible
 curl http://localhost:8080
@@ -66,10 +66,10 @@ curl http://localhost:8080
   <Accordion title="Container not running">
     ```bash
     # Check why it stopped
-    docker logs palacms
+    docker logs primo
 
     # Restart it
-    docker start palacms
+    docker start primo
     ```
   </Accordion>
 
@@ -118,9 +118,9 @@ df -h
 
 **Solutions:**
 
-1. Ensure only one Pala container is running:
+1. Ensure only one Primo container is running:
 ```bash
-docker ps | grep palacms
+docker ps | grep primo
 ```
 
 2. Restart the container:
@@ -130,7 +130,7 @@ docker-compose restart
 
 3. If persists, check for file permissions:
 ```bash
-docker exec palacms ls -la /app/pb_data
+docker exec primo ls -la /app/pb_data
 ```
 
 ### Publishing fails or times out
@@ -141,7 +141,7 @@ docker exec palacms ls -la /app/pb_data
 
 ```bash
 # Check container logs during publish
-docker logs -f palacms
+docker logs -f primo
 ```
 
 **Common Causes:**
@@ -155,7 +155,7 @@ docker logs -f palacms
     Increase Docker memory limit:
     ```yaml
     services:
-      palacms:
+      primo:
         # ... other config
         deploy:
           resources:
@@ -167,7 +167,7 @@ docker logs -f palacms
   <Accordion title="Network timeout">
     Check if your server can reach external CDNs (for Svelte compiler):
     ```bash
-    docker exec palacms curl -I https://esm.sh
+    docker exec primo curl -I https://esm.sh
     ```
   </Accordion>
 </AccordionGroup>
@@ -220,7 +220,7 @@ docker logs -f palacms
 
 ### Image pull fails
 
-**Error:** `Error response from daemon: manifest for ghcr.io/palacms/palacms:latest not found`
+**Error:** `Error response from daemon: manifest for ghcr.io/primocms/primo:latest not found`
 
 **Solutions:**
 
@@ -228,7 +228,7 @@ docker logs -f palacms
 2. Check your internet connection
 3. Try pulling manually:
 ```bash
-docker pull ghcr.io/palacms/palacms:latest
+docker pull ghcr.io/primocms/primo:latest
 ```
 
 ### Permission errors with volume
@@ -239,10 +239,10 @@ docker pull ghcr.io/palacms/palacms:latest
 
 ```bash
 # Check volume permissions
-docker exec palacms ls -la /app
+docker exec primo ls -la /app
 
 # Fix permissions
-docker exec palacms chown -R 1000:1000 /app/pb_data
+docker exec primo chown -R 1000:1000 /app/pb_data
 ```
 
 ### Container keeps restarting
@@ -251,10 +251,10 @@ docker exec palacms chown -R 1000:1000 /app/pb_data
 
 ```bash
 # Check why it's restarting
-docker logs palacms --tail=50
+docker logs primo --tail=50
 
 # Check restart policy
-docker inspect palacms | grep -A 5 RestartPolicy
+docker inspect primo | grep -A 5 RestartPolicy
 ```
 
 **Common Causes:**
@@ -275,7 +275,7 @@ docker inspect palacms | grep -A 5 RestartPolicy
 1. Verify email/password are correct
 2. Check if account exists:
 ```bash
-docker exec palacms ./palacms admin ls
+docker exec primo ./primo admin ls
 ```
 
 3. Reset password via PocketBase admin:
@@ -288,7 +288,7 @@ docker exec palacms ./palacms admin ls
 **Solution:** Create new superuser via command line:
 
 ```bash
-docker exec -it palacms ./palacms admin create \
+docker exec -it primo ./primo admin create \
   admin@example.com \
   new-secure-password
 ```
@@ -302,7 +302,7 @@ Always backup before upgrading:
 
 ```bash
 # Backup pb_data
-docker cp palacms:/app/pb_data ./backup_$(date +%Y%m%d)
+docker cp primo:/app/pb_data ./backup_$(date +%Y%m%d)
 
 # Then upgrade
 docker-compose pull && docker-compose up -d
@@ -316,7 +316,7 @@ Restore from backup:
 docker-compose down
 
 # Restore backup
-docker cp ./backup_20250101 palacms:/app/pb_data
+docker cp ./backup_20250101 primo:/app/pb_data
 
 # Restart
 docker-compose up -d
@@ -363,11 +363,11 @@ docker-compose up -d
 
 **Symptoms:** Browser console shows CORS errors
 
-**Cause:** Accessing Pala from a different domain than configured
+**Cause:** Accessing Primo from a different domain than configured
 
 **Solution:**
 
-Ensure `PALA_APP_URL` matches the domain you're accessing from.
+Ensure `PRIMO_APP_URL` matches the domain you're accessing from.
 
 ## Getting Help
 
@@ -375,19 +375,19 @@ If you're still stuck:
 
 1. **Check the logs:**
 ```bash
-docker logs palacms --tail=100 -f
+docker logs primo --tail=100 -f
 ```
 
 2. **Search existing issues:**
-   - [GitHub Issues](https://github.com/palacms/palacms/issues)
+   - [GitHub Issues](https://github.com/primocms/primo/issues)
 
 3. **Ask for help:**
-   {/* - [Discord Community](https://discord.gg/pala) */}
-   - [GitHub Discussions](https://github.com/palacms/palacms/discussions)
+   {/* - [Discord Community](https://discord.gg/primo) */}
+   - [GitHub Discussions](https://github.com/primocms/primo/discussions)
 
 4. **File a bug report:**
-   - Include: OS, Docker version, Pala version, full error logs
-   - [Create Issue](https://github.com/palacms/palacms/issues/new)
+   - Include: OS, Docker version, Primo version, full error logs
+   - [Create Issue](https://github.com/primocms/primo/issues/new)
 
 ## Next Steps
 
@@ -396,6 +396,6 @@ docker logs palacms --tail=100 -f
     Review deployment best practices
   </Card>
   <Card title="Environment Variables" icon="gear" href="/reference/environment-variables">
-    Configure Pala properly
+    Configure Primo properly
   </Card>
 </CardGroup>

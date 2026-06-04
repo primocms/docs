@@ -1,17 +1,17 @@
 ---
 title: 'Deployment Guide'
-description: 'Deploy Pala to production on Railway, VPS, or custom infrastructure.'
+description: 'Deploy Primo to production on Railway, VPS, or custom infrastructure.'
 ---
 
-This guide covers deploying Pala to production. Choose the deployment method that matches your needs and technical expertise.
+This guide covers deploying Primo to production. Choose the deployment method that matches your needs and technical expertise.
 
 <Warning>
-  **Persistent Storage Required**: Pala stores all data in a SQLite database and needs persistent disk storage to function. Traditional serverless platforms (Vercel, Netlify, Cloudflare Pages) have ephemeral file systems and won't work.
+  **Persistent Storage Required**: Primo stores all data in a SQLite database and needs persistent disk storage to function. Traditional serverless platforms (Vercel, Netlify, Cloudflare Pages) have ephemeral file systems and won't work.
 </Warning>
 
 ## Quick Deploy: Railway
 
-The fastest way to deploy Pala to production.
+The fastest way to deploy Primo to production.
 
 ### Prerequisites
 
@@ -22,14 +22,14 @@ The fastest way to deploy Pala to production.
 
 <Steps>
   <Step title="Click deploy button">
-    [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/palacms?referralCode=RCPU7k)
+    [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/primo?referralCode=RCPU7k)
   </Step>
 
   <Step title="Configure environment (optional)">
     Set environment variables if you want automated setup:
-    - `PALA_SUPERUSER_EMAIL`
-    - `PALA_SUPERUSER_PASSWORD`
-    - `PALA_APP_URL` (optional, auto-detected)
+    - `PRIMO_SUPERUSER_EMAIL`
+    - `PRIMO_SUPERUSER_PASSWORD`
+    - `PRIMO_APP_URL` (optional, auto-detected)
   </Step>
 
   <Step title="Wait for deployment">
@@ -41,7 +41,7 @@ The fastest way to deploy Pala to production.
   </Step>
 
   <Step title="Access your instance">
-    Click the generated URL to access Pala. If you didn't set environment variables, you'll see the setup screen.
+    Click the generated URL to access Primo. If you didn't set environment variables, you'll see the setup screen.
   </Step>
 
   <Step title="Configure custom domain (optional)">
@@ -77,29 +77,29 @@ Deploy to any VPS for full control over your infrastructure.
 
   <Step title="Create project directory">
     ```bash
-    mkdir palacms
-    cd palacms
+    mkdir primo
+    cd primo
     ```
   </Step>
 
   <Step title="Create docker-compose.yml">
     ```yaml
     services:
-      palacms:
-        image: ghcr.io/palacms/palacms:latest
+      primo:
+        image: ghcr.io/primocms/primo:latest
         restart: always
         ports:
           - "8080:8080"
         volumes:
-          - palacms-data:/app/pb_data
+          - primo-data:/app/pb_data
         environment:
-          - PALA_APP_URL=https://your-domain.com
+          - PRIMO_APP_URL=https://your-domain.com
           # Optional: automated setup
-          # - PALA_SUPERUSER_EMAIL=admin@example.com
-          # - PALA_SUPERUSER_PASSWORD=<secret>
+          # - PRIMO_SUPERUSER_EMAIL=admin@example.com
+          # - PRIMO_SUPERUSER_PASSWORD=<secret>
 
     volumes:
-      palacms-data:
+      primo-data:
     ```
   </Step>
 
@@ -123,17 +123,17 @@ For simpler setups without compose:
 
 ```bash
 docker run -d \
-  --name palacms \
+  --name primo \
   --restart always \
   -p 8080:8080 \
-  -v palacms-data:/app/pb_data \
-  -e PALA_APP_URL=https://your-domain.com \
-  ghcr.io/palacms/palacms:latest
+  -v primo-data:/app/pb_data \
+  -e PRIMO_APP_URL=https://your-domain.com \
+  ghcr.io/primocms/primo:latest
 ```
 
 ### Configure Reverse Proxy
 
-Pala runs on port 8080. Use a reverse proxy for SSL and domain routing:
+Primo runs on port 8080. Use a reverse proxy for SSL and domain routing:
 
 <Tabs>
   <Tab title="Nginx">
@@ -187,14 +187,14 @@ Pala runs on port 8080. Use a reverse proxy for SSL and domain routing:
 
     ```yaml
     services:
-      palacms:
-        image: ghcr.io/palacms/palacms:latest
+      primo:
+        image: ghcr.io/primocms/primo:latest
         labels:
           - "traefik.enable=true"
-          - "traefik.http.routers.palacms.rule=Host(`your-domain.com`)"
-          - "traefik.http.routers.palacms.entrypoints=websecure"
-          - "traefik.http.routers.palacms.tls.certresolver=letsencrypt"
-          - "traefik.http.services.palacms.loadbalancer.server.port=8080"
+          - "traefik.http.routers.primo.rule=Host(`your-domain.com`)"
+          - "traefik.http.routers.primo.entrypoints=websecure"
+          - "traefik.http.routers.primo.tls.certresolver=letsencrypt"
+          - "traefik.http.services.primo.loadbalancer.server.port=8080"
     ```
   </Tab>
 </Tabs>
@@ -246,24 +246,24 @@ Pala runs on port 8080. Use a reverse proxy for SSL and domain routing:
     primary_region = "sjc"
 
     [build]
-      image = "ghcr.io/palacms/palacms:latest"
+      image = "ghcr.io/primocms/primo:latest"
 
     [http_service]
       internal_port = 8080
       force_https = true
 
     [[mounts]]
-      source = "palacms_data"
+      source = "primo_data"
       destination = "/app/pb_data"
 
     [env]
-      PALA_APP_URL = "https://your-app-name.fly.dev"
+      PRIMO_APP_URL = "https://your-app-name.fly.dev"
     ```
   </Step>
 
   <Step title="Create volume">
     ```bash
-    fly volumes create palacms_data --size 3
+    fly volumes create primo_data --size 3
     ```
   </Step>
 
@@ -276,7 +276,7 @@ Pala runs on port 8080. Use a reverse proxy for SSL and domain routing:
 
 ## Database Backups
 
-Pala uses SQLite, stored in `/app/pb_data`. Back up this directory regularly.
+Primo uses SQLite, stored in `/app/pb_data`. Back up this directory regularly.
 
 <Info>
 **Cloud users:** Backups are handled automatically. Backup frequency depends on your plan.
@@ -321,16 +321,16 @@ For production sites, configure S3-compatible storage for off-site backups. This
 
 ```bash
 #!/bin/bash
-# backup-palacms.sh
+# backup-primo.sh
 
-BACKUP_DIR="/backups/palacms"
+BACKUP_DIR="/backups/primo"
 DATE=$(date +%Y%m%d_%H%M%S)
 
 # Create backup directory
 mkdir -p $BACKUP_DIR
 
 # Copy pb_data
-docker cp palacms:/app/pb_data $BACKUP_DIR/pb_data_$DATE
+docker cp primo:/app/pb_data $BACKUP_DIR/pb_data_$DATE
 
 # Keep only last 7 days
 find $BACKUP_DIR -type d -mtime +7 -exec rm -rf {} +
@@ -338,7 +338,7 @@ find $BACKUP_DIR -type d -mtime +7 -exec rm -rf {} +
 
 Add to crontab:
 ```bash
-0 2 * * * /path/to/backup-palacms.sh
+0 2 * * * /path/to/backup-primo.sh
 ```
 
 ### Restore from Backup
@@ -348,7 +348,7 @@ Add to crontab:
 docker-compose down
 
 # Restore backup
-docker cp pb_data_20250101_020000 palacms:/app/pb_data
+docker cp pb_data_20250101_020000 primo:/app/pb_data
 
 # Start container
 docker-compose up -d
@@ -358,7 +358,7 @@ docker-compose up -d
   Test your backups regularly. A backup you haven't tested is not a backup.
 </Warning>
 
-## Updating Pala
+## Updating Primo
 
 ### Docker Compose
 
@@ -374,14 +374,14 @@ docker-compose up -d
 
 ```bash
 # Stop and remove old container
-docker stop palacms
-docker rm palacms
+docker stop primo
+docker rm primo
 
 # Pull latest image
-docker pull ghcr.io/palacms/palacms:latest
+docker pull ghcr.io/primocms/primo:latest
 
 # Start new container (same command as initial deploy)
-docker run -d --name palacms ...
+docker run -d --name primo ...
 ```
 
 <Tip>
@@ -434,11 +434,11 @@ Point your domain through Cloudflare (free tier) for:
   </Accordion>
 
   <Accordion title="Keep Docker updated">
-    Regularly update Docker and the Pala image for security patches.
+    Regularly update Docker and the Primo image for security patches.
   </Accordion>
 
   <Accordion title="Use HTTPS everywhere">
-    Never serve Pala over HTTP in production. Use Let's Encrypt for free SSL certificates.
+    Never serve Primo over HTTP in production. Use Let's Encrypt for free SSL certificates.
   </Accordion>
 
   <Accordion title="Restrict SSH access">
@@ -468,7 +468,7 @@ See the [Troubleshooting Guide](/reference/troubleshooting) for common deploymen
 
 <CardGroup cols={2}>
   <Card title="Environment Variables" icon="gear" href="/reference/environment-variables">
-    Configure Pala with environment variables
+    Configure Primo with environment variables
   </Card>
   <Card title="Troubleshooting" icon="wrench" href="/reference/troubleshooting">
     Solve common deployment issues

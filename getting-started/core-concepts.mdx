@@ -1,13 +1,13 @@
 ---
 title: 'Core Concepts'
-description: 'Learn the fundamental concepts behind Pala: sites, page types, pages, blocks, and sections.'
+description: 'Learn the fundamental concepts behind Primo: sites, page types, pages, blocks, and sections.'
 ---
 
-Understanding Pala's core concepts helps you build sites more effectively. Everything in Pala follows a clear hierarchy that separates structure from content, giving you control while empowering editors.
+Understanding Primo's core concepts helps you build sites more effectively. Everything in Primo follows a clear hierarchy that separates structure from content, giving you control while empowering editors.
 
 ## The Content Hierarchy
 
-Pala organizes content in three levels:
+Primo organizes content in three levels:
 
 ```
 Site → Pages → Sections
@@ -125,7 +125,7 @@ Page types are completely customizable. Here are common examples:
 - **Standard** - Header/footer with standard blocks
 - **Editorial** - Reading-focused layout with limited blocks
 
-Everything in Pala is a page. Whether it's a content entity (blog post, team member) or a flexible layout page (homepage, about page), so long as it has a common structure you create a page type for it.
+Everything in Primo is a page. Whether it's a content entity (blog post, team member) or a flexible layout page (homepage, about page), so long as it has a common structure you create a page type for it.
 
 <Accordion title="Example: Blog Post Page Type">
 A "Blog Post" page type might include:
@@ -148,13 +148,13 @@ Fixed sections (ie sections within the header/footer slots) contain static conte
 
 ### Block Availability
 
-Pala doesn't differentiate between types of blocks - you control which blocks are available per page type. For one-time-use blocks (like a homepage hero), toggle it on, place it on the page, then toggle it off. Toggling it off doesn't remove it from existing pages, just prevents editors from adding it again.
+Primo doesn't differentiate between types of blocks - you control which blocks are available per page type. For one-time-use blocks (like a homepage hero), toggle it on, place it on the page, then toggle it off. Toggling it off doesn't remove it from existing pages, just prevents editors from adding it again.
 
-**Cross-page type dependencies:** When a block references fields from a different page type, Pala shows a broken link icon with "References Page Fields from [Page Type]". You can still add the block, but those fields won't have data. To use a block across multiple page types, give each field the same key (e.g., a header block with `title` fields connected to both "Blank" and "Standard" page types, both referenced as `{title}` in the code).
+**Cross-page type dependencies:** When a block references fields from a different page type, Primo shows a broken link icon with "References Page Fields from [Page Type]". You can still add the block, but those fields won't have data. To use a block across multiple page types, give each field the same key (e.g., a header block with `title` fields connected to both "Blank" and "Standard" page types, both referenced as `{title}` in the code).
 
 ## Pages
 
-**Pages** are instances of page types. In Pala, everything is a page - whether it's content (blog post, team member) or layout (homepage, about page).
+**Pages** are instances of page types. In Primo, everything is a page - whether it's content (blog post, team member) or layout (homepage, about page).
 
 ### Creating Pages
 
@@ -265,7 +265,7 @@ The hierarchy ensures consistency while maintaining flexibility. Every page foll
 		Step-by-step guide to creating a complete site.
 	</Card>
 	<Card title="Architecture" icon="cube" href="/reference/architecture">
-		Learn how Pala works under the hood.
+		Learn how Primo works under the hood.
 	</Card>
 	<Card title="Defining Page Types" icon="layer-group" href="/building-sites/defining-page-types">
 		Set up page types to control structure and available blocks.

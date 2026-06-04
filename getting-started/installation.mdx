@@ -1,25 +1,25 @@
 ---
 title: 'Installation'
-description: 'Self-host Pala on your own infrastructure or wait for Pala Cloud.'
+description: 'Self-host Primo on your own infrastructure or wait for Primo Cloud.'
 ---
 
-Pala offers two installation options: self-hosting for full control over your infrastructure, or our upcoming managed cloud platform.
+Primo offers two installation options: self-hosting for full control over your infrastructure, or our upcoming managed cloud platform.
 
 <Tabs>
 	<Tab title="Self-Hosted">
 		## Self-Hosted Installation
 
-		Run Pala on your own infrastructure for complete control. Ideal for teams with specific security, compliance, or customization requirements.
+		Run Primo on your own infrastructure for complete control. Ideal for teams with specific security, compliance, or customization requirements.
 
-		Pala's architecture is intentionally simple—a single monolithic application with a SQLite database. This means self-hosting requires minimal operational overhead. No complex microservices, separate database servers, or distributed systems to manage.
+		Primo's architecture is intentionally simple—a single monolithic application with a SQLite database. This means self-hosting requires minimal operational overhead. No complex microservices, separate database servers, or distributed systems to manage.
 
 		<Warning>
-			**Persistent Storage Required**: Pala stores uses a SQLite database that requires persistent disk storage. It will NOT work on some serverless platforms like Vercel, Netlify, or Cloudflare Pages.
+			**Persistent Storage Required**: Primo stores uses a SQLite database that requires persistent disk storage. It will NOT work on some serverless platforms like Vercel, Netlify, or Cloudflare Pages.
 		</Warning>
 
 		### Choose Your Hosting Path
 
-		Select the approach that matches your technical comfort level and requirements. All options can run Pala for **$5-7/month**.
+		Select the approach that matches your technical comfort level and requirements. All options can run Primo for **$5-7/month**.
 
 		<Tip>
 		**New to self-hosting?** Start with [Railway](https://railway.com/?referralCode=RCPU7k) or [Fly.io](https://fly.io) for the easiest setup. If you need more control or lower costs at scale, consider VPS hosting.
@@ -29,7 +29,7 @@ Pala offers two installation options: self-hosting for full control over your in
 			<Tab title="Managed Platforms (Easiest)">
 				**What you get:** One-click deployment, automatic SSL, managed infrastructure. No server management required.
 
-				**[Railway](https://railway.com/deploy/palacms?referralCode=RCPU7k)** (Recommended)
+				**[Railway](https://railway.com/deploy/primo?referralCode=RCPU7k)** (Recommended)
 				- Click deploy button, done in 5 minutes
 				- From $5/month with persistent volumes included
 				- Automatic deployments and SSL certificates
@@ -60,11 +60,11 @@ Pala offers two installation options: self-hosting for full control over your in
 		</Tabs>
 
 		<Info>
-			**Quick start:** If you just want to try Pala, click the [Railway deploy button](https://railway.com/deploy/palacms?referralCode=RCPU7k) for instant setup. For production sites or when you need full control, choose the VPS path.
+			**Quick start:** If you just want to try Primo, click the [Railway deploy button](https://railway.com/deploy/primo?referralCode=RCPU7k) for instant setup. For production sites or when you need full control, choose the VPS path.
 		</Info>
 
 		<Accordion title="Local Development (Optional)">
-			For contributing to Pala or testing locally:
+			For contributing to Primo or testing locally:
 
 			- **devenv** ([install here](https://devenv.sh/)) or **Dev Container** compatible environment (VS Code)
 			- **Git**
@@ -74,8 +74,8 @@ Pala offers two installation options: self-hosting for full control over your in
 			<Steps>
 				<Step title="Clone the repository">
 					```bash
-					git clone https://github.com/palacms/palacms.git
-					cd palacms
+					git clone https://github.com/primocms/primo.git
+					cd primo
 					```
 				</Step>
 
@@ -127,52 +127,52 @@ Pala offers two installation options: self-hosting for full control over your in
 			**Using [Railway](https://railway.com/?referralCode=RCPU7k) or [Fly.io](https://fly.io)?** You can skip this section - those platforms handle Docker deployment automatically.
 		</Info>
 
-		For VPS hosting (Hetzner, DigitalOcean, etc.) or custom infrastructure, deploy Pala as a Docker container using Docker Compose or by running Docker commands directly. See the [PocketBase production deployment guide](https://pocketbase.io/docs/going-to-production/) for additional information.
+		For VPS hosting (Hetzner, DigitalOcean, etc.) or custom infrastructure, deploy Primo as a Docker container using Docker Compose or by running Docker commands directly. See the [PocketBase production deployment guide](https://pocketbase.io/docs/going-to-production/) for additional information.
 
 		<Steps>
 			<Step title="Point your domain to the server">
-				Configure your DNS to point your domain name to the server where you'll host Pala.
+				Configure your DNS to point your domain name to the server where you'll host Primo.
 			</Step>
 
 			<Step title="Prepare Docker deployment">
-				Use Docker Compose (recommended) or run Docker commands directly. Use `ghcr.io/palacms/palacms:latest` as the image.
+				Use Docker Compose (recommended) or run Docker commands directly. Use `ghcr.io/primocms/primo:latest` as the image.
 
 				**Required volume**: Add a volume for the path `/app/pb_data`. This is where all files and the database will be stored.
 
 				**Optional environment variables** (only take effect on first start):
-				- `PALA_APP_URL` - Sets base URL used for generating links in the backend (e.g., emails)
-				- `PALA_SUPERUSER_EMAIL` + `PALA_SUPERUSER_PASSWORD` - Creates initial superuser account for accessing PocketBase dashboard.
-				- `PALA_USER_EMAIL` + `PALA_USER_PASSWORD` - Creates initial user account for accessing PalaCMS.
+				- `PRIMO_APP_URL` - Sets base URL used for generating links in the backend (e.g., emails)
+				- `PRIMO_SUPERUSER_EMAIL` + `PRIMO_SUPERUSER_PASSWORD` - Creates initial superuser account for accessing PocketBase dashboard.
+				- `PRIMO_USER_EMAIL` + `PRIMO_USER_PASSWORD` - Creates initial user account for accessing Primo.
 
 				<CodeGroup>
 					```yaml compose.yaml
 					services:
-					  palacms:
-					    image: ghcr.io/palacms/palacms:latest
+					  primo:
+					    image: ghcr.io/primocms/primo:latest
 					    restart: always
 					    ports:
 					      - 8080:8080
 					    volumes:
-					      - palacms-data:/app/pb_data
+					      - primo-data:/app/pb_data
 					    # Optional environment variables:
 					    # environment:
-					    #   - PALA_APP_URL=https://example.com
-					    #   - PALA_SUPERUSER_EMAIL=admin@example.com
-					    #   - PALA_SUPERUSER_PASSWORD=secure-password
-					    #   - PALA_USER_EMAIL=user@example.com
-					    #   - PALA_USER_PASSWORD=secure-password
+					    #   - PRIMO_APP_URL=https://example.com
+					    #   - PRIMO_SUPERUSER_EMAIL=admin@example.com
+					    #   - PRIMO_SUPERUSER_PASSWORD=secure-password
+					    #   - PRIMO_USER_EMAIL=user@example.com
+					    #   - PRIMO_USER_PASSWORD=secure-password
 
 					volumes:
-					  palacms-data:
+					  primo-data:
 					```
 
 					```bash docker run
 					docker run -d \
-					  --name palacms \
+					  --name primo \
 					  --restart always \
 					  -p 8080:8080 \
-					  -v palacms-data:/app/pb_data \
-					  ghcr.io/palacms/palacms:latest
+					  -v primo-data:/app/pb_data \
+					  ghcr.io/primocms/primo:latest
 					```
 				</CodeGroup>
 			</Step>
@@ -192,13 +192,13 @@ Pala offers two installation options: self-hosting for full control over your in
 	</Tab>
 
 	<Tab title="Cloud">
-		## Pala Cloud
+		## Primo Cloud
 
 		<Note>
-			**Coming Soon** — Pala Cloud is currently in development. We recommend [self-hosting](#self-hosted) for now, which takes just a few minutes with platforms like Railway or Fly.io.
+			**Coming Soon** — Primo Cloud is currently in development. We recommend [self-hosting](#self-hosted) for now, which takes just a few minutes with platforms like Railway or Fly.io.
 		</Note>
 
-		Pala Cloud will be a fully managed hosting solution that handles all the infrastructure for you—no installation, setup, or server management required.
+		Primo Cloud will be a fully managed hosting solution that handles all the infrastructure for you—no installation, setup, or server management required.
 
 		### Planned Features
 
@@ -215,7 +215,7 @@ Pala offers two installation options: self-hosting for full control over your in
 
 <CardGroup cols={2}>
 	<Card title="Core Concepts" icon="lightbulb" href="/getting-started/core-concepts">
-		Learn the fundamental concepts behind Pala
+		Learn the fundamental concepts behind Primo
 	</Card>
 	<Card title="Quickstart" icon="bolt" href="/getting-started/quickstart">
 		Build your first site in minutes

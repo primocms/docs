@@ -3,7 +3,7 @@ title: 'Writing Components'
 description: 'Build reusable components and turn them into content blocks.'
 ---
 
-Components are the foundation of Pala. You write components using Svelte, attach content fields to them, and they become blocks that editors can use to build pages. This guide covers everything you need to know about writing effective components.
+Components are the foundation of Primo. You write components using Svelte, attach content fields to them, and they become blocks that editors can use to build pages. This guide covers everything you need to know about writing effective components.
 
 ## Components vs Blocks
 
@@ -22,12 +22,12 @@ Understanding the distinction helps you build better:
 - Editors can modify content, not code
 
 <Info>
-When you create a block in Pala, you're writing a Svelte component and then attaching fields to it. The component code stays the same; fields make it editable.
+When you create a block in Primo, you're writing a Svelte component and then attaching fields to it. The component code stays the same; fields make it editable.
 </Info>
 
 ## Component Structure
 
-Every Pala component follows this structure:
+Every Primo component follows this structure:
 
 ```svelte
 <script>
@@ -165,7 +165,7 @@ When working with repeater fields, always check if the array has items:
 
 ### 4. Use Scoped Styles
 
-Pala components use scoped styles by default. Use `:global()` when you need to style child elements:
+Primo components use scoped styles by default. Use `:global()` when you need to style child elements:
 
 ```svelte
 <style>
@@ -328,12 +328,12 @@ When using rich text fields, use `{@html}` to render HTML:
 ```
 
 <Warning>
-Only use `{@html}` with trusted content. Pala sanitizes rich text fields, but be cautious with user-generated content.
+Only use `{@html}` with trusted content. Primo sanitizes rich text fields, but be cautious with user-generated content.
 </Warning>
 
 ### Markdown Content
 
-If you're using markdown fields, Pala processes them automatically. But you can also use a markdown processor for additional control:
+If you're using markdown fields, Primo processes them automatically. But you can also use a markdown processor for additional control:
 
 ```svelte
 <script>
@@ -423,7 +423,7 @@ Build complex components from simpler ones:
 ```
 
 <Info>
-In Pala's component editor, you write single-file components. For composition, you can create separate blocks and reference them, or write everything in one component file.
+In Primo's component editor, you write single-file components. For composition, you can create separate blocks and reference them, or write everything in one component file.
 </Info>
 
 ## Performance Considerations
@@ -455,7 +455,7 @@ Use reactive statements efficiently:
 
 ### Use the Preview
 
-Pala's in-browser editor provides instant preview:
+Primo's in-browser editor provides instant preview:
 
 1. Write your component code
 2. Add test content in fields

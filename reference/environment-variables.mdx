@@ -1,15 +1,19 @@
 ---
 title: 'Environment Variables'
-description: 'Configure Pala using environment variables for deployment.'
+description: 'Configure Primo using environment variables for deployment.'
 ---
 
-Environment variables let you configure Pala for different deployment environments. These are particularly useful for Docker deployments and automated setup.
+Environment variables let you configure Primo for different deployment environments. These are particularly useful for Docker deployments and automated setup.
+
+<Note>
+Legacy `PALA_*` variable names are still accepted as fallbacks, but new deployments should use the `PRIMO_*` names documented below.
+</Note>
 
 ## Initial Setup Variables
 
 These variables only take effect on **first startup** when initializing a new instance:
 
-### `PALA_SUPERUSER_EMAIL`
+### `PRIMO_SUPERUSER_EMAIL`
 
 Creates an initial superuser account (admin) with full access.
 
@@ -20,28 +24,28 @@ Creates an initial superuser account (admin) with full access.
 
 **Example:**
 ```bash
-PALA_SUPERUSER_EMAIL=admin@example.com
+PRIMO_SUPERUSER_EMAIL=admin@example.com
 ```
 
-### `PALA_SUPERUSER_PASSWORD`
+### `PRIMO_SUPERUSER_PASSWORD`
 
 Password for the initial superuser account.
 
 - **Type**: String
-- **Required**: Only if `PALA_SUPERUSER_EMAIL` is set
+- **Required**: Only if `PRIMO_SUPERUSER_EMAIL` is set
 - **Default**: None
 - **Minimum**: 8 characters
 
 **Example:**
 ```bash
-PALA_SUPERUSER_PASSWORD=secure-password-123
+PRIMO_SUPERUSER_PASSWORD=secure-password-123
 ```
 
 <Warning>
-If both `PALA_SUPERUSER_EMAIL` and `PALA_SUPERUSER_PASSWORD` are set, the setup screen will be skipped and you'll go straight to the sign-in page.
+If both `PRIMO_SUPERUSER_EMAIL` and `PRIMO_SUPERUSER_PASSWORD` are set, the setup screen will be skipped and you'll go straight to the sign-in page.
 </Warning>
 
-### `PALA_USER_EMAIL`
+### `PRIMO_USER_EMAIL`
 
 Creates an initial regular user account.
 
@@ -52,24 +56,24 @@ Creates an initial regular user account.
 
 **Example:**
 ```bash
-PALA_USER_EMAIL=editor@example.com
+PRIMO_USER_EMAIL=editor@example.com
 ```
 
-### `PALA_USER_PASSWORD`
+### `PRIMO_USER_PASSWORD`
 
 Password for the initial regular user account.
 
 - **Type**: String
-- **Required**: Only if `PALA_USER_EMAIL` is set
+- **Required**: Only if `PRIMO_USER_EMAIL` is set
 - **Default**: None
 - **Minimum**: 8 characters
 
 **Example:**
 ```bash
-PALA_USER_PASSWORD=editor-password-123
+PRIMO_USER_PASSWORD=editor-password-123
 ```
 
-### `PALA_APP_URL`
+### `PRIMO_APP_URL`
 
 Sets the base URL for the application. Used for generating links in emails and backend processes.
 
@@ -80,7 +84,7 @@ Sets the base URL for the application. Used for generating links in emails and b
 
 **Example:**
 ```bash
-PALA_APP_URL=https://cms.example.com
+PRIMO_APP_URL=https://cms.example.com
 ```
 
 ## Common Configurations
@@ -97,7 +101,7 @@ The setup screen will guide you through creating your first account.
 ### Production with Manual Setup
 
 ```bash
-PALA_APP_URL=https://cms.example.com
+PRIMO_APP_URL=https://cms.example.com
 ```
 
 Access the setup screen to create your admin account manually.
@@ -105,11 +109,11 @@ Access the setup screen to create your admin account manually.
 ### Production with Automated Setup
 
 ```bash
-PALA_APP_URL=https://cms.example.com
-PALA_SUPERUSER_EMAIL=admin@example.com
-PALA_SUPERUSER_PASSWORD=strong-random-password
-PALA_USER_EMAIL=editor@example.com
-PALA_USER_PASSWORD=another-strong-password
+PRIMO_APP_URL=https://cms.example.com
+PRIMO_SUPERUSER_EMAIL=admin@example.com
+PRIMO_SUPERUSER_PASSWORD=strong-random-password
+PRIMO_USER_EMAIL=editor@example.com
+PRIMO_USER_PASSWORD=another-strong-password
 ```
 
 No setup screen - go straight to sign-in.
@@ -118,22 +122,22 @@ No setup screen - go straight to sign-in.
 
 ```yaml
 services:
-  palacms:
-    image: ghcr.io/palacms/palacms:latest
+  primo:
+    image: ghcr.io/primocms/primo:latest
     restart: always
     ports:
       - 8080:8080
     volumes:
-      - palacms-data:/app/pb_data
+      - primo-data:/app/pb_data
     environment:
-      - PALA_APP_URL=https://cms.example.com
-      - PALA_SUPERUSER_EMAIL=admin@example.com
-      - PALA_SUPERUSER_PASSWORD=${SUPERUSER_PASSWORD}
-      - PALA_USER_EMAIL=editor@example.com
-      - PALA_USER_PASSWORD=${USER_PASSWORD}
+      - PRIMO_APP_URL=https://cms.example.com
+      - PRIMO_SUPERUSER_EMAIL=admin@example.com
+      - PRIMO_SUPERUSER_PASSWORD=${SUPERUSER_PASSWORD}
+      - PRIMO_USER_EMAIL=editor@example.com
+      - PRIMO_USER_PASSWORD=${USER_PASSWORD}
 
 volumes:
-  palacms-data:
+  primo-data:
 ```
 
 <Tip>
@@ -150,9 +154,9 @@ Use `.env` files or secrets management to avoid hardcoding passwords in docker-c
 
 ```bash
 # Railway environment variables
-PALA_APP_URL=${RAILWAY_STATIC_URL}
-PALA_SUPERUSER_EMAIL=admin@example.com
-PALA_SUPERUSER_PASSWORD=<secret>
+PRIMO_APP_URL=${RAILWAY_STATIC_URL}
+PRIMO_SUPERUSER_EMAIL=admin@example.com
+PRIMO_SUPERUSER_PASSWORD=<secret>
 ```
 
 ## Security Best Practices
@@ -189,7 +193,7 @@ PALA_SUPERUSER_PASSWORD=<secret>
 
 ## Troubleshooting
 
-### Setup screen appears even with PALA_SUPERUSER_EMAIL set
+### Setup screen appears even with PRIMO_SUPERUSER_EMAIL set
 
 **Cause**: Environment variables not loaded, or database already initialized
 
@@ -215,7 +219,7 @@ PALA_SUPERUSER_PASSWORD=<secret>
 Environment variables for user creation only work when the database is first initialized. To reset:
 
 1. Stop the container
-2. Delete the volume: `docker volume rm palacms-data`
+2. Delete the volume: `docker volume rm primo-data`
 3. Restart with new environment variables
 
 <Warning>
@@ -226,7 +230,7 @@ Deleting the volume deletes all your data. Only do this for fresh installs or if
 
 <CardGroup cols={2}>
   <Card title="Deployment Guide" icon="rocket" href="/reference/deployment">
-    Learn how to deploy Pala to production
+    Learn how to deploy Primo to production
   </Card>
   <Card title="Troubleshooting" icon="wrench" href="/reference/troubleshooting">
     Solve common deployment issues

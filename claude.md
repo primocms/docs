@@ -1,12 +1,12 @@
-# Pala Documentation Context
+# Primo Documentation Context
 
-## About Pala
+## About Primo
 
-Pala is a component-based CMS that streamlines the handoff between developers and content editors.
+Primo is a component-based CMS that streamlines the handoff between developers and content editors.
 
 **Core Value Prop:** "Build with code. Hand off with confidence."
 
-**The Problem Pala Solves:**
+**The Problem Primo Solves:**
 Traditional website development creates tension between developers and content editors:
 - Developers need code control and modern tooling
 - Clients need a simple, visual editing experience
@@ -14,7 +14,7 @@ Traditional website development creates tension between developers and content e
 - Headless CMSs have terrible client UX
 - Webflow is expensive and limiting
 
-Pala solves this by coupling code and content in self-contained blocks that live together and can be used and updated visually by non-technical content editors.
+Primo solves this by coupling code and content in self-contained blocks that live together and can be used and updated visually by non-technical content editors.
 
 ## Key Features
 
@@ -62,7 +62,7 @@ Pala solves this by coupling code and content in self-contained blocks that live
 ## Core Terminology
 
 **USE THESE TERMS:**
-- **"Pala"** - not "Pala CMS" (except in technical contexts like GitHub repo, domain)
+- **"Primo"** - not "Primo CMS" (except in technical contexts like GitHub repo, domain)
 - **"blocks"** - what users build (Svelte components with content fields attached)
 - **"slots"** - areas where blocks can be placed (header, body, footer)
 - **"editors"** - not "clients" in technical documentation
@@ -70,7 +70,7 @@ Pala solves this by coupling code and content in self-contained blocks that live
 - **"component library" or "block library"** - personal library of reusable blocks
 
 **DON'T USE:**
-- "Pala CMS" in user-facing copy
+- "Primo CMS" in user-facing copy
 - "components" when referring to blocks (unless explaining the relationship)
 - "clients" in docs (use "editors" - save "clients" for marketing/handoff context)
 
@@ -381,7 +381,7 @@ Fields are the content editing interface attached to blocks, page types, and sit
 
 **Self-Hosted:**
 
-Since all code and content is stored in the database, Pala requires a persistent server environment. Local development is for testing only—you'll need a virtual machine or cloud hosting for production use.
+Since all code and content is stored in the database, Primo requires a persistent server environment. Local development is for testing only—you'll need a virtual machine or cloud hosting for production use.
 
 **Recommended Hosting:**
 - **Railway**: Easiest deployment with one-click setup, automatic SSL, and simple scaling
@@ -390,7 +390,7 @@ Since all code and content is stored in the database, Pala requires a persistent
 
 **Local Development (Testing Only):**
 - Requirements: Node.js 18+, npm/yarn, Git, devenv or Dev Container support
-- Repo: github.com/palacms/palacms
+- Repo: github.com/primocms/primo
 - Steps: 
   1. Clone repository
   2. `npm install`
