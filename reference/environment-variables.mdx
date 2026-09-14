@@ -87,6 +87,73 @@ Sets the base URL for the application. Used for generating links in emails and b
 PRIMO_APP_URL=https://cms.example.com
 ```
 
+## Custom Domain Variables
+
+These control how sites get a public address: an automatic subdomain on
+creation, and connecting a site's own custom domain.
+
+### `PRIMO_BASE_DOMAIN`
+
+A wildcard base domain under which new sites get an automatic, live subdomain
+(`<site-slug>.<base-domain>`) the moment they're created. Without it, new sites
+start unassigned (editable but not publicly served) until a domain is connected.
+
+- **Type**: String (domain)
+- **Required**: No
+- **Default**: Empty (new sites start unassigned)
+- **When to use**: Multi-site instances where every site should be reachable
+  immediately without manual DNS.
+
+<Warning>
+	Setting this variable only tells Primo which subdomains to assign. For those
+	subdomains to actually resolve and serve over HTTPS, you must separately
+	point a wildcard DNS record (`*.<base-domain>`) at this server **and**
+	provision a matching wildcard TLS certificate. Primo does not create the DNS
+	record or the certificate.
+</Warning>
+
+**Example:**
+```bash
+PRIMO_BASE_DOMAIN=sites.example.com
+# A site named "Acme Co" becomes https://acme-co.sites.example.com
+```
+
+### `PRIMO_DOMAIN_PROVIDER`
+
+Selects how connecting a site's own custom domain works. `manual` (the default)
+shows the DNS records to add and leaves routing/TLS to your reverse proxy;
+`railway` attaches the domain through Railway's API and reports certificate
+status back to the editor.
+
+- **Type**: String (`manual` | `railway`)
+- **Required**: No
+- **Default**: `manual`
+- **When to use**: Set to `railway` when the instance runs on Railway and you
+  want custom domains attached automatically.
+
+**Example:**
+```bash
+PRIMO_DOMAIN_PROVIDER=railway
+```
+
+### `PRIMO_RAILWAY_TOKEN`
+
+A Railway **project** access token scoped to the same environment as Primo, used
+only when `PRIMO_DOMAIN_PROVIDER` is `railway`. Create it in the Railway dashboard
+under the project's Settings → Tokens (environment-scoped within the project; use
+the least-privileged token). A token for a different environment causes domain
+provisioning to fail. The project/environment/service IDs Railway injects
+automatically (`RAILWAY_PROJECT_ID`, etc.) supply the rest.
+
+- **Type**: String (token)
+- **Required**: Only when `PRIMO_DOMAIN_PROVIDER=railway`
+- **Default**: Empty
+
+**Example:**
+```bash
+PRIMO_RAILWAY_TOKEN=your-railway-project-token
+```
+
 ## Common Configurations
 
 ### Development Setup
