@@ -138,10 +138,12 @@ PRIMO_DOMAIN_PROVIDER=railway
 
 ### `PRIMO_RAILWAY_TOKEN`
 
-A Railway **project** access token, used only when `PRIMO_DOMAIN_PROVIDER` is
-`railway`. Create it in the Railway dashboard under the project's Settings →
-Tokens (project-scoped, least privilege). The project/environment/service IDs
-Railway injects automatically (`RAILWAY_PROJECT_ID`, etc.) supply the rest.
+A Railway **project** access token scoped to the same environment as Primo, used
+only when `PRIMO_DOMAIN_PROVIDER` is `railway`. Create it in the Railway dashboard
+under the project's Settings → Tokens (environment-scoped within the project; use
+the least-privileged token). A token for a different environment causes domain
+provisioning to fail. The project/environment/service IDs Railway injects
+automatically (`RAILWAY_PROJECT_ID`, etc.) supply the rest.
 
 - **Type**: String (token)
 - **Required**: Only when `PRIMO_DOMAIN_PROVIDER=railway`
