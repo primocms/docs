@@ -123,6 +123,30 @@ This means you can drop an image into `uploads/` and reference it from an image 
 `host` (the deployed hostname for a hosted server) is per-environment and is **not** overwritten by file sync. This prevents `primo push` from pointing your production site at `localhost`.
 </Warning>
 
+## Site Groups
+
+Groups organize sites in the dashboard (Home Services, Food & Hospitality, and so on). Declare them in the workspace's `server.yaml`:
+
+```yaml
+site_groups:
+  - id: home-services
+    name: Home Services
+    index: 0
+```
+
+Reference a group from a site's `site.yaml` by its `id` or `name`:
+
+```yaml
+name: Goodweather Heating & Air
+group: Home Services
+```
+
+<Warning>
+**The server assigns group ids on import and matches groups by name.** The `id` in `server.yaml` is a local reference only — a short, human-chosen id like `architecture1` is replaced by a server-assigned id. Your files keep the id you wrote while the CMS uses its own.
+
+Identify a group by its **name** everywhere you reference it — `server.yaml`, each `site.yaml`, and anything that mirrors them — and expect the id to change on first import. Keep names unique and stable. `primo dev` and `primo add` print a notice when a configured id looks locally-chosen.
+</Warning>
+
 ## Avatar Uploads
 
 iPhone HEIC photos are automatically converted to JPEG when uploaded as avatars — no manual conversion required.
