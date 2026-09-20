@@ -3,10 +3,10 @@ title: 'MCP Server'
 description: 'Let AI agents work inside Primo workspaces safely with the official primo-mcp server.'
 ---
 
-`primo-mcp` is the official [Model Context Protocol](https://modelcontextprotocol.io/) server for Primo. It gives AI coding agents (Claude Code, Cursor, Cline, etc.) live access to Primo's docs, schemas, and validators so they can produce correct block and page files on the first try.
+`primo-mcp` is the official [Model Context Protocol](https://modelcontextprotocol.io/) server for Primo. It gives AI coding agents — Claude Code, Claude Desktop, Cursor, VS Code / Copilot, Codex, OpenCode, and more — live access to Primo's docs, schemas, and validators so they can produce correct block and page files on the first try.
 
 <Note>
-The MCP server is optional. It's most useful when an agent is editing files in a Primo workspace export (a directory created by `primo new` or `primo pull`).
+The MCP server is optional. It's most useful when an agent is editing files in a Primo workspace export (a directory created by `primo new` or `primo pull`). Without it, `primo validate` and `primo build` still work.
 </Note>
 
 ## What It Does
@@ -22,10 +22,75 @@ When an agent edits a `component.svelte`, `fields.yaml`, or page YAML, the MCP s
 ## Installation
 
 ```bash
-npm install -g primo-mcp
+npm install -g primo-cli
 ```
 
-## Configure with Claude Code
+`primo-cli` bundles `primo-mcp`, so installing the CLI is enough for the wiring commands below to use the direct `primo-mcp` command. If you use a client without the CLI, `npm install -g primo-mcp` installs the server on its own.
+
+## Connect your agent
+
+Each MCP client reads its own config file, in its own format, with its own key shape. `primo mcp install` detects the clients on your machine and merges the Primo entry into each one, so you don't hand-edit JSON per client:
+
+```bash
+primo mcp install
+```
+
+```bash
+primo mcp install --client cursor --client vscode   # target specific clients
+primo mcp install --all                             # every known client
+primo mcp install --dry-run                         # show the paths, write nothing
+primo mcp list                                      # what's detected, and where
+primo mcp print --client opencode                   # emit a snippet to paste yourself
+```
+
+<Note>
+MCP servers are loaded when a client starts. **Restart your client** after wiring (and reload the window for editor extensions) so it picks up the new server.
+</Note>
+
+### Supported clients
+
+| Client | Where the `primo` entry goes |
+| --- | --- |
+| Claude Code | `.mcp.json` (project), or `claude mcp add --scope user` |
+| Claude Desktop | `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS), `%APPDATA%\Claude\claude_desktop_config.json` (Windows) |
+| Cursor | `.cursor/mcp.json` (project) or `~/.cursor/mcp.json` |
+| VS Code / Copilot | `.vscode/mcp.json` |
+| Codex | `~/.codex/config.toml` or `.codex/config.toml` |
+| OpenCode | `opencode.json` |
+| Gemini CLI | `~/.gemini/settings.json` |
+| Cline | The Cline MCP settings file |
+| Windsurf | `~/.codeium/windsurf/mcp_config.json` |
+| Continue | `.continue/mcpServers/mcp.json` |
+| Zed | `~/.config/zed/settings.json` |
+| JetBrains AI Assistant | No safe on-disk file — `primo mcp install` prints what to paste |
+
+Run `primo mcp list` to see the exact resolved path for your machine, and `primo mcp print --client <name>` for any client's snippet.
+
+### What `install` changes
+
+`install` merges **only** the `primo` server entry. It never rewrites the rest of your config:
+
+- Existing settings, sibling servers, tables, and comments are preserved.
+- Every write is backed up (`<file>.bak-<timestamp>`) and atomic.
+- Re-running is idempotent — an already-wired client is left untouched.
+- `--dry-run` writes nothing. A conflicting `primo` entry is left as-is unless you pass `--force`.
+- Files that can't be edited safely (JSONC with comments, TOML defined inline or with dotted keys) are reported rather than guessed — `primo mcp print` emits the snippet instead.
+
+## Wire clients during `primo init`
+
+`primo init` detects your MCP clients and offers to wire them, so a new workspace has Primo tools available before the first agent session:
+
+```bash
+primo init            # prompts with a checklist of detected clients
+primo init --yes      # wire detected clients without prompting
+primo init --no-mcp   # skip wiring
+```
+
+When run without a terminal (for example in CI), `primo init` prints a hint instead of prompting or writing.
+
+## Configure manually
+
+### Claude Code
 
 Register `primo-mcp` with the Claude Code CLI:
 
@@ -48,7 +113,9 @@ By default this adds the server to your current project. Use `--scope user` to a
 }
 ```
 
-For other clients (Cursor, Cline, etc.), see the [MCP client docs](https://modelcontextprotocol.io/clients).
+### Other clients
+
+For any other client, `primo mcp print --client <name>` emits the exact snippet and target path. Paste it into that client's MCP configuration and restart the client. You can also browse the [MCP client directory](https://modelcontextprotocol.io/clients).
 
 ## Available Tools
 
