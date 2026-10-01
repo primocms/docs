@@ -54,7 +54,11 @@ The fastest way to deploy Primo to production.
        - `PRIMO_RAILWAY_TOKEN` = the token
     3. In the Primo dashboard, open a site's menu and choose **Assign domain**. Primo attaches the domain to your Railway deployment, shows the DNS records to add at your registrar, and marks the site live once the certificate is issued.
 
-    Without these variables, Primo shows manual instructions instead: point DNS at your Railway URL, then mark the domain as connected yourself.
+    Without these variables, connect the domain by hand:
+
+    1. In your Railway service, go to **Settings → Networking → Custom Domain** and add the domain.
+    2. Add the DNS records Railway shows at your registrar, and wait for Railway to issue the certificate.
+    3. In the Primo dashboard, choose **Assign domain** on the site, enter the domain, and click **Mark as connected**.
   </Step>
 </Steps>
 

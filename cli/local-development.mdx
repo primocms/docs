@@ -39,6 +39,8 @@ primo dev > dev.log 2>&1 &
 
 Local site hosts like `my-site.localhost:3000` are updated to the port in use, so you can run several workspaces side by side.
 
+If you chose the port yourself (with `-p` or `port:` in `server.yaml`), `primo dev` asks before switching to another one. Without a terminal to ask in (scripts, CI, agents), it stops with an error instead, so pass a free port with `-p`.
+
 ### Leftover CMS processes
 
 If a previous `primo dev` was killed without shutting down its CMS, the next start tells you which process is in the way:
@@ -178,7 +180,11 @@ A folder you create by hand (or copy) under `sites/` isn't in the CMS until you 
 primo add my-other-site
 ```
 
-`primo add` needs the workspace's port, so **stop `primo dev` first**, then start it again afterwards. If `primo dev` is running, `primo add` stops and tells you so rather than racing it. Record ids copied from another site are stripped, so a copied folder becomes a new site instead of overwriting the original.
+`primo add` needs the workspace's port, so **stop `primo dev` first**, then start it again afterward. If `primo dev` is running, `primo add` stops and tells you so rather than racing it.
+
+<Warning>
+To start a new site from a copy of an existing one, **delete the `site_id` line from the copy's `site.yaml`** before running `primo add`. A folder that still has a `site_id` counts as already registered, so `primo add` imports it into the original site and overwrites it. Once `site_id` is gone, `primo add` also removes the other record ids copied from the original and assigns new ones.
+</Warning>
 
 `primo status` lists any folders on disk that aren't registered yet:
 
