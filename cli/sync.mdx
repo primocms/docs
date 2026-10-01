@@ -22,14 +22,17 @@ Pull an entire server (every site plus the shared library) into local files:
 
 ```bash
 primo pull https://cms.example.com
-primo pull https://cms.example.com -o ./my-workspace
+primo pull https://cms.example.com ./my-workspace
 ```
 
-**Options:**
-- `-o, --output <dir>` — Output directory (defaults to `./<server-hostname>`)
+**Arguments and options:**
+- `[dir]` — Output directory (defaults to `./<server-hostname>`)
+- `-s, --server <url>` — Server URL (alternative to the positional argument)
 - `-t, --token <token>` — Auth token (overrides stored credentials)
 
 The result is a complete workspace ready for `primo dev`. Image files in `uploads/` are pulled as real binaries — the directory is self-contained.
+
+Each pull also records which server revision your files came from (in `.primo/sync-state.json`). The next push uses it to check that nobody has changed the site in the meantime. See [Push safety](#push-safety).
 
 ## `primo push` — Local → Hosted
 
@@ -41,6 +44,7 @@ primo push https://cms.example.com --site abc123
 primo push --only my-site         # Push just one site folder
 primo push --preview              # Preview changes without applying
 primo push --dry-run              # Show what would be sent
+primo push --force                # Overwrite server changes (asks first, backs up first)
 ```
 
 **Options:**
@@ -49,12 +53,74 @@ primo push --dry-run              # Show what would be sent
 - `--only <slug>` — Only push the named folder under `sites/` (skips `library/`)
 - `-d, --dir <dir>` — Workspace directory (default: `.`)
 - `-t, --token <token>` — Auth token
-- `--preview` — Preview-only push (doesn't publish)
+- `--force` — Overwrite changes made on the server since your last sync, after confirmation. A backup is saved first.
+- `--yes` — Confirm `--force` without the interactive prompt (for scripts and CI)
+- `--preview` — Preview-only push (doesn't publish). Also reports any site whose server changes would block a normal push.
 - `--dry-run` — Show planned operations without sending requests
 
 <Tip>
 Always run `primo push --dry-run` first when pushing to production. It surfaces import warnings (orphaned uploads, unresolved block references) before they hit the server.
 </Tip>
+
+## Push Safety
+
+A push replaces the server's copy of a site with your local files. To keep it from silently erasing edits a client made in the CMS, Primo checks first: if the site changed on the server since your last pull or push, the push is refused **before anything is uploaded**:
+
+```
+Push stopped before any uploads:
+  my-site: changed on the server since the last sync (or was deleted).
+Nothing was changed. Save your local work before pulling. An intentional overwrite requires --force.
+```
+
+The check covers sites and the shared library (additions, deletions, field edits and reordering). It runs again on the server while the push is applied, so an edit made in the middle of a push still stops it.
+
+### Recover from a refused push
+
+<Steps>
+  <Step title="Save your local work">
+    Commit it, or copy the changed files somewhere outside `sites/`. A pull overwrites your local files with the server's version.
+  </Step>
+  <Step title="Pull">
+    ```bash
+    primo pull https://cms.example.com .
+    ```
+  </Step>
+  <Step title="Redo your change and push">
+    Re-apply your edits on top of the pulled files (with Git, `git diff` shows what the client changed), then push again.
+  </Step>
+</Steps>
+
+### Overwrite on purpose with `--force`
+
+If you're sure your local files should win:
+
+```bash
+primo push https://cms.example.com --force
+```
+
+Primo lists what will be replaced and asks for confirmation. Before overwriting, the server saves a backup of its version and the CLI downloads a copy:
+
+```
+  Server backup: https://cms.example.com/api/primo/push-backups/<site-id>/backup-<id>.zip
+  Local backup: .primo/backups/<site-id>/backup-<id>.zip
+```
+
+In a script or CI job, where there's no prompt, pass `--force --yes`.
+
+### "No saved baseline"
+
+```
+my-site: has no saved baseline for this server. Pull first, or explicitly overwrite with --force.
+```
+
+Your workspace has never synced this site with this server, for example because it was copied from another machine or the site was created on the server separately. Pull first, or use `--force` if your files should replace the server's. Pushing a site that doesn't exist on the server yet needs no baseline.
+
+### Version requirements
+
+Push safety needs **primo-cli 0.2.0 or later** and **Primo server 3.3.0 or later**:
+
+- An older CLI pushing to an existing site on a 3.3.0+ server gets `428 Push requires a sync baseline. Update the CLI and pull first, or explicitly force an overwrite with a backup.` Update with `npm i -g primo-cli@latest`, then pull.
+- CLI 0.2.0 refuses to push to an older server: `Server does not support safe pushes. Update the CMS first; no upload was attempted.`
 
 ## Library-Only Sync
 
@@ -63,12 +129,14 @@ To move just the shared block library between workspaces and servers:
 ```bash
 # Pull library into a workspace
 primo library pull https://cms.example.com
-primo library pull -o ./my-workspace
+primo library pull https://cms.example.com ./my-workspace
 
 # Push library to a server
 primo library push https://cms.example.com
 primo library push https://cms.example.com -d ./my-workspace
 ```
+
+`primo library push` has the same [push safety](#push-safety) check, `--force`, and `--yes` options as `primo push`.
 
 This is useful when curating a block library independently of any particular site.
 
@@ -89,7 +157,7 @@ This is useful when curating a block library independently of any particular sit
 ### Edit in production, snapshot to Git
 
 ```bash
-primo pull https://cms.example.com -o ./prod-backup
+primo pull https://cms.example.com ./prod-backup
 cd prod-backup
 git add . && git commit -m "Snapshot $(date)"
 ```
@@ -105,7 +173,7 @@ primo push https://cms.example.com       # Apply
 ### Move a site between servers
 
 ```bash
-primo pull https://old-server.com -o ./workspace
+primo pull https://old-server.com ./workspace
 primo push https://new-server.com -d ./workspace
 ```
 

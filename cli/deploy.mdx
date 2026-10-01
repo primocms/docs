@@ -124,7 +124,7 @@ Hosted Primo uses PocketBase's built-in backup system. Configure scheduled backu
 For Git-based backups, `primo pull` produces a full snapshot:
 
 ```bash
-primo pull https://my-app.up.railway.app -o ./backup-$(date +%Y%m%d)
+primo pull https://my-app.up.railway.app ./backup-$(date +%Y%m%d)
 ```
 
 ## Next Steps

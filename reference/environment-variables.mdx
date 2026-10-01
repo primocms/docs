@@ -6,7 +6,9 @@ description: 'Configure Primo using environment variables for deployment.'
 Environment variables let you configure Primo for different deployment environments. These are particularly useful for Docker deployments and automated setup.
 
 <Note>
-Legacy `PALA_*` variable names are still accepted as fallbacks, but new deployments should use the `PRIMO_*` names documented below.
+<Warning>
+Legacy `PALA_*` variable names are **no longer read**. If an older deployment still sets `PALA_SUPERUSER_EMAIL` or similar, rename those variables to their `PRIMO_*` equivalents below; otherwise they're silently ignored.
+</Warning>
 </Note>
 
 ## Initial Setup Variables
@@ -154,6 +156,58 @@ automatically (`RAILWAY_PROJECT_ID`, etc.) supply the rest.
 PRIMO_RAILWAY_TOKEN=your-railway-project-token
 ```
 
+## Operations Variables
+
+These adjust built-in safeguards. The defaults suit most deployments.
+
+### `PRIMO_RATE_LIMIT`
+
+Rate limiting is on by default. Signed-out requests are limited, including repeated sign-in attempts, which gives brute-force protection. Signed-in editors aren't throttled.
+
+- **Type**: `off` to disable
+- **Required**: No
+- **Default**: Enabled
+- **When to use**: Your own proxy or firewall already rate-limits requests
+
+**Example:**
+```bash
+PRIMO_RATE_LIMIT=off
+```
+
+<Note>
+This is read once: on the first start of a new instance, or the first start after upgrading to 3.2.7 or later. After that, change rate limits in the PocketBase admin UI (`/_/` → **Settings → Rate limits**).
+</Note>
+
+### `PRIMO_BACKUP_CRON`
+
+Schedule for automatic database backups, as a cron expression. Backups are stored on the data volume in `pb_data/backups/`, and the 7 most recent are kept.
+
+- **Type**: Cron expression
+- **Required**: No
+- **Default**: `0 3 * * *` (daily at 03:00)
+
+**Example:**
+```bash
+PRIMO_BACKUP_CRON="0 */6 * * *"
+```
+
+<Note>
+This is read only on the first start of a new instance. After that, manage the schedule in the PocketBase admin UI (`/_/` → **Settings → Backups**). Backups on the same volume protect against mistakes, not against losing the volume; for off-site copies, configure S3 storage there too.
+</Note>
+
+### `PRIMO_ENABLE_USAGE_STATS`
+
+Anonymous usage statistics. Off by default on self-hosted instances.
+
+- **Type**: `true` or `false`
+- **Required**: No
+- **Default**: `false`
+
+**Example:**
+```bash
+PRIMO_ENABLE_USAGE_STATS=true
+```
+
 ## Common Configurations
 
 ### Development Setup
@@ -224,6 +278,9 @@ Use `.env` files or secrets management to avoid hardcoding passwords in docker-c
 PRIMO_APP_URL=${RAILWAY_STATIC_URL}
 PRIMO_SUPERUSER_EMAIL=admin@example.com
 PRIMO_SUPERUSER_PASSWORD=<secret>
+# Connect site domains from the Primo dashboard (see Custom Domain Variables)
+PRIMO_DOMAIN_PROVIDER=railway
+PRIMO_RAILWAY_TOKEN=<project-token>
 ```
 
 ## Security Best Practices
