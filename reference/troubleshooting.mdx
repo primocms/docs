@@ -273,22 +273,17 @@ docker inspect primo | grep -A 5 RestartPolicy
 **Checks:**
 
 1. Verify email/password are correct
-2. Check if account exists:
-```bash
-docker exec primo ./primo admin ls
-```
-
-3. Reset password via PocketBase admin:
+2. Reset the password via the PocketBase admin:
 - Go to `https://your-domain.com/_/`
 - Sign in with superuser
 - Reset user password
 
 ### Locked out of admin
 
-**Solution:** Create new superuser via command line:
+**Solution:** Create a superuser, or reset an existing one's password, from the command line:
 
 ```bash
-docker exec -it primo ./primo admin create \
+docker exec -it primo ./primo superuser upsert \
   admin@example.com \
   new-secure-password
 ```
@@ -368,6 +363,57 @@ docker-compose up -d
 **Solution:**
 
 Ensure `PRIMO_APP_URL` matches the domain you're accessing from.
+
+## CLI & Sync Issues
+
+### Push fails with "428 Push requires a sync baseline"
+
+**Cause:** Your CLI is older than 0.2.0, and the server (3.3.0+) only accepts pushes that prove they're based on the server's current version.
+
+**Solution:** Update the CLI, then pull before pushing again:
+
+```bash
+npm i -g primo-cli@latest
+primo pull https://cms.example.com .
+```
+
+If `primo dev` is running locally, stop it before updating and start it again afterwards. See [Push safety](/cli/sync#push-safety).
+
+### Push refused: "changed on the server since the last sync"
+
+**Cause:** Someone edited the site in the CMS (or deleted it) after your last pull. Nothing was uploaded.
+
+**Solution:** Save your local work, pull, re-apply your change, and push again. To replace the server's version on purpose, use `primo push --force`; a backup of the server's version is saved first. See [Recover from a refused push](/cli/sync#recover-from-a-refused-push).
+
+### Push refused: "Server does not support safe pushes"
+
+**Cause:** The server is older than 3.3.0, and CLI 0.2.0 only pushes to servers that can check for conflicting edits.
+
+**Solution:** Upgrade the server to 3.3.0 or later (see [Data loss after upgrade](#data-loss-after-upgrade) for how to back up first).
+
+### `primo dev` says a CMS from an earlier session is still running
+
+**Cause:** A previous `primo dev` was killed without stopping its CMS process, which still holds the port.
+
+**Solution:** Stop the process with the `kill <pid>` command from the message, or run `primo dev --force`. `--force` stops anything on the port, including another workspace's `primo dev`.
+
+### `primo dev` starts on a different port
+
+**Cause:** Port 3000 or its live-reload port (3001) is in use by another program or workspace.
+
+**Solution:** Nothing to fix; use the URLs `primo dev` prints. To choose a port, run `primo dev -p 4000` or set `port:` in `server.yaml`.
+
+### A new site folder doesn't appear in the dashboard
+
+**Cause:** Folders created by hand under `sites/` aren't registered in the CMS.
+
+**Solution:** Stop `primo dev`, run `primo add <folder-name>` from the workspace root, then start `primo dev` again. `primo status` lists unregistered folders.
+
+### Self-hosted editor is read-only at `localhost`
+
+**Cause:** Before 3.3.0, a production binary or Docker image opened at `http://localhost` showed the editor in read-only Browse mode with no Publish button.
+
+**Solution:** Upgrade to 3.3.0 or later.
 
 ## Getting Help
 

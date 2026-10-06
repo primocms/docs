@@ -7,7 +7,7 @@ Primo has two starting points. Pick the one that matches how you work:
 
 <CardGroup cols={2}>
   <Card title="Start local" icon="laptop-code">
-    Run `primo new` to create a workspace on your machine. Build the site locally, then deploy when ready.
+    Run `primo init` and `primo new` to create a workspace on your machine. Build the site locally, then deploy when ready.
   </Card>
   <Card title="Start deployed" icon="cloud-arrow-up">
     Deploy Primo to Railway or a VPS first, then pull it down to your laptop with `primo pull` for local edits.
@@ -31,15 +31,17 @@ Both paths land at the same place: a workspace on disk that you can edit with co
         Requires Node.js 18+.
       </Step>
 
-      <Step title="Create a site">
+      <Step title="Create a workspace and a site">
         ```bash
+        primo init my-workspace
+        cd my-workspace
         primo new my-site
         ```
 
-        This scaffolds a workspace and starts the local CMS at `http://my-site.localhost:3000`.
+        `primo init` creates the workspace and offers to connect your AI agent to the Primo MCP tools. `primo new` creates the site and starts the local CMS. If the port is busy, Primo picks the next free one and prints the URLs it's using.
 
         <Tip>
-        Open `http://my-site.localhost:3000/admin` to use the visual editor. Edits round-trip to your files in real time.
+        Open `http://my-site.localhost:3000/admin/site` to see the site in the visual editor. File edits show up there immediately. By default your files are the source of truth and the editor is read-only; see [authoring modes](/cli/local-development) to edit in the CMS instead.
         </Tip>
       </Step>
 
@@ -47,8 +49,9 @@ Both paths land at the same place: a workspace on disk that you can edit with co
         Open the workspace in your editor:
 
         ```
-        my-site/
+        my-workspace/
         ├── server.yaml
+        ├── AGENTS.md
         ├── library/
         └── sites/my-site/
             ├── site.yaml
@@ -58,15 +61,14 @@ Both paths land at the same place: a workspace on disk that you can edit with co
             └── site/
         ```
 
-        Edit `blocks/<name>/component.svelte` in your editor — the CMS reflects changes immediately. See [Local Development](/cli/local-development) for the full workflow including `--author` modes.
+        Edit `sites/my-site/blocks/<name>/component.svelte` in your editor — the CMS reflects changes immediately. See [Local Development](/cli/local-development) for the full workflow including `--author` modes.
       </Step>
 
       <Step title="Let AI agents help">
-        For Claude Code, Cursor, or other agents, install the MCP server so they can validate edits and scaffold blocks correctly:
+        The workspace includes an `AGENTS.md` guide (and a `CLAUDE.md` that imports it), so Claude Code, Cursor, and other agents know how Primo sites are structured. If you skipped MCP setup during `primo init`, connect the Primo MCP tools so agents can validate edits and scaffold blocks correctly:
 
         ```bash
-        npm install -g primo-mcp
-        claude mcp add --transport stdio primo -- primo-mcp
+        primo mcp install
         ```
 
         See the [MCP server reference](/reference/mcp-server) for details.
@@ -91,7 +93,7 @@ Both paths land at the same place: a workspace on disk that you can edit with co
       <Step title="Self-host Primo">
         Pick one:
 
-        - **[Railway](https://railway.com/deploy/primo?referralCode=RCPU7k)** — one-click deploy with persistent storage
+        - **[Railway](https://railway.com/deploy/palacms?referralCode=RCPU7k)** — one-click deploy with persistent storage
         - **[Fly.io](https://fly.io)** — generous free tier
         - **Docker / VPS** — `docker run -d -p 8080:8080 ghcr.io/primocms/primo:latest`
 

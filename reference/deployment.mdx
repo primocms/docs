@@ -22,7 +22,7 @@ The fastest way to deploy Primo to production.
 
 <Steps>
   <Step title="Click deploy button">
-    [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/primo?referralCode=RCPU7k)
+    [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/palacms?referralCode=RCPU7k)
   </Step>
 
   <Step title="Configure environment (optional)">
@@ -30,6 +30,7 @@ The fastest way to deploy Primo to production.
     - `PRIMO_SUPERUSER_EMAIL`
     - `PRIMO_SUPERUSER_PASSWORD`
     - `PRIMO_APP_URL` (optional, auto-detected)
+    - `PRIMO_DOMAIN_PROVIDER=railway` and `PRIMO_RAILWAY_TOKEN`: connect site domains from the Primo dashboard (see below)
   </Step>
 
   <Step title="Wait for deployment">
@@ -44,8 +45,20 @@ The fastest way to deploy Primo to production.
     Click the generated URL to access Primo. If you didn't set environment variables, you'll see the setup screen.
   </Step>
 
-  <Step title="Configure custom domain (optional)">
-    Railway Settings → Domains → Add custom domain
+  <Step title="Connect site domains from the dashboard">
+    To connect domains to sites without leaving the Primo dashboard, give Primo access to your Railway service:
+
+    1. In your Railway project, go to **Settings → Tokens → New Project Token**
+    2. Add two variables to the service, then redeploy:
+       - `PRIMO_DOMAIN_PROVIDER` = `railway`
+       - `PRIMO_RAILWAY_TOKEN` = the token
+    3. In the Primo dashboard, open a site's menu and choose **Assign domain**. Primo attaches the domain to your Railway deployment, shows the DNS records to add at your registrar, and marks the site live once the certificate is issued.
+
+    Without these variables, connect the domain by hand:
+
+    1. In your Railway service, go to **Settings → Networking → Custom Domain** and add the domain.
+    2. Add the DNS records Railway shows at your registrar, and wait for Railway to issue the certificate.
+    3. In the Primo dashboard, choose **Assign domain** on the site, enter the domain, and click **Mark as connected**.
   </Step>
 </Steps>
 
@@ -285,6 +298,8 @@ Primo uses SQLite, stored in `/app/pb_data`. Back up this directory regularly.
 ### PocketBase Automated Backups (Recommended)
 
 PocketBase has built-in automated backups that you can configure through the admin UI.
+
+New instances back up daily at 03:00 and keep the 7 most recent backups, stored locally. To use a different schedule from the start, set [`PRIMO_BACKUP_CRON`](/reference/environment-variables#primo_backup_cron). To change it later, or add off-site storage, use the admin UI:
 
 <Steps>
   <Step title="Access PocketBase Admin">

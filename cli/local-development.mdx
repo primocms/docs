@@ -3,7 +3,7 @@ title: 'Local Development'
 description: 'Run the Primo CMS locally with primo dev and sync changes between files and the editor.'
 ---
 
-`primo dev` runs the full Primo CMS on your machine and keeps it in sync with your local files. You write blocks and content in your editor; the CMS picks up the changes. You make edits in the CMS; they're written back to disk.
+`primo dev` runs the full Primo CMS on your machine and keeps it in sync with your local files. You write blocks and content in your editor; the CMS picks up the changes. With `--author cms`, edits you make in the CMS are written back to disk instead (see [Author Modes](#author-modes)).
 
 ## Starting the Dev Server
 
@@ -13,19 +13,59 @@ From a workspace root (the directory containing `server.yaml`):
 primo dev
 ```
 
-Each site is served on its own subdomain:
+`primo dev` runs until you stop it (Ctrl+C). It prints the URLs for each site:
 
-- `http://my-site.localhost:3000` — the published site
-- `http://my-site.localhost:3000/admin` — the CMS editor
+- `http://127.0.0.1:3000/admin/dashboard` — the dashboard
+- `http://my-site.localhost:3000/admin/site` — the CMS editor for a site
+- `http://my-site.localhost:3000/` — the site's preview
+
+Run from the folder that *contains* a workspace, `primo dev` tells you to `cd` into it rather than creating a new one.
 
 <Tip>
-The dev server listens on all interfaces, so you can hit `http://<your-lan-ip>:3000` from a phone on the same network to test mobile layouts.
+From scripts or AI agents, run `primo dev` in the background, log to a file, and stop it by its PID when you're done:
+
+```bash
+primo dev > dev.log 2>&1 &
+```
 </Tip>
+
+### Hosted server changes
+
+If your workspace has a hosted server configured, `primo dev` checks its locally tracked sites and shared library against your last pull or push before loading the local CMS. If server data changed or was deleted, you see a warning naming the affected site or library.
+
+The check uses your saved login and waits up to five seconds across all requests. Missing sync history, an unreachable server, an expired login, or an older server produces a notice that freshness could not be verified. Local development still starts. Workspaces without a configured server skip the check.
+
+This check does not pull data or change your saved sync history. To update an outdated workspace, save your local work, stop `primo dev`, and [pull from the hosted server](/cli/sync#recover-from-a-refused-push) before editing. A pull replaces local files, so preserve your changes first. `primo push` checks the server again when you upload.
+
+### Ports
+
+`primo dev` uses two ports: the CMS port (3000 by default, or `port:` in `server.yaml`) and the next one up for live reload. If either is taken, it picks the next free pair and tells you:
+
+```
+ℹ Port 3000 or reload port 3001 is in use. Using http://localhost:3002 for this session.
+```
+
+Local site hosts like `my-site.localhost:3000` are updated to the port in use, so you can run several workspaces side by side.
+
+If you chose the port yourself (with `-p` or `port:` in `server.yaml`), `primo dev` asks before switching to another one. Without a terminal to ask in (scripts, CI, agents), it stops with an error instead, so pass a free port with `-p`.
+
+### Leftover CMS processes
+
+If a previous `primo dev` was killed without shutting down its CMS, the next start tells you which process is in the way:
+
+```
+✖ Failed to start: A Primo CMS from an earlier session is still running on port 3002 (pid 8087); the command that started it exited without stopping it. Stop it with `kill 8087`, or run `primo dev --force` to stop it and start fresh.
+```
+
+<Warning>
+`primo dev --force` stops **any** process on the workspace's port, including a `primo dev` running for a different workspace. Prefer `kill <pid>` when you have more than one workspace running.
+</Warning>
 
 ### Options
 
 ```bash
 primo dev -p 8080            # Use a custom port
+primo dev --force            # Stop whatever holds the port, then start
 primo dev --author files     # Default: files are source of truth
 primo dev --author cms       # CMS is source of truth
 primo dev --author both      # Bidirectional (beta)
@@ -78,7 +118,7 @@ Each site folder follows this layout:
 
 ```
 sites/my-site/
-├── site.yaml          # Site name, hostname, group
+├── site.yaml          # Site name, id, group
 ├── site/
 │   ├── fields.yaml    # Site-wide fields (logo, nav, etc.)
 │   ├── content.yaml   # Values for site fields
@@ -115,13 +155,68 @@ sites/my-site/uploads/
 
 This means you can drop an image into `uploads/` and reference it from an image field without ever opening the CMS.
 
-## site.yaml and Hostname
+## site.yaml
 
-`site.yaml` holds the site name, hostname, and group. These round-trip between the CMS and files — editing the name in the dashboard updates `site.yaml`, and editing `site.yaml` updates the CMS.
+`site.yaml` holds the site's name, its `site_id`, and its group:
+
+```yaml
+name: My Site
+site_id: b0491u6f53g0np3
+group: default
+```
+
+`site_id` ties the folder to its record in the CMS. Primo writes it for you, so don't edit or copy it by hand.
+
+The site's hostname is **not** stored in files. It's per-environment (a `*.localhost` host in dev, your domain in production) and is set in the dashboard, so `primo push` can't point your production site at `localhost`.
 
 <Warning>
-`host` (the deployed hostname for a hosted server) is per-environment and is **not** overwritten by file sync. This prevents `primo push` from pointing your production site at `localhost`.
+Keep backup copies of a site **outside** `sites/` (for example in a `_backups/` folder at the workspace root). A copy inside `sites/` has the same `site_id`: `primo dev` skips it, and `primo push` refuses to push both.
 </Warning>
+
+## Adding Sites
+
+`primo new <name>` creates a site folder under `sites/`, and `primo dev` imports it into the CMS. In an interactive terminal, `primo new` starts the CMS for you; with `--skip-dev`, or from a script, it only creates the files:
+
+```
+My Site was created. Start the local CMS to import it:
+  primo dev
+```
+
+A folder you create by hand (or copy) under `sites/` isn't in the CMS until you register it with `primo add`:
+
+```bash
+primo add my-other-site
+```
+
+`primo add` needs the workspace's port, so **stop `primo dev` first**, then start it again afterward. If `primo dev` is running, `primo add` stops and tells you so rather than racing it.
+
+<Warning>
+To start a new site from a copy of an existing one, **delete the `site_id` line from the copy's `site.yaml`** before running `primo add`. A folder that still has a `site_id` counts as already registered, so `primo add` imports it into the original site and overwrites it. Once `site_id` is gone, `primo add` also removes the other record ids copied from the original and assigns new ones.
+</Warning>
+
+`primo status` lists any folders on disk that aren't registered yet:
+
+```
+  1 site on disk but not registered in the CMS:
+    ! other  run `primo add other`
+```
+
+## Shared Library
+
+The workspace's `library/` folder holds blocks shared across sites. `library/groups.yaml` lists the library's groups and their folders:
+
+```yaml
+- name: Shared
+  folder: shared
+```
+
+Each block lives in `library/<group-folder>/<block>/`, with the same files as a site block. `primo dev` loads the library into the CMS, where editors add library blocks to a site from the block picker. To use a library block on a site in files, copy its folder into `sites/<name>/blocks/` (leaving out its `_id`). The copy is independent afterwards.
+
+## Working with AI Agents
+
+`primo init`, `primo new`, and `primo pull` write an `AGENTS.md` at the workspace root: a guide to the workspace layout, commands, content-design defaults, and valid field types. Most coding agents read it automatically. They also write a `CLAUDE.md` that imports it (`@AGENTS.md`) for Claude Code.
+
+For validation and scaffolding tools, connect the [Primo MCP server](/reference/mcp-server). `primo dev` also registers it in the workspace's `.mcp.json`.
 
 ## Site Groups
 
@@ -153,11 +248,19 @@ iPhone HEIC photos are automatically converted to JPEG when uploaded as avatars 
 
 ## Validating Your Work
 
-Run `primo validate` from the workspace root to check site structure:
+Run `primo validate` from the workspace root to check every site, or from a site folder to check just that site:
 
 ```bash
 primo validate
-primo validate --strict    # Treat warnings as errors
+primo validate -d sites/my-site
+```
+
+It catches structural mistakes such as a missing homepage (`pages/index.yaml`), or `fields:` under a `repeater` or `group` field, where nested fields must be listed under `subfields:`.
+
+To rebuild a site's preview while `primo dev` is running, pass the site folder:
+
+```bash
+primo preview --dir sites/my-site
 ```
 
 For AI-assisted development, the [MCP server](/reference/mcp-server) exposes per-file validators (`validate_block`, `validate_page`, `validate_site`) that agents call automatically.

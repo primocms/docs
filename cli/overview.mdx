@@ -22,11 +22,13 @@ npm install -g primo-cli
 ## Quick Start
 
 ```bash
-# Create a new site and start the local CMS
+# Create a workspace, then a site inside it
+primo init my-workspace
+cd my-workspace
 primo new my-site
 ```
 
-This scaffolds a workspace and starts `primo dev` on `http://my-site.localhost:3000`.
+`primo init` creates the workspace and offers to connect your AI agent to the Primo MCP tools (skip with `--no-mcp`). In an interactive terminal, `primo new` then starts the local CMS, with the site at `http://my-site.localhost:3000`. From scripts and CI, or with `--skip-dev`, it only creates the files; start the CMS yourself with `primo dev`.
 
 ## Workspace Structure
 
@@ -35,14 +37,17 @@ A Primo workspace contains one or more sites and a shared block library:
 ```
 workspace/
 ├── server.yaml          # Port, site groups, server-level config
+├── AGENTS.md            # Guide for AI agents working in this workspace
+├── CLAUDE.md            # Imports AGENTS.md for Claude Code
 ├── library/             # Shared blocks reusable across sites
+│   ├── groups.yaml      # Library groups and their folders
 │   ├── marketing/
 │   │   └── hero/
 │   └── shared/
 │       └── footer/
 └── sites/
     ├── site-one/
-    │   ├── site.yaml    # Site name, hostname, group
+    │   ├── site.yaml    # Site name, id, group
     │   ├── blocks/      # Site-specific blocks
     │   ├── pages/
     │   ├── page-types/
@@ -59,15 +64,19 @@ Each site is served on its own subdomain in dev: `site-one.localhost:3000`, `sit
 | Command | What it does |
 | --- | --- |
 | `primo init [name]` | Initialize a new workspace |
-| `primo new [name]` | Create a new site and start dev |
+| `primo new [name]` | Create a new site (and start the CMS in an interactive terminal; `--skip-dev` to only create files) |
+| `primo add <site>` | Register a hand-made `sites/` folder with the CMS (stop `primo dev` first) |
 | `primo dev` | Run the local CMS with file/CMS sync |
+| `primo status` | Show the workspace: server state, sites, groups, last sync |
+| `primo preview --dir sites/<name>` | Rebuild a site's preview (needs `primo dev` running) |
 | `primo pull <server>` | Pull a hosted server into local files |
 | `primo push <server>` | Push local changes to a hosted server |
 | `primo library pull/push` | Sync just the shared block library |
 | `primo login <server>` | Authenticate with a hosted instance |
 | `primo deploy` | Deploy the workspace to Railway or Fly.io |
 | `primo build` | Build a static site for any host |
-| `primo validate` | Check site structure for errors |
+| `primo validate` | Check site structure for errors (from the workspace root, checks every site) |
+| `primo mcp install` | Connect your agent client to the Primo MCP tools |
 
 ## When to Use Which Command
 

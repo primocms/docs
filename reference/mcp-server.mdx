@@ -174,8 +174,8 @@ A few invariants worth knowing:
 You can also drive the same validators from `primo validate`:
 
 ```bash
-primo validate
-primo validate --strict
+primo validate                     # every site, from the workspace root
+primo validate -d sites/my-site    # one site
 ```
 
 This catches the same class of errors as the MCP validators, just at the workspace level instead of file by file.
