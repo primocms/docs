@@ -29,6 +29,14 @@ primo dev > dev.log 2>&1 &
 ```
 </Tip>
 
+### Hosted server changes
+
+If your workspace has a hosted server configured, `primo dev` checks its locally tracked sites and shared library against your last pull or push before loading the local CMS. If server data changed or was deleted, you see a warning naming the affected site or library.
+
+The check uses your saved login and waits up to five seconds across all requests. Missing sync history, an unreachable server, an expired login, or an older server produces a notice that freshness could not be verified. Local development still starts. Workspaces without a configured server skip the check.
+
+This check does not pull data or change your saved sync history. To update an outdated workspace, save your local work, stop `primo dev`, and [pull from the hosted server](/cli/sync#recover-from-a-refused-push) before editing. A pull replaces local files, so preserve your changes first. `primo push` checks the server again when you upload.
+
 ### Ports
 
 `primo dev` uses two ports: the CMS port (3000 by default, or `port:` in `server.yaml`) and the next one up for live reload. If either is taken, it picks the next free pair and tells you:
