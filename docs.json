@@ -79,6 +79,7 @@
           "reference/keyboard-shortcuts",
           "reference/environment-variables",
           "reference/deployment",
+          "reference/analytics",
           "reference/mcp-server",
           "reference/troubleshooting"
         ]

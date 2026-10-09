@@ -1,0 +1,45 @@
+---
+title: 'Usage Analytics'
+description: 'Learn about Primo CMS analytics, usage metrics, telemetry defaults, and the self-hosted opt-out setting.'
+---
+
+Starting with CMS v3.3.1, usage analytics are enabled by default on hosted and self-hosted instances. You do not need to configure an analytics account or key. In earlier versions, self-hosted instances require an explicit opt-in.
+
+## What Primo reports
+
+Primo sends usage metrics to PostHog to help improve the CMS:
+
+- The server sends an instance heartbeat at startup and daily, with a randomly generated instance ID and counts of sites, pages, and users.
+- The editor reports completed operations: creating a site, saving content, publishing a site, and adding a collaborator. It also reports failures using broad categories, such as network or permission errors.
+
+Primo adds opaque record IDs and operation properties to editor events, without adding page content, field values, email addresses, passwords, or raw error messages. The browser SDK also includes technical metadata. Automatic click capture, pageview capture, and session recording are disabled.
+
+These metrics describe CMS usage. To add visitor analytics to a published site, use [Head HTML in Site Configuration](/reference/site-configuration#head-html).
+
+Reporting is best-effort. A failed analytics request does not block server startup or editing.
+
+## Disable analytics on a self-hosted instance
+
+Set the following [environment variable](/reference/environment-variables#primo_enable_usage_stats) on your CMS server:
+
+```dotenv
+PRIMO_ENABLE_USAGE_STATS=false
+```
+
+For Railway, add it to your service variables and redeploy. For Docker, add it to the container's environment and recreate the container. For a binary installation, set it in the environment of the process that runs Primo, then restart the server.
+
+This setting disables both server heartbeats and editor analytics for the instance. Remove the variable or set it to `true`, then restart or redeploy, to enable reporting again.
+
+Development mode (`PRIMO_DEV_MODE=1`) always disables analytics, even if you set `PRIMO_ENABLE_USAGE_STATS=true`.
+
+## Verify the analytics setting
+
+With your CMS running locally on port 8080, run:
+
+```bash
+curl --fail --silent --show-error http://localhost:8080/api/primo/info
+```
+
+For a remote instance, replace `http://localhost:8080` with your CMS URL. After you opt out and restart, the JSON response contains `"telemetry_enabled": false`. With the v3.3.1 default configuration outside development mode, it contains `"telemetry_enabled": true`.
+
+This value confirms the server's configuration; it does not confirm delivery of an analytics event. If the value does not change after you opt out, check that you set the variable on the CMS service and restarted or recreated that service.
