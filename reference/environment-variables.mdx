@@ -197,16 +197,20 @@ This is read only on the first start of a new instance. After that, manage the s
 
 ### `PRIMO_ENABLE_USAGE_STATS`
 
-Anonymous usage statistics. Off by default on self-hosted instances.
+Controls CMS usage analytics, including server heartbeats and editor events. Starting with CMS v3.3.1, analytics are enabled by default on hosted and self-hosted instances. Earlier versions default to off on self-hosted instances.
 
 - **Type**: `true` or `false`
 - **Required**: No
-- **Default**: `false`
+- **Default**: `true` in v3.3.1 and later, outside development mode
 
 **Example:**
 ```bash
-PRIMO_ENABLE_USAGE_STATS=true
+PRIMO_ENABLE_USAGE_STATS=false
 ```
+
+Set this to `false` to opt out, then restart or redeploy your CMS service. Development mode (`PRIMO_DEV_MODE=1`) always disables analytics, even if this variable is `true`.
+
+See [Usage Analytics](/reference/analytics) for the metrics collected and how to verify your setting.
 
 ## Common Configurations
 
