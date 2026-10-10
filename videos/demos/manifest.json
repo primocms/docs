@@ -1,0 +1,625 @@
+{
+  "recordedOn": "2026-10-10",
+  "build": {
+    "branch": "main",
+    "commit": "b0225f01bed114fd44b7328f2159a6ac9b545628",
+    "commitUrl": "https://github.com/primocms/primo/commit/b0225f01bed114fd44b7328f2159a6ac9b545628",
+    "version": "main-b0225f01b",
+    "builtAt": "2026-10-10T07:36:30.165Z",
+    "binarySha256": "b7cc36cab65a86f3807cfd700cccaccab90e8093dfe7a012d12bbe306451d923",
+    "cleanSource": true,
+    "baseUrl": "http://primo.test:43960"
+  },
+  "format": "H.264 MP4, 1600×1080, 30 fps, silent with burned-in instructions",
+  "clips": [
+    {
+      "id": "introduction-overview",
+      "title": "Primo in action: edit, create, and publish",
+      "build": {
+        "branch": "main",
+        "commit": "b0225f01bed114fd44b7328f2159a6ac9b545628",
+        "commitUrl": "https://github.com/primocms/primo/commit/b0225f01bed114fd44b7328f2159a6ac9b545628",
+        "version": "main-b0225f01b",
+        "builtAt": "2026-10-10T07:36:30.165Z",
+        "binarySha256": "b7cc36cab65a86f3807cfd700cccaccab90e8093dfe7a012d12bbe306451d923",
+        "cleanSource": true,
+        "baseUrl": "http://primo.test:43960"
+      },
+      "exampleSite": {
+        "id": "39m6yfqho8ws9cu",
+        "name": "Little Grove Preschool"
+      },
+      "duration": 45.2,
+      "bytes": 3657733,
+      "steps": [
+        {
+          "at": 0.8,
+          "text": "A complete site, ready for your content."
+        },
+        {
+          "at": 3.5,
+          "text": "Click the headline and make it your own."
+        },
+        {
+          "at": 7.9,
+          "text": "Replace a photo directly on the page."
+        },
+        {
+          "at": 13.9,
+          "text": "Create a blog post from a reusable page type."
+        },
+        {
+          "at": 22.4,
+          "text": "The same design, with this post’s own content."
+        },
+        {
+          "at": 26.2,
+          "text": "Arrange the homepage with reusable blocks."
+        },
+        {
+          "at": 33.2,
+          "text": "Publish when your changes are ready."
+        },
+        {
+          "at": 37,
+          "text": "View the finished site."
+        }
+      ],
+      "source": "Actual Primo UI in an isolated local demo"
+    },
+    {
+      "id": "create-site",
+      "title": "Create a site from a starter",
+      "build": {
+        "branch": "main",
+        "commit": "b0225f01bed114fd44b7328f2159a6ac9b545628",
+        "commitUrl": "https://github.com/primocms/primo/commit/b0225f01bed114fd44b7328f2159a6ac9b545628",
+        "version": "main-b0225f01b",
+        "builtAt": "2026-10-10T07:36:30.165Z",
+        "binarySha256": "b7cc36cab65a86f3807cfd700cccaccab90e8093dfe7a012d12bbe306451d923",
+        "cleanSource": true,
+        "baseUrl": "http://primo.test:43960"
+      },
+      "exampleSite": {
+        "name": "Hawthorn Veterinary",
+        "source": "Marketplace"
+      },
+      "duration": 22.7,
+      "bytes": 1173451,
+      "steps": [
+        {
+          "at": 0.8,
+          "text": "Choose Create Site from the dashboard."
+        },
+        {
+          "at": 2.8,
+          "text": "Give the new site a name."
+        },
+        {
+          "at": 6.7,
+          "text": "Browse starters in the Marketplace."
+        },
+        {
+          "at": 10.6,
+          "text": "Choose Hawthorn Veterinary and review its design."
+        },
+        {
+          "at": 14.1,
+          "text": "Review optional blocks, then create your site."
+        },
+        {
+          "at": 17.5,
+          "text": "Your new site is ready in the dashboard."
+        }
+      ],
+      "source": "Actual Primo UI in an isolated local demo"
+    },
+    {
+      "id": "site-management",
+      "title": "Organize sites in dashboard groups",
+      "build": {
+        "branch": "main",
+        "commit": "b0225f01bed114fd44b7328f2159a6ac9b545628",
+        "commitUrl": "https://github.com/primocms/primo/commit/b0225f01bed114fd44b7328f2159a6ac9b545628",
+        "version": "main-b0225f01b",
+        "builtAt": "2026-10-10T07:36:30.165Z",
+        "binarySha256": "b7cc36cab65a86f3807cfd700cccaccab90e8093dfe7a012d12bbe306451d923",
+        "cleanSource": true,
+        "baseUrl": "http://primo.test:43960"
+      },
+      "exampleSite": {
+        "id": "gjk2xfsu6ic6ct6",
+        "name": "Willow Creek Animal Rescue"
+      },
+      "duration": 9.7,
+      "bytes": 1463264,
+      "steps": [
+        {
+          "at": 0.8,
+          "text": "Use groups to organize the sites you manage."
+        },
+        {
+          "at": 2.5,
+          "text": "Switch groups to see another set of sites."
+        },
+        {
+          "at": 3.9,
+          "text": "Return to active clients and open a site."
+        }
+      ],
+      "source": "Actual Primo UI in an isolated local demo"
+    },
+    {
+      "id": "create-page",
+      "title": "Create a page from a page type",
+      "build": {
+        "branch": "main",
+        "commit": "b0225f01bed114fd44b7328f2159a6ac9b545628",
+        "commitUrl": "https://github.com/primocms/primo/commit/b0225f01bed114fd44b7328f2159a6ac9b545628",
+        "version": "main-b0225f01b",
+        "builtAt": "2026-10-10T07:36:30.165Z",
+        "binarySha256": "b7cc36cab65a86f3807cfd700cccaccab90e8093dfe7a012d12bbe306451d923",
+        "cleanSource": true,
+        "baseUrl": "http://primo.test:43960"
+      },
+      "exampleSite": {
+        "id": "jz85kx5lfmq6x91",
+        "name": "Cedar & Hearth Events"
+      },
+      "duration": 12.6,
+      "bytes": 557832,
+      "steps": [
+        {
+          "at": 0.8,
+          "text": "Open Pages, then choose Create page."
+        },
+        {
+          "at": 3.6,
+          "text": "Name the page. Primo generates its URL."
+        },
+        {
+          "at": 6.7,
+          "text": "Create the page using its default page type."
+        },
+        {
+          "at": 8.3,
+          "text": "Open the new page to start editing."
+        }
+      ],
+      "source": "Actual Primo UI in an isolated local demo"
+    },
+    {
+      "id": "inline-editing",
+      "title": "Edit text directly on the page",
+      "build": {
+        "branch": "main",
+        "commit": "b0225f01bed114fd44b7328f2159a6ac9b545628",
+        "commitUrl": "https://github.com/primocms/primo/commit/b0225f01bed114fd44b7328f2159a6ac9b545628",
+        "version": "main-b0225f01b",
+        "builtAt": "2026-10-10T07:36:30.165Z",
+        "binarySha256": "b7cc36cab65a86f3807cfd700cccaccab90e8093dfe7a012d12bbe306451d923",
+        "cleanSource": true,
+        "baseUrl": "http://primo.test:43960"
+      },
+      "exampleSite": {
+        "id": "zqlrutst9i2dzvd",
+        "name": "Olivia Hayes Photography"
+      },
+      "duration": 11.5,
+      "bytes": 549586,
+      "steps": [
+        {
+          "at": 0.8,
+          "text": "Click text on the page to edit it."
+        },
+        {
+          "at": 2.6,
+          "text": "Type your new headline."
+        },
+        {
+          "at": 6.6,
+          "text": "The change saves automatically."
+        }
+      ],
+      "source": "Actual Primo UI in an isolated local demo"
+    },
+    {
+      "id": "form-editing",
+      "title": "Edit content with structured fields",
+      "build": {
+        "branch": "main",
+        "commit": "b0225f01bed114fd44b7328f2159a6ac9b545628",
+        "commitUrl": "https://github.com/primocms/primo/commit/b0225f01bed114fd44b7328f2159a6ac9b545628",
+        "version": "main-b0225f01b",
+        "builtAt": "2026-10-10T07:36:30.165Z",
+        "binarySha256": "b7cc36cab65a86f3807cfd700cccaccab90e8093dfe7a012d12bbe306451d923",
+        "cleanSource": true,
+        "baseUrl": "http://primo.test:43960"
+      },
+      "exampleSite": {
+        "id": "45r6ra53sbzajsj",
+        "name": "Rivet & Loom Studio"
+      },
+      "duration": 12.6,
+      "bytes": 991861,
+      "steps": [
+        {
+          "at": 0.8,
+          "text": "Open Edit content for a block."
+        },
+        {
+          "at": 2.9,
+          "text": "Update the headline in its content field."
+        },
+        {
+          "at": 7,
+          "text": "Save to update the page."
+        },
+        {
+          "at": 9,
+          "text": "Your saved content appears on the canvas."
+        }
+      ],
+      "source": "Actual Primo UI in an isolated local demo"
+    },
+    {
+      "id": "add-block",
+      "title": "Add a reusable block to a page",
+      "build": {
+        "branch": "main",
+        "commit": "b0225f01bed114fd44b7328f2159a6ac9b545628",
+        "commitUrl": "https://github.com/primocms/primo/commit/b0225f01bed114fd44b7328f2159a6ac9b545628",
+        "version": "main-b0225f01b",
+        "builtAt": "2026-10-10T07:36:30.165Z",
+        "binarySha256": "b7cc36cab65a86f3807cfd700cccaccab90e8093dfe7a012d12bbe306451d923",
+        "cleanSource": true,
+        "baseUrl": "http://primo.test:43960"
+      },
+      "exampleSite": {
+        "id": "jm9hbkslgpchptw",
+        "name": "Fieldwork Landscape Studio"
+      },
+      "duration": 12.3,
+      "bytes": 645700,
+      "steps": [
+        {
+          "at": 0.8,
+          "text": "Choose where the new block will go."
+        },
+        {
+          "at": 3.2,
+          "text": "Find a block in the Blocks tab."
+        },
+        {
+          "at": 5,
+          "text": "Drag the block onto the page."
+        },
+        {
+          "at": 8.2,
+          "text": "The new block appears in the page outline."
+        }
+      ],
+      "source": "Actual Primo UI in an isolated local demo"
+    },
+    {
+      "id": "reorder-blocks",
+      "title": "Reorder page blocks",
+      "build": {
+        "branch": "main",
+        "commit": "b0225f01bed114fd44b7328f2159a6ac9b545628",
+        "commitUrl": "https://github.com/primocms/primo/commit/b0225f01bed114fd44b7328f2159a6ac9b545628",
+        "version": "main-b0225f01b",
+        "builtAt": "2026-10-10T07:36:30.165Z",
+        "binarySha256": "b7cc36cab65a86f3807cfd700cccaccab90e8093dfe7a012d12bbe306451d923",
+        "cleanSource": true,
+        "baseUrl": "http://primo.test:43960"
+      },
+      "exampleSite": {
+        "id": "9yq69jb166hklim",
+        "name": "Sable & Form Interiors"
+      },
+      "duration": 10.4,
+      "bytes": 983146,
+      "steps": [
+        {
+          "at": 1.5,
+          "text": "Select a block in the page outline."
+        },
+        {
+          "at": 3.2,
+          "text": "Open the block actions menu."
+        },
+        {
+          "at": 5.3,
+          "text": "Move the block up one position."
+        },
+        {
+          "at": 6.8,
+          "text": "The canvas and outline use the new order."
+        }
+      ],
+      "source": "Actual Primo UI in an isolated local demo"
+    },
+    {
+      "id": "component-fields",
+      "title": "Build a component with an editable field",
+      "build": {
+        "branch": "main",
+        "commit": "b0225f01bed114fd44b7328f2159a6ac9b545628",
+        "commitUrl": "https://github.com/primocms/primo/commit/b0225f01bed114fd44b7328f2159a6ac9b545628",
+        "version": "main-b0225f01b",
+        "builtAt": "2026-10-10T07:36:30.165Z",
+        "binarySha256": "b7cc36cab65a86f3807cfd700cccaccab90e8093dfe7a012d12bbe306451d923",
+        "cleanSource": true,
+        "baseUrl": "http://primo.test:43960"
+      },
+      "exampleSite": {
+        "id": "2e10czeki0gn4wx",
+        "name": "Meridian Analytics"
+      },
+      "duration": 24.7,
+      "bytes": 662898,
+      "steps": [
+        {
+          "at": 0.8,
+          "text": "Open the page type to create a reusable block."
+        },
+        {
+          "at": 5.9,
+          "text": "Switch to content and create a Text field."
+        },
+        {
+          "at": 8,
+          "text": "Label the field Headline. Its key is headline."
+        },
+        {
+          "at": 11,
+          "text": "Set the default content for the field."
+        },
+        {
+          "at": 16,
+          "text": "Reference the field in your component markup."
+        },
+        {
+          "at": 19.4,
+          "text": "Preview the result, then create the block."
+        }
+      ],
+      "source": "Actual Primo UI in an isolated local demo"
+    },
+    {
+      "id": "page-types",
+      "title": "Define a reusable page type",
+      "build": {
+        "branch": "main",
+        "commit": "b0225f01bed114fd44b7328f2159a6ac9b545628",
+        "commitUrl": "https://github.com/primocms/primo/commit/b0225f01bed114fd44b7328f2159a6ac9b545628",
+        "version": "main-b0225f01b",
+        "builtAt": "2026-10-10T07:36:30.165Z",
+        "binarySha256": "b7cc36cab65a86f3807cfd700cccaccab90e8093dfe7a012d12bbe306451d923",
+        "cleanSource": true,
+        "baseUrl": "http://primo.test:43960"
+      },
+      "exampleSite": {
+        "id": "vlwj6apmp41asrh",
+        "name": "Apex Creative Studio"
+      },
+      "duration": 52.6,
+      "bytes": 3801465,
+      "steps": [
+        {
+          "at": 0.8,
+          "text": "Open Pages and choose Manage page types."
+        },
+        {
+          "at": 3.5,
+          "text": "Create a Case Study type for client projects."
+        },
+        {
+          "at": 6.7,
+          "text": "Open its template and enable the project story block."
+        },
+        {
+          "at": 10.4,
+          "text": "Add the project layout to the starting template."
+        },
+        {
+          "at": 15.1,
+          "text": "Create a project using the Case Study page type."
+        },
+        {
+          "at": 24.5,
+          "text": "Give this project its own content."
+        },
+        {
+          "at": 32,
+          "text": "Create a second case study using the same template."
+        },
+        {
+          "at": 41.7,
+          "text": "Same layout, different content for each project."
+        }
+      ],
+      "source": "Actual Primo UI in an isolated local demo"
+    },
+    {
+      "id": "shared-slots",
+      "title": "Use shared header and footer slots",
+      "build": {
+        "branch": "main",
+        "commit": "b0225f01bed114fd44b7328f2159a6ac9b545628",
+        "commitUrl": "https://github.com/primocms/primo/commit/b0225f01bed114fd44b7328f2159a6ac9b545628",
+        "version": "main-b0225f01b",
+        "builtAt": "2026-10-10T07:36:30.165Z",
+        "binarySha256": "b7cc36cab65a86f3807cfd700cccaccab90e8093dfe7a012d12bbe306451d923",
+        "cleanSource": true,
+        "baseUrl": "http://primo.test:43960"
+      },
+      "exampleSite": {
+        "id": "ug3wwuig0e7lwfg",
+        "name": "Fernbank House & Rooms"
+      },
+      "duration": 14.2,
+      "bytes": 830167,
+      "steps": [
+        {
+          "at": 0.8,
+          "text": "Open the page type template."
+        },
+        {
+          "at": 4.7,
+          "text": "Header content is shared across this page type."
+        },
+        {
+          "at": 7.2,
+          "text": "The body contains content editors can change per page."
+        },
+        {
+          "at": 9.6,
+          "text": "Footer content stays consistent across these pages."
+        }
+      ],
+      "source": "Actual Primo UI in an isolated local demo"
+    },
+    {
+      "id": "block-library",
+      "title": "Browse and edit reusable library blocks",
+      "build": {
+        "branch": "main",
+        "commit": "b0225f01bed114fd44b7328f2159a6ac9b545628",
+        "commitUrl": "https://github.com/primocms/primo/commit/b0225f01bed114fd44b7328f2159a6ac9b545628",
+        "version": "main-b0225f01b",
+        "builtAt": "2026-10-10T07:36:30.165Z",
+        "binarySha256": "b7cc36cab65a86f3807cfd700cccaccab90e8093dfe7a012d12bbe306451d923",
+        "cleanSource": true,
+        "baseUrl": "http://primo.test:43960"
+      },
+      "duration": 11.3,
+      "bytes": 994326,
+      "steps": [
+        {
+          "at": 0.8,
+          "text": "Browse groups in your shared block library."
+        },
+        {
+          "at": 2.5,
+          "text": "Open a library block to inspect its code."
+        },
+        {
+          "at": 4.4,
+          "text": "Switch to the content fields that power the block."
+        },
+        {
+          "at": 6.8,
+          "text": "Close the block and return to the library."
+        }
+      ],
+      "source": "Actual Primo UI in an isolated local demo"
+    },
+    {
+      "id": "marketplace",
+      "title": "Explore ready-made site starters",
+      "build": {
+        "branch": "main",
+        "commit": "b0225f01bed114fd44b7328f2159a6ac9b545628",
+        "commitUrl": "https://github.com/primocms/primo/commit/b0225f01bed114fd44b7328f2159a6ac9b545628",
+        "version": "main-b0225f01b",
+        "builtAt": "2026-10-10T07:36:30.165Z",
+        "binarySha256": "b7cc36cab65a86f3807cfd700cccaccab90e8093dfe7a012d12bbe306451d923",
+        "cleanSource": true,
+        "baseUrl": "http://primo.test:43960"
+      },
+      "duration": 12.4,
+      "bytes": 564839,
+      "steps": [
+        {
+          "at": 0.8,
+          "text": "Browse starters by category."
+        },
+        {
+          "at": 2.4,
+          "text": "Inspect the designs available in this category."
+        },
+        {
+          "at": 5.8,
+          "text": "Switch categories to find a suitable starting point."
+        }
+      ],
+      "source": "Actual Primo UI in an isolated local demo"
+    },
+    {
+      "id": "collaborators",
+      "title": "Create an editor invitation link",
+      "build": {
+        "branch": "main",
+        "commit": "b0225f01bed114fd44b7328f2159a6ac9b545628",
+        "commitUrl": "https://github.com/primocms/primo/commit/b0225f01bed114fd44b7328f2159a6ac9b545628",
+        "version": "main-b0225f01b",
+        "builtAt": "2026-10-10T07:36:30.165Z",
+        "binarySha256": "b7cc36cab65a86f3807cfd700cccaccab90e8093dfe7a012d12bbe306451d923",
+        "cleanSource": true,
+        "baseUrl": "http://primo.test:43960"
+      },
+      "exampleSite": {
+        "id": "72rptck5qcdzadw",
+        "name": "Harvest Table Kitchen"
+      },
+      "duration": 15.2,
+      "bytes": 855166,
+      "steps": [
+        {
+          "at": 0.8,
+          "text": "Open More options, then Collaborators."
+        },
+        {
+          "at": 3.6,
+          "text": "Enter the collaborator email address."
+        },
+        {
+          "at": 7.5,
+          "text": "Choose Content Editor to allow content changes."
+        },
+        {
+          "at": 9.2,
+          "text": "Generate an invitation link to share with the editor."
+        }
+      ],
+      "source": "Actual Primo UI in an isolated local demo"
+    },
+    {
+      "id": "publishing",
+      "title": "Publish and view the finished site",
+      "build": {
+        "branch": "main",
+        "commit": "b0225f01bed114fd44b7328f2159a6ac9b545628",
+        "commitUrl": "https://github.com/primocms/primo/commit/b0225f01bed114fd44b7328f2159a6ac9b545628",
+        "version": "main-b0225f01b",
+        "builtAt": "2026-10-10T07:36:30.165Z",
+        "binarySha256": "b7cc36cab65a86f3807cfd700cccaccab90e8093dfe7a012d12bbe306451d923",
+        "cleanSource": true,
+        "baseUrl": "http://primo.test:43960"
+      },
+      "exampleSite": {
+        "id": "13gfozcyrq9eda7",
+        "name": "Lantern Street Food"
+      },
+      "duration": 11.7,
+      "bytes": 779722,
+      "steps": [
+        {
+          "at": 0.8,
+          "text": "Open Publish to review your changes."
+        },
+        {
+          "at": 2.8,
+          "text": "Choose Publish changes to build the site."
+        },
+        {
+          "at": 5.7,
+          "text": "View site opens the published result."
+        }
+      ],
+      "source": "Actual Primo UI in an isolated local demo"
+    }
+  ]
+}

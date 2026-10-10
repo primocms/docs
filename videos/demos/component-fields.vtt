@@ -1,0 +1,25 @@
+WEBVTT
+
+1
+00:00:00.801 --> 00:00:05.872
+Open the page type to create a reusable block.
+
+2
+00:00:05.872 --> 00:00:08.000
+Switch to content and create a Text field.
+
+3
+00:00:08.000 --> 00:00:11.022
+Label the field Headline. Its key is headline.
+
+4
+00:00:11.022 --> 00:00:16.019
+Set the default content for the field.
+
+5
+00:00:16.019 --> 00:00:19.388
+Reference the field in your component markup.
+
+6
+00:00:19.388 --> 00:00:24.689
+Preview the result, then create the block.

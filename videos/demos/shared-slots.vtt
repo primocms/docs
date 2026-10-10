@@ -1,0 +1,17 @@
+WEBVTT
+
+1
+00:00:00.802 --> 00:00:04.739
+Open the page type template.
+
+2
+00:00:04.739 --> 00:00:07.153
+Header content is shared across this page type.
+
+3
+00:00:07.153 --> 00:00:09.596
+The body contains content editors can change per page.
+
+4
+00:00:09.596 --> 00:00:14.186
+Footer content stays consistent across these pages.
