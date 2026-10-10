@@ -189,6 +189,12 @@ Primo offers two installation options: self-hosting for full control over your i
 				Create your first site by navigating to `https://your-domain.com/admin` (replace with your domain). Note that the site is created using the domain name used to access the CMS.
 			</Step>
 		</Steps>
+
+		### Usage analytics
+
+		Starting with CMS v3.3.1, usage analytics are enabled by default. Primo sends instance counts and selected editor operations to PostHog to help improve the CMS. Automatic click capture and session recording are disabled.
+
+		To opt out, set [`PRIMO_ENABLE_USAGE_STATS=false`](/reference/environment-variables#primo_enable_usage_stats) in your CMS service's environment, then restart or redeploy it. This disables both server heartbeats and editor analytics. Development mode (`PRIMO_DEV_MODE=1`) always disables analytics.
 	</Tab>
 
 	<Tab title="Cloud">
