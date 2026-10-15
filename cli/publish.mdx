@@ -33,6 +33,10 @@ The CLI reuses credentials saved for that server. For scripts, `--token` supplie
 Publishing includes the whole site's saved draft, including changes on other pages. Save open CMS dialogs and review collaborators' changes before publishing.
 </Note>
 
+<Warning>
+When CLI publishing uses the `primo-mcp` 0.1.10 compiler, it drops inline formatting, links, and code-block formatting from rich text stored as TipTap JSON. This affects `primo publish` and `primo push --publish`. Until your compiler includes a fix, use browser publishing for sites with formatted rich text. The separate `primo build` command in CLI 0.2.1 preserves this formatting.
+</Warning>
+
 ## Publish saved CMS changes
 
 Run these commands from your workspace root. Replace `my-site` with the folder name under `sites/`:
