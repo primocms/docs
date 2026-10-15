@@ -19,28 +19,13 @@ This guide helps you solve common issues when deploying or running Primo.
 
 <AccordionGroup>
   <Accordion title="Check if environment variables created a user">
-    If you set `PRIMO_SUPERUSER_EMAIL` and `PRIMO_SUPERUSER_PASSWORD`, a superuser was created automatically. Use those credentials to sign in.
+    If you set `PRIMO_SUPERUSER_EMAIL` and `PRIMO_SUPERUSER_PASSWORD`, use those credentials for the PocketBase backend at `/_/`. Primo sign-in uses a separate regular account, created by setup or the `PRIMO_USER_EMAIL` and `PRIMO_USER_PASSWORD` variables. If only the superuser exists, use PocketBase to create a `users` record with the server Developer role.
   </Accordion>
 
-  <Accordion title="Check if volume contains existing data">
-    ```bash
-    # Stop container
-    docker-compose down
-
-    # Check volume
-    docker volume inspect primo-data
-
-    # If you want to start fresh, delete the volume
-    docker volume rm primo-data
-
-    # Restart
-    docker-compose up -d
-    ```
-
-    <Warning>
-    Deleting the volume deletes all your data. Only do this for fresh installs.
-    </Warning>
+<Accordion title="Recover access to an existing instance">
+    A persistent volume keeps existing accounts after redeploying. Recover the superuser account with the command under [Locked out of admin](#locked-out-of-admin), then manage CMS users through PocketBase. Do not delete the volume to solve a sign-in problem.
   </Accordion>
+
 </AccordionGroup>
 
 ### Can't access after deployment
@@ -74,8 +59,8 @@ curl http://localhost:8080
   </Accordion>
 
   <Accordion title="Port not accessible">
-    1. Check firewall allows port 8080 (or your configured port)
-    2. Verify port mapping in docker-compose.yml: `- "8080:8080"`
+    1. Test port 8080 locally on the server. For a production reverse proxy, expose ports 80 and 443 publicly and keep the backend port private.
+    2. Verify port mapping in docker-compose.yml: `- "127.0.0.1:8080:8080"`
     3. Check if another service is using port 8080:
     ```bash
     sudo lsof -i :8080
@@ -85,7 +70,7 @@ curl http://localhost:8080
   <Accordion title="Domain not pointing to server">
     1. Check DNS settings point to your server IP
     2. Wait for DNS propagation (up to 48 hours)
-    3. Test with server IP directly: `http://YOUR_IP:8080`
+    3. On the server, test the backend with `curl -I http://127.0.0.1:8080/admin/`, then check your reverse proxy's hostname configuration. A loopback-bound backend is not reachable through the public IP.
   </Accordion>
 </AccordionGroup>
 
@@ -125,7 +110,7 @@ docker ps | grep primo
 
 2. Restart the container:
 ```bash
-docker-compose restart
+docker compose restart
 ```
 
 3. If persists, check for file permissions:
@@ -164,12 +149,10 @@ docker logs -f primo
     ```
   </Accordion>
 
-  <Accordion title="Network timeout">
-    Check if your server can reach external CDNs (for Svelte compiler):
-    ```bash
-    docker exec primo curl -I https://esm.sh
-    ```
+<Accordion title="Network timeout">
+    Browser publishing compiles blocks in your browser. Check browser DevTools for failed CDN or module requests and confirm that the browser can reach those URLs. The minimal Primo Docker image does not include `curl`; testing a CDN from inside the container would not test the browser's connection.
   </Accordion>
+
 </AccordionGroup>
 
 ## Performance Issues
@@ -231,19 +214,17 @@ docker logs -f primo
 docker pull ghcr.io/primocms/primo:latest
 ```
 
-### Permission errors with volume
+### Permission errors with a volume
 
-**Error:** `permission denied` when accessing `/app/pb_data`
-
-**Solution:**
+Check the container's effective user and the mounted directory before changing ownership:
 
 ```bash
-# Check volume permissions
-docker exec primo ls -la /app
-
-# Fix permissions
-docker exec primo chown -R 1000:1000 /app/pb_data
+docker exec primo id
+docker exec primo ls -ld /app/pb_data
+docker inspect --format '{{.Config.User}}' primo
 ```
+
+Ensure a bind-mounted directory is writable by the effective UID/GID. The image does not declare UID 1000, so do not apply a blanket `chown 1000:1000`. For named volumes or hosted volumes, check the platform's mount configuration and startup logs.
 
 ### Container keeps restarting
 
@@ -280,7 +261,7 @@ docker inspect primo | grep -A 5 RestartPolicy
 
 ### Locked out of admin
 
-**Solution:** Create a superuser, or reset an existing one's password, from the command line:
+**Solution:** To recover the PocketBase backend at `/_/`, create a superuser or reset an existing one's password from the command line:
 
 ```bash
 docker exec -it primo ./primo superuser upsert \
@@ -288,34 +269,15 @@ docker exec -it primo ./primo superuser upsert \
   new-secure-password
 ```
 
+This command changes backend access. Use the backend's `users` collection to reset the regular account you use for Primo sign-in.
+
 ## Migration & Upgrade Issues
 
-### Data loss after upgrade
+### Data loss after an upgrade
 
-**Prevention:**
-Always backup before upgrading:
+Before updating, create a PocketBase backup and download it off-server. Verify the deployment still mounts the same persistent volume at `/app/pb_data`; an empty or different volume can make existing data appear lost.
 
-```bash
-# Backup pb_data
-docker cp primo:/app/pb_data ./backup_$(date +%Y%m%d)
-
-# Then upgrade
-docker-compose pull && docker-compose up -d
-```
-
-**Recovery:**
-Restore from backup:
-
-```bash
-# Stop container
-docker-compose down
-
-# Restore backup
-docker cp ./backup_20250101 primo:/app/pb_data
-
-# Restart
-docker-compose up -d
-```
+Follow [Database backups](/reference/deployment#database-backups) for consistent raw backups and a tested restore procedure. Do not copy a live SQLite directory or remove the container before attempting `docker cp`.
 
 ### Blocks not working after upgrade
 
@@ -362,7 +324,7 @@ docker-compose up -d
 
 **Solution:**
 
-Ensure `PRIMO_APP_URL` matches the domain you're accessing from.
+For normal CMS use, access the editor and API from the same origin. For an external dashboard, configure [`CORS_ALLOWED_ORIGINS`](/reference/environment-variables#cors_allowed_origins) with the exact browser origin. `PRIMO_APP_URL` does not control CORS.
 
 ## CLI & Sync Issues
 
@@ -374,6 +336,7 @@ Ensure `PRIMO_APP_URL` matches the domain you're accessing from.
 
 ```bash
 npm i -g primo-cli@latest
+# Save or commit local work before this pull, which replaces local files.
 primo pull https://cms.example.com .
 ```
 
@@ -389,7 +352,7 @@ If `primo dev` is running locally, stop it before updating and start it again af
 
 **Cause:** The server is older than 3.3.0, and CLI 0.2.0 only pushes to servers that can check for conflicting edits.
 
-**Solution:** Upgrade the server to 3.3.0 or later (see [Data loss after upgrade](#data-loss-after-upgrade) for how to back up first).
+**Solution:** Upgrade the server to 3.3.0 or later (see [Data loss after an upgrade](#data-loss-after-an-upgrade) for how to back up first).
 
 ### `primo dev` says a CMS from an earlier session is still running
 

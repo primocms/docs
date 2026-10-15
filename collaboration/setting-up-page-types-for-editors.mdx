@@ -1,9 +1,9 @@
 ---
 title: 'Setting Up Page Types for Editors'
-description: 'Configure page types with the right guardrails for content editors.'
+description: 'Choose the fields and layout changes content editors can use.'
 ---
 
-Page types are how you define what content editors can and can't do. When configured well, they give editors complete freedom to manage content while keeping your design and structure intact. This guide shows you how to set up page types that work for both developers and editors.
+Use page types to choose what editors can change: page fields, section content, and the blocks they can add to the body. You need developer access to configure them.
 
 ## Watch the workflow
 
@@ -24,470 +24,103 @@ Create a Case Study type for an agency site, then make two projects that share i
   Your browser does not support embedded video. [Download this demonstration](/videos/demos/page-types.mp4).
 </video>
 
-## The Role of Page Types
+[Download video](/videos/demos/page-types.mp4) · [Download captions](/videos/demos/page-types.vtt)
 
-Page types serve as templates and guardrails:
+<Accordion title="Read the walkthrough">
+1. Open Pages and choose Manage page types.
+2. Create a Case Study type for client projects.
+3. Open its template and enable the project story block.
+4. Add the project layout to the starting template.
+5. Create a project using the Case Study page type.
+6. Give this project its own content.
+7. Create a second case study using the same template.
+8. Same layout, different content for each project.
+</Accordion>
 
-- **Templates**: Define structure and available options for pages
-- **Guardrails**: Control what editors can modify
-- **Freedom within bounds**: Editors get content autonomy without breaking design
+## Choose a fixed or flexible layout
 
-<Info>
-Think of page types like form templates. You define the structure (fields, available sections), and editors fill in the content. They can't change the form itself, just the answers.
-</Info>
+Start with the editor's task. A profile may need the same layout every time; an About page may need sections editors can arrange.
 
-## Core Configuration
+| Editors need to… | Configure the page type with… |
+| --- | --- |
+| Fill in content without changing the body layout | Starting body sections and an empty available-block list |
+| Add sections and change their order | A focused list of available blocks, with optional starting body sections |
+| Keep navigation and footer structure consistent | Shared header and footer sections |
 
-### Available Blocks
+Editors can edit the fields in shared sections. Use Site Field references when the same content should appear across different page types.
 
-The most important decision: which blocks can editors use in the body slot?
-
-<Steps>
-<Step title="Open page type editor">
-  Navigate to your site, go to Page Types, and open the page type you want to configure.
-</Step>
-
-<Step title="Go to Blocks tab">
-  Click on the "Blocks" tab to see which blocks are available for this page type.
-</Step>
-
-<Step title="Add blocks">
-  Click "Add Block" to select which blocks editors can use:
-
-  - **Be selective**: Only include blocks that make sense for this page type
-  - **Consider use cases**: What will editors actually need?
-  - **Test the flow**: Can editors build complete pages with available blocks?
-
-  <Example>
-  **Blog Post page type:**
-  - Text (for article content)
-  - Image (for illustrations)
-  - Quote (for pull quotes)
-  - Video (for embedded videos)
-
-  **Default page type:**
-  - Hero (for page header)
-  - Text (for descriptions)
-  - Card Grid (for features)
-  - CTA (for conversion actions)
-  - Image (for visuals)
-  </Example>
-</Step>
-
-<Step title="Remove unnecessary blocks">
-  If a block doesn't fit, remove it. Fewer, focused options are better than overwhelming choices.
-
-  <Tip>
-  Start minimal. You can always add more blocks later based on editor feedback.
-  </Tip>
-</Step>
-</Steps>
-
-### Header and Footer Slots
-
-Header and footer slots contain blocks that appear on every page of this type. Editors can't add, remove, or reorder these blocks.
+## Configure editing options
 
 <Steps>
-<Step title="Configure header slot">
-  Add blocks that should appear at the top of every page:
+  <Step title="Open the page type">
+    Choose **Pages → Manage page types** and open the type you want to configure.
+  </Step>
+  <Step title="Set the starting layout">
+    Place shared blocks in the header and footer. Add body sections to give new pages a useful starting layout.
 
-  - Navigation
-  - Site header
-  - Breadcrumbs
-  - Page-specific header
+    Header and footer sections stay shared. Body sections are copied when a page is created; later template changes do not replace them on existing pages.
+  </Step>
+  <Step title="Choose available blocks">
+    In the **Blocks** tab, enable only the blocks editors need to add. For a flexible article layout, you might build or import Text, Image, and Quote blocks. Leave the list empty if editors should only fill in the existing layout.
+  </Step>
+  <Step title="Add page fields">
+    Define content each page needs, such as a title or biography. Give fields clear labels and use Info fields for instructions.
 
-  <Info>
-  Header blocks appear in the same order on every page. Editors can't change the structure, only edit the content within fields.
-  </Info>
-</Step>
-
-<Step title="Configure footer slot">
-  Add blocks that should appear at the bottom of every page:
-
-  - Site footer
-  - Newsletter signup
-  - Related content
-  - Copyright notice
-
-  <Warning>
-  Don't add too many required blocks. Heavy headers and footers can make pages feel rigid.
-  </Warning>
-</Step>
-
-<Step title="Keep slots flexible">
-  Consider whether blocks truly need to be in header/footer:
-
-  - **Header/Footer**: Navigation, branding, site-wide elements
-  - **Body**: Everything else that might vary by page
-</Step>
+    To display a page field in a block, add a **Page Field** reference to that block. For search metadata, add the appropriate tags to the page type's [Head HTML](/reference/site-configuration#page-metadata).
+  </Step>
+  <Step title="Test as a content editor">
+    Create a page with realistic content, then sign in as an editor. Check that the fields and layout controls support the task. Test a second page to verify shared content and independent body content.
+  </Step>
 </Steps>
 
-### Page Fields
+## Example page types you can create
 
-Page fields are metadata that applies to the entire page. Use them for information that doesn't fit in individual blocks.
+These are suggested designs, not built-in presets. Create or import the blocks they use and define the fields yourself. Pages with similar needs can share one page type.
 
-<Steps>
-<Step title="Add page fields">
-  Go to the Fields tab and add page-level fields:
+| Example type | Possible page fields | Possible body setup |
+| --- | --- | --- |
+| Blog Post | `title` (Text), `body` (Rich Text), `publish_date` (Date) | Fixed Post Content section connected to the page fields |
+| Team Member | `name` (Text), `photo` (Image), `bio` (Rich Text) | Fixed Profile section connected to the page fields |
+| Event | `title` (Text), `date` (Date), `location` (Text), `registration_link` (Link) | Event Details section, with optional Text and Image blocks |
+| General Page | `meta_title` and `meta_description` (Text) | Flexible body using selected Hero, Text, and Image blocks |
 
-  **Common page fields:**
-  - `meta_title` (Text) - SEO title
-  - `meta_description` (Text) - SEO description
-  - `featured_image` (Image) - Social media image
-  - `publish_date` (Date) - Publication date
-  - `author` (Page, Person type) - Article author
-  - `category` (Select) - Content category
-  - `featured` (Toggle) - Mark as featured
-</Step>
+See [Build a blog for content editors](/collaboration/example-blog) for a complete example.
 
-<Step title="Choose appropriate field types">
-  Use the right field type for each purpose:
+A Date field records a date; it does not schedule publishing. A Link field stores a destination; registration or newsletter processing requires your own service. Fields such as `featured` or `status` only affect the rendered page if your code uses them.
 
-  - **Text**: Titles, short descriptions
-  - **Rich Text**: Long descriptions, excerpts
-  - **Image**: Featured images, thumbnails
-  - **Date**: Publication dates, event dates
-  - **Select**: Categories, status options
-  - **Page**: Authors, related pages
-  - **Toggle**: Featured status, visibility flags
+## Make fields easy to use
 
-  <Tip>
-  See the [Field Types reference](/reference/field-types) for all available types.
-  </Tip>
-</Step>
+Use labels that explain the content, such as **Featured image** instead of **Image 1**. Add an Info field for image dimensions, writing guidance, or where a value appears. Instructions guide editors; they do not enforce required fields or text-length limits.
 
-<Step title="Add helpful labels and help text">
-  Make fields editor-friendly:
+For example, if your block displays `featured_image` at the top of a post, add an Info field saying: "Choose a landscape image for the post header and add descriptive alt text." Only describe social-sharing behavior if you have also connected the field to social metadata tags.
 
-  **Good field configuration:**
-  - **Field name**: `featured_image`
-  - **Label**: "Featured Image"
-  - **Help text**: "This image appears in social media shares and at the top of the post. Recommended size: 1200x630px."
-
-  **Bad field configuration:**
-  - **Field name**: `img_1`
-  - **Label**: "Image"
-  - **Help text**: *(empty)*
-</Step>
-</Steps>
-
-## Best Practices
-
-### 1. Start with User Needs
-
-Think about what editors will actually create:
-
-**Blog:**
-- Text for articles
-- Images for illustrations
-- Quotes for pull quotes
-- Code blocks for tutorials
-
-**Default Page:**
-- Hero for impact
-- Text for content
-- Images for visuals
-- Card grids for features
-
-**Event Page:**
-- Date/time/location
-- Description
-- Registration form
-- Speaker bios
-
-<Tip>
-Talk to your content editors before configuring page types. What do they need to create?
-</Tip>
-
-### 2. Limit Choices to Useful Options
-
-More options ≠ better. Too many blocks overwhelm editors and dilute your design.
-
-**Good: Focused options**
-```yaml
-Blog Post page type:
-  Available blocks:
-    - Text
-    - Image
-    - Quote
-    - Video
-```
-
-**Bad: Too many options**
-```yaml
-Blog Post page type:
-  Available blocks:
-    - Text
-    - Rich Text
-    - Markdown
-    - Image
-    - Image Gallery
-    - Video
-    - YouTube Embed
-    - Vimeo Embed
-    - Quote
-    - Blockquote
-    - Pull Quote
-    - (15 more...)
-```
-
-### 3. Use Descriptive Names
-
-Page type names help editors choose the right template:
-
-- ✅ "Blog Post"
-- ✅ "Default"
-- ✅ "Team Member"
-- ✅ "Case Study"
-- ❌ "Type 1"
-- ❌ "Template A"
-- ❌ "Generic"
-
-### 4. Create Reusable Patterns
-
-Build page types that work across similar content:
-
-**Person page type** (reusable for):
-- Team members
-- Authors
-- Speakers
-- Advisors
-
-**Article page type** (reusable for):
-- Blog posts
-- News articles
-- Case studies
-- Documentation pages
-
-### 5. Test with Real Content
-
-Before handing off to editors:
-
-1. Create a test page using the page type
-2. Try to build a realistic page with available blocks
-3. Look for gaps: What's missing? What's unnecessary?
-4. Refine based on what you learn
-
-## Common Page Type Patterns
-
-### Blog Post
-
-**Purpose**: Article content with metadata
-
-**Available blocks:**
-- Text
-- Image
-- Quote
-- Video
-
-**Page fields:**
-- `title` (Text, required)
-- `excerpt` (Text)
-- `author` (Page, Person type)
-- `publish_date` (Date)
-- `featured_image` (Image)
-- `category` (Select)
-- `tags` (Repeater with Text)
-- `meta_title` (Text)
-- `meta_description` (Text)
-
-**Header slot:**
-- Site Navigation
-- Breadcrumbs
-
-**Footer slot:**
-- Site Footer
-
-### Team Member
-
-**Purpose**: Individual profiles
-
-**Available blocks:**
-- Text (for bio)
-- Image (for additional photos)
-
-**Page fields:**
-- `name` (Text, required)
-- `title` (Text, required) - Job title
-- `photo` (Image, required)
-- `email` (Text)
-- `bio` (Rich Text)
-- `linkedin` (URL)
-- `twitter` (URL)
-
-**Header slot:**
-- Site Navigation
-
-**Footer slot:**
-- Site Footer
-
-### Event
-
-**Purpose**: Event listings with date/location
-
-**Available blocks:**
-- Text (for description)
-- Image (for photos)
-- Map (for location)
-
-**Page fields:**
-- `title` (Text, required) - Event name
-- `date` (Date, required)
-- `time` (Text)
-- `location` (Text, required)
-- `address` (Text)
-- `registration_link` (Link)
-- `featured_image` (Image)
-- `description` (Rich Text)
-
-**Header slot:**
-- Site Navigation
-
-**Footer slot:**
-- Site Footer
-
-## Iterating Based on Feedback
-
-Page types aren't set in stone. Improve them based on editor needs:
-
-### Signs You Need to Adjust
-
-**Editors keep asking for a specific block:**
-→ Add it to the page type
-
-**A block is never used:**
-→ Consider removing it
-
-**Editors work around limitations:**
-→ Add the missing capability
-
-**Editors are confused by options:**
-→ Reduce choices or improve labels
-
-**Editors duplicate pages instead of creating new ones:**
-→ The page type might be too restrictive
-
-### Making Changes
-
-<Steps>
-<Step title="Gather feedback">
-  Ask editors what's working and what's not:
-
-  - What blocks do you wish you had?
-  - Which blocks do you never use?
-  - What feels limiting?
-  - What feels overwhelming?
-</Step>
-
-<Step title="Test proposed changes">
-  Before making changes live:
-
-  - Create a test page type with proposed changes
-  - Have an editor test it
-  - Verify it solves the problem
-</Step>
-
-<Step title="Update and communicate">
-  When making changes:
-
-  - Update the page type
-  - Let editors know what changed
-  - Consider creating a quick guide for new features
-</Step>
-</Steps>
-
-## Advanced Patterns
+## Add optional editing patterns
 
 <AccordionGroup>
-<Accordion title="Conditional Page Type Fields">
-Use conditional fields to show/hide fields based on other selections:
+  <Accordion title="Show fields only when relevant">
+    For an Event type you create, add `event_type` as Select with In Person and Virtual options. Put `venue` after it and set a condition to show Venue for In Person. Add `meeting_link` as URL and show it for Virtual.
 
-**Event page type with virtual/in-person toggle:**
+    Conditions control the form. Add matching conditions in your block code if the published page should also hide those values. See [Conditional fields](/building-sites/working-with-fields#conditional-fields).
+  </Accordion>
+  <Accordion title="List pages of one type">
+    Build a Team Grid block and give it a Page List field named `members`, configured for your Team Member type. The field supplies all pages of that type; your block code renders the list.
 
-Fields:
-- `event_type` (Select) - Options: "In Person", "Virtual"
-- `venue` (Text) - Show only when `event_type` is "In Person"
-- `address` (Text) - Show only when `event_type` is "In Person"
-- `meeting_link` (URL) - Show only when `event_type` is "Virtual"
-
-This creates a dynamic form where editors only see relevant fields based on their selection.
-</Accordion>
-
-<Accordion title="Using Page Field References">
-Allow blocks to reference page-level data:
-
-**Blog Post header block** that shows the featured image from page fields:
-
-Block fields:
-- `featured_image` (Page Field) - References the page's `featured_image` field
-
-This way, editors set the featured image once in page fields, and it appears automatically in the header block.
-
-**Benefits:**
-- Single source of truth for page-level data
-- Editors update one field, it appears everywhere
-- Reduces duplication and inconsistency
-</Accordion>
-
-<Accordion title="Reusable Content Patterns">
-Use Page List fields to automatically include content:
-
-**Team page with automatic team member list:**
-
-Available blocks:
-- Text (for introduction)
-- Team Grid (uses Page List field)
-
-The Team Grid block has:
-- `members` (Page List, Person type) - Automatically shows all Person pages
-
-Editors don't select team members individually—the block shows everyone automatically.
-
-**Use cases:**
-- Team directory pages
-- Blog post listings
-- Product catalogs
-- Event calendars
-</Accordion>
+    For a hand-picked list, use a Repeater containing a Page field. See [Field types](/reference/field-types).
+  </Accordion>
 </AccordionGroup>
 
-## Troubleshooting
+## Adjust the setup after handoff
 
-### Editors Can't Find Blocks They Need
+Ask editors which blocks they need, which fields confuse them, and where they work around the layout. Make a test page before changing the shared setup, then check both new and existing pages.
 
-**Problem**: "I need a gallery block but it's not available"
+| Problem | Change to consider |
+| --- | --- |
+| Editors cannot add a block | Enable it in the page type; for a fixed layout, decide whether to allow body changes |
+| Too many similar choices | Keep one useful block and expose a Select field for variations you implement |
+| Pages look inconsistent | Use a fixed body or reduce the available-block list |
+| Editors misunderstand a field | Improve its label or add an Info field with a concrete example |
 
-**Solution**: Add the block to the page type's available blocks list
-
-### Editors Break Layout
-
-**Problem**: Editors add too many CTAs or use blocks incorrectly
-
-**Solutions**:
-- Remove problematic blocks from available options
-- Create more specific blocks with built-in constraints
-- Add Info fields with usage guidelines
-- Provide examples of well-built pages
-
-### Pages Look Inconsistent
-
-**Problem**: Every page looks different
-
-**Solutions**:
-- Use header/footer slots for consistent structure
-- Limit block options to maintain cohesion
-- Create example pages editors can duplicate
-- Add visual guidelines (style guide)
-
-### Editors Want More Flexibility
-
-**Problem**: "This feels too restrictive"
-
-**Solutions**:
-- Identify specific pain points
-- Add necessary blocks thoughtfully
-- Consider if constraints are serving design goals
-- Balance freedom with consistency
+Tell editors what changed and show them how to use it. Agree on review before publishing as a team process; the page type does not create an approval workflow.
 
 ## Next Steps
 
@@ -508,7 +141,3 @@ Editors don't select team members individually—the block shows everyone automa
   Complete reference of all available field types.
 </Card>
 </CardGroup>
-
-<Tip>
-The best page type configurations come from iteration. Start with a solid foundation, then refine based on real-world usage and editor feedback.
-</Tip>

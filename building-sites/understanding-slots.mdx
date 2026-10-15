@@ -3,7 +3,7 @@ title: 'Understanding Slots'
 description: 'Learn how slots organize blocks into header, body, and footer areas.'
 ---
 
-Slots are areas where blocks can be placed within a page type. They help you create consistent layouts while giving editors control over content.
+A slot is a layout area: header, body, or footer. Place blocks in these areas to choose what pages share and what editors can change on each page.
 
 ## Watch the workflow
 
@@ -24,269 +24,132 @@ Watch the workflow in Primo.
   Your browser does not support embedded video. [Download this demonstration](/videos/demos/shared-slots.mp4).
 </video>
 
-## The Three Slots
+[Download video](/videos/demos/shared-slots.mp4) · [Download captions](/videos/demos/shared-slots.vtt)
 
-Every page type has three slots:
+<Accordion title="Read the walkthrough">
+1. Open the page type template.
+2. Header content is shared across this page type.
+3. The body contains content editors can change per page.
+4. Footer content stays consistent across these pages.
+</Accordion>
 
-### Header Slot
+## The three slots
 
-The **header slot** appears at the top of every page of this type.
+| Slot | Where it appears | Content and editing behavior |
+| --- | --- | --- |
+| Header | Above the body | Structure and ordinary section content are shared across pages of this type |
+| Body | Main page content | Each page has its own sections and content; the available-block list controls layout editing |
+| Footer | Below the body | Structure and ordinary section content are shared across pages of this type |
 
-**Use for:**
-- Site navigation
-- Logo
-- Top banner
-- Search bar
+Use the header for navigation and the footer for shared links. Put content that varies by page in the body. These are uses for blocks you build or import; a slot does not create a navigation menu or footer design for you.
 
-**Characteristics:**
-- Defined at the page type level
-- Same content appears on all pages
-- Editors cannot modify on individual pages
-- Perfect for site-wide UI elements
+Editors can change content fields in shared header and footer sections, but they cannot add, remove, or reorder those sections on individual pages. A shared section can display each page's own title through a **Page Field** reference.
 
-**Example:**
-```
-┌─────────────────────────────┐
-│      Header Slot            │ ← Navigation, Logo
-│  (Same on all pages)        │
-├─────────────────────────────┤
-│                             │
-│      Body Slot              │
-│  (Editable per page)        │
-│                             │
-├─────────────────────────────┤
-│      Footer Slot            │ ← Copyright, Links
-│  (Same on all pages)        │
-└─────────────────────────────┘
-```
+<Note>
+Sharing is scoped to a page type. If two page types should use the same logo or navigation values, connect their blocks to **Site Field** references.
+</Note>
 
-### Body Slot
+## Fixed or flexible body layouts
 
-The **body slot** is the main content area where editors have full control.
+The available-block list determines whether the body layout is fixed or flexible. These are two ways to configure a page type, not separate template presets.
 
-**Use for:**
-- Main page content
-- Hero sections
-- Text blocks
-- Image galleries
-- Call-to-action sections
+### Flexible body: choose available blocks
 
-**Characteristics:**
-- Editors can add, remove, and reorder blocks
-- Different content on each page
-- Most flexible slot
-- Blocks stack vertically
+Enable the blocks editors can insert. Editors can add those blocks, remove sections, and change their order. New pages can start with body sections from the template and then use different layouts.
 
-**Editor Capabilities:**
-- ✅ Add blocks (from available blocks)
-- ✅ Remove blocks
-- ✅ Reorder blocks (drag and drop)
-- ✅ Edit block content
-- ❌ Cannot modify header/footer
-- ❌ Cannot add blocks not in "available blocks"
+For example, you could create a General Page type with Hero, Text, and Image blocks. Your About page could use Hero and Text, while Services could use Hero, Text, and several Image sections.
 
-### Footer Slot
+### Fixed body: leave available blocks empty
 
-The **footer slot** appears at the bottom of every page of this type.
+Add the starting body sections in the page type and leave its available-block list empty. Editors can change content but cannot add, remove, or reorder those sections.
 
-**Use for:**
-- Site footer
-- Copyright notice
-- Footer navigation
-- Social media links
-- Newsletter signup
+For example, you could create a Team Member type with Profile and Biography blocks. Each new profile gets those sections and stores its own content.
 
-**Characteristics:**
-- Defined at the page type level
-- Same content appears on all pages
-- Editors cannot modify on individual pages
-- Perfect for consistent site-wide elements
+The starting body sections are copied when you create a page. Changing the template later does not replace body sections on existing pages.
 
-## Static vs Dynamic Body Slots
+### Watch: Configure fixed and flexible body layouts
 
-The body slot behavior changes based on whether the page type has available blocks:
+Watch the available-block list change the layout controls, then compare two posts with independent content.
 
-### Dynamic Body (Default)
+<video
+  controls
+  playsInline
+  preload="none"
+  className="w-full rounded-xl"
+  aria-label="Configure fixed and flexible body layouts"
+  poster="/videos/demos/fixed-flexible-layouts.jpg"
+>
+  <source src="/videos/demos/fixed-flexible-layouts.mp4" type="video/mp4" />
+  <track kind="captions" src="/videos/demos/fixed-flexible-layouts.vtt" srcLang="en" label="English" />
+  Your browser does not support embedded video. [Download this demonstration](/videos/demos/fixed-flexible-layouts.mp4).
+</video>
 
-**When:** Page type has "Available Blocks" configured
+[Download video](/videos/demos/fixed-flexible-layouts.mp4) · [Download captions](/videos/demos/fixed-flexible-layouts.vtt)
 
-**Behavior:**
-- Editors can add blocks from the list
-- Editors can remove blocks
-- Editors can reorder blocks
-- Each page can have different blocks
-
-**Example:**
-```
-Page Type: Blog Post
-Available Blocks: [Hero, Text, Image, Code Block, CTA]
-
-Page 1 (Blog Post):
-- Hero
-- Text
-- Image
-- CTA
-
-Page 2 (Blog Post):
-- Text
-- Code Block
-- Text
-- Image
-```
-
-### Static Body
-
-**When:** Page type has NO available blocks configured
-
-**Behavior:**
-- Body blocks are pre-defined in the page type
-- Same structure on all pages
-- Content varies per page, structure stays the same
-- Editors can only edit block content, not add/remove
-
-**Example:**
-```
-Page Type: Team Member
-Available Blocks: [] (empty)
-Body Slot Blocks: [Profile Header, Bio Text, Contact Info]
-
-All team member pages have:
-- Profile Header (content varies)
-- Bio Text (content varies)
-- Contact Info (content varies)
-```
-
-<Tip>
-Use static body slots when you want a consistent structure across all pages of a type. Great for profiles, product pages, or any templated content.
-</Tip>
+<Accordion title="Read the walkthrough">
+1. Enabling available blocks lets editors change the body structure.
+2. Disable the last available block: Primo confirms that the page type becomes static.
+3. Existing body sections remain. Editors can change content, but structure is fixed.
+4. Enable a block again to restore flexible layout controls, including reordering.
+5. This Blog Post type stays fixed: Post Content uses the first post’s own fields.
+6. Another post keeps the same structure, with its own title and body.
+</Accordion>
 
 ## Configuring Slots in Page Types
 
+You need developer access to configure the layout.
+
 <Steps>
-  <Step title="Create or edit a page type">
-    Navigate to Pages → Page Types → Create/Edit
+  <Step title="Open the page type">
+    Choose **Pages → Manage page types** and open the type you want to configure.
   </Step>
-
-  <Step title="Configure header slot">
-    Under "Header Slot":
-    - Click "Add Block"
-    - Select blocks to appear at the top of every page
-    - Order matters - blocks appear top to bottom
+  <Step title="Place shared sections">
+    Add blocks to the header and footer areas. Set their order and shared content.
   </Step>
-
-  <Step title="Configure available blocks">
-    Under "Available Blocks":
-    - Add blocks editors can use in the body slot
-    - Leave empty for static body slot
+  <Step title="Set the starting body">
+    Add body sections if new pages should start with a layout and sample content. You can do this for either a fixed or flexible body.
   </Step>
-
-  <Step title="Configure body slot (for static)">
-    If Available Blocks is empty:
-    - Configure default blocks for the body
-    - These appear on all pages
+  <Step title="Choose editing options">
+    In the **Blocks** tab, enable the blocks editors can insert for a flexible body. Leave the available-block list empty for a fixed body.
   </Step>
-
-  <Step title="Configure footer slot">
-    Under "Footer Slot":
-    - Click "Add Block"
-    - Select blocks to appear at the bottom of every page
+  <Step title="Verify two pages">
+    Create two pages of this type. Confirm shared content appears on both, body content remains independent, and editors have the intended layout controls.
   </Step>
 </Steps>
 
-## Common Patterns
+## Example layouts you can create
 
-### Blog Post Template
+The page type and block names below describe designs you can build or import.
 
-```
-Header Slot: [Site Navigation]
-Available Blocks: [Hero, Text Block, Image, Code Block, Quote, CTA]
-Footer Slot: [Site Footer]
-```
+| Example | Header | Body | Footer |
+| --- | --- | --- | --- |
+| General Page | Navigation block | Flexible: selected Hero, Text, and Image blocks | Footer Links block |
+| Team Member | Navigation block | Fixed: Profile and Biography sections | Footer Links block |
+| Blog Post | Navigation block | Fixed: Post Content section using page fields | Footer Links block |
 
-**Result:** Consistent header/footer, flexible body content
+A block that contains a search box, newsletter form, or registration form needs its own code and any required external service. Placing it in a slot does not add a search index or form-processing backend.
 
-### Default Page Template
+## Check layout changes
 
-```
-Header Slot: [Site Navigation]
-Available Blocks: [Hero, Text, Image, Card Grid, CTA]
-Footer Slot: [Site Footer]
-```
-
-**Result:** Flexible layout for general content pages
-
-### Product Page Template
-
-```
-Header Slot: [Site Navigation]
-Available Blocks: [] (empty)
-Body Slot: [Product Hero, Specs, Gallery, Reviews, Related Products]
-Footer Slot: [Site Footer]
-```
-
-**Result:** Consistent product page structure
-
-### Documentation Page
-
-```
-Header Slot: [Docs Navigation, Search]
-Available Blocks: [Text, Code Block, Image, Accordion, Tabs, Alert]
-Footer Slot: [Docs Footer, Previous/Next]
-```
-
-**Result:** Documentation-specific UI and blocks
-
-## Best Practices
-
-<AccordionGroup>
-  <Accordion title="Keep headers and footers minimal">
-    Heavy headers/footers slow down editing and can overwhelm the page. Include only what's truly site-wide.
-  </Accordion>
-
-  <Accordion title="Group related blocks">
-    Instead of adding 20 individual blocks to available blocks, consider creating composite blocks that include common combinations.
-  </Accordion>
-
-  <Accordion title="Use static bodies for templated content">
-    Product pages, team profiles, and case studies benefit from consistent structure. Use static body slots to maintain consistency.
-  </Accordion>
-
-  <Accordion title="Preview before publishing">
-    Always preview pages to ensure header/footer blocks work well with body content. Check responsive behavior.
-  </Accordion>
-
-  <Accordion title="Consider mobile navigation">
-    Header blocks should handle mobile viewports. Test navigation collapse/hamburger menus.
-  </Accordion>
-</AccordionGroup>
+Preview an existing page and a newly created page after changing a page type. Test mobile navigation, shared links, and empty content. Publish when the affected pages are ready.
 
 ## Semantic HTML
 
-Primo wraps each slot in semantic HTML tags:
+The browser publisher wraps the body in `<main>` and adds `<header>` and `<footer>` when those areas have rendered content:
 
 ```html
-<header data-slot="header">
-  <!-- Header slot blocks -->
+<header>
+  <!-- Header sections -->
 </header>
-
-<main data-slot="body">
-  <!-- Body slot blocks -->
+<main>
+  <!-- Body sections -->
 </main>
-
-<footer data-slot="footer">
-  <!-- Footer slot blocks -->
+<footer>
+  <!-- Footer sections -->
 </footer>
 ```
 
-This provides:
-- ✅ Better accessibility (screen readers)
-- ✅ Proper document structure
-- ✅ SEO benefits
-- ✅ Valid HTML5
-
-<Info>
-The semantic tags are added automatically. You don't need to include them in your block code.
-</Info>
+Use `<section>`, `<div>`, or `<nav>` inside your blocks to avoid adding a second page-level wrapper. Check the generated HTML if you use the CLI static builder, whose wrappers can differ.
 
 ## Next Steps
 

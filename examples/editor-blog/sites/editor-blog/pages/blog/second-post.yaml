@@ -1,0 +1,11 @@
+name: Make a seasonal garden checklist
+page_type: blog-post
+fields:
+  title: Make a seasonal garden checklist
+  excerpt: A few repeatable tasks help your garden thrive.
+  publish_date: "2026-10-11"
+  body: <p>Check soil moisture, remove weeds, and note what blooms. Adjust your
+    plan as the seasons change.</p>
+sections:
+  - block: post-content
+    content: {}

@@ -1,6 +1,6 @@
 ---
 title: 'Quickstart'
-description: 'Build your first Primo site in 5 minutes — locally with the CLI or deployed and pulled down.'
+description: 'Create your first Primo site locally with the CLI or on a deployed server.'
 ---
 
 Primo has two starting points. Pick the one that matches how you work:
@@ -14,7 +14,7 @@ Primo has two starting points. Pick the one that matches how you work:
   </Card>
 </CardGroup>
 
-Both paths land at the same place: a workspace on disk that you can edit with code, AI agents, or the visual CMS.
+Both paths let you use the visual CMS. The local path starts with files on disk; the deployed path lets you work entirely in the browser or pull files later.
 
 <Tabs>
   <Tab title="Start local">
@@ -28,7 +28,7 @@ Both paths land at the same place: a workspace on disk that you can edit with co
         npm install -g primo-cli
         ```
 
-        Requires Node.js 18+.
+        Use a supported Node.js LTS release, version 22.13 or later. Check your version with `node --version` before installing.
       </Step>
 
       <Step title="Create a workspace and a site">
@@ -38,17 +38,17 @@ Both paths land at the same place: a workspace on disk that you can edit with co
         primo new my-site
         ```
 
-        `primo init` creates the workspace and offers to connect your AI agent to the Primo MCP tools. `primo new` creates the site and starts the local CMS. If the port is busy, Primo picks the next free one and prints the URLs it's using.
+        `primo init` creates the workspace and offers to connect your AI agent to the Primo MCP tools. `primo new` creates the site and starts the local CMS when you run it in an interactive terminal. From a script, start the CMS separately with `primo dev`. If the port is busy, Primo picks the next free one and prints the URLs it's using.
 
         <Tip>
-        Open `http://my-site.localhost:3000/admin/site` to see the site in the visual editor. File edits show up there immediately. By default your files are the source of truth and the editor is read-only; see [authoring modes](/cli/local-development) to edit in the CMS instead.
+        Open the editor URL printed by the CLI, normally `http://my-site.localhost:3000/admin/site`. File edits show up there immediately. By default your files are the source of truth and the editor is read-only; see [authoring modes](/cli/local-development#author-modes) to edit in the CMS instead.
         </Tip>
       </Step>
 
       <Step title="Edit blocks and pages">
         Open the workspace in your editor:
 
-        ```
+        ```text
         my-workspace/
         ├── server.yaml
         ├── AGENTS.md
@@ -94,14 +94,14 @@ Both paths land at the same place: a workspace on disk that you can edit with co
         Pick one:
 
         - **[Railway](https://railway.com/deploy/palacms?referralCode=RCPU7k)** — one-click deploy with persistent storage
-        - **[Fly.io](https://fly.io)** — generous free tier
-        - **Docker / VPS** — `docker run -d -p 8080:8080 ghcr.io/primocms/primo:latest`
+        - **[Fly.io](https://fly.io)** — usage-based hosting with persistent volumes
+        - **Docker / VPS** — `docker run -d -p 8080:8080 -v primo-data:/app/pb_data ghcr.io/primocms/primo:latest`
 
         See the [Installation Guide](/getting-started/installation) for full instructions.
       </Step>
 
       <Step title="Create a site in the browser">
-        Visit your deployed URL and follow the site creation wizard. Pick a starter (Blog, Portfolio, Restaurant, Business, or Blank) or clone an existing site.
+        Visit your deployed URL, complete account setup, and choose **Create Site** from the dashboard. Browse the starters available in your instance, copy an existing site, or start blank. Starter names and included blocks depend on the design you choose.
 
         <Tip>
         You can build the entire site in the browser without ever installing the CLI. The CLI is optional.
@@ -109,7 +109,7 @@ Both paths land at the same place: a workspace on disk that you can edit with co
       </Step>
 
       <Step title="Edit content visually">
-        Open `https://your-domain.com/admin` and edit pages by clicking on them. See [Using the Editor](/content-management/using-the-editor) for the full visual workflow.
+        Open your site in the editor. Click supported fields to edit inline, or use **Edit content** for the content form. See [Using the Editor](/content-management/using-the-editor) for the full visual workflow.
 
         <Tip>
         The admin panel is always at `/admin/` on your domain. Your published site lives at the root.
@@ -125,11 +125,15 @@ Both paths land at the same place: a workspace on disk that you can edit with co
         primo pull https://your-domain.com
         ```
 
-        You'll get a full workspace on disk. Push changes back with `primo push`. See [Push and Pull](/cli/sync) for the sync model.
+        You'll get a full workspace on disk. Push changes back with `primo push`, then publish from the browser to update the public site. See [Push and Pull](/cli/sync) for the sync model.
+      </Step>
+
+      <Step title="Connect the site's public hostname">
+        From the Sites dashboard, open the site's menu and choose **Assign domain**. Use your Railway-generated hostname or a custom domain, then verify HTTPS. Follow [Connect a site domain](/dashboard/connecting-domains) for DNS and connection steps. The CMS server's address does not automatically assign that hostname to a new site.
       </Step>
 
       <Step title="Publish changes">
-        Browser edits auto-save. To publish, click **Publish** (or press ⌘P / Ctrl+P). Primo compiles your blocks, generates static HTML, and serves it from your domain.
+        Inline edits and page layout changes auto-save. Save any open content dialogs, then publish: click **Publish** (or press ⌘P / Ctrl+P). Primo compiles your blocks, generates static HTML, and serves it from your domain.
       </Step>
     </Steps>
   </Tab>

@@ -3,7 +3,7 @@ title: 'Publishing'
 description: 'Deploy your site changes to production.'
 ---
 
-Publishing compiles your blocks into static HTML, CSS, and JavaScript and deploys them to your domain.
+Publishing makes the site's saved changes public. Primo generates HTML, CSS, and JavaScript from your blocks and content and serves them on the connected domain.
 
 ## Watch the workflow
 
@@ -24,6 +24,14 @@ Watch the workflow in Primo.
   Your browser does not support embedded video. [Download this demonstration](/videos/demos/publishing.mp4).
 </video>
 
+[Download video](/videos/demos/publishing.mp4) · [Download captions](/videos/demos/publishing.vtt)
+
+<Accordion title="Read the walkthrough">
+1. Open Publish to review your changes.
+2. Choose Publish changes to build the site.
+3. View site opens the published result.
+</Accordion>
+
 ## How It Works
 
 When you publish, Primo:
@@ -37,6 +45,8 @@ Your site is accessible at `https://yourdomain.com/` while the admin stays at `h
 
 ## Publishing a Site
 
+You need publishing access to a deployed site with a [connected hostname](/dashboard/connecting-domains). Local `primo dev` uses previews; deploy the CMS or [build static files](/cli/deploy) to make the site public. Save open content dialogs before publishing.
+
 <Steps>
 <Step title="Click Publish">
   In the toolbar, click "Publish" (or press `Cmd/Ctrl + P`).
@@ -47,12 +57,12 @@ Your site is accessible at `https://yourdomain.com/` while the admin stays at `h
 </Step>
 
 <Step title="Wait for completion">
-  Publishing typically takes 10-30 seconds. You'll see a success message when done.
+  Wait for the success message. Timing depends on site size, network speed, and your browser.
 </Step>
 </Steps>
 
 <Check>
-Your site is now live at your domain.
+Open your public hostname in a separate tab. Check the homepage, a nested page, images, and navigation to confirm the saved changes are live.
 </Check>
 
 ## What Gets Published
@@ -60,7 +70,7 @@ Your site is now live at your domain.
 Every publish includes:
 
 - All pages
-- All blocks (recompiled)
+- The block code and content needed to render your pages
 - All assets (images, files)
 - Site configuration
 
@@ -68,10 +78,14 @@ Every publish includes:
 Even if you only change one thing, Primo rebuilds the entire site to ensure consistency.
 </Tip>
 
+<Note>
+Publishing applies to the whole site, including saved changes on other pages. A CLI push updates CMS data without publishing; review it in the hosted editor and publish here when ready.
+</Note>
+
 ## Auto-Save Behavior
 
-Most changes auto-save:
-- Page content edits
+These changes auto-save:
+- Inline content edits
 - Adding/removing blocks
 - Reordering blocks
 
@@ -93,11 +107,11 @@ Always save in the block/section/site editor before publishing.
 
 **Changes don't appear on live site:**
 - Hard refresh your browser (`Cmd/Ctrl + Shift + R`)
-- Wait 1-2 minutes for propagation
+- Check any reverse-proxy or CDN caching rules; bypass caches for `/admin` and `/api`
 - Verify you clicked "Publish Changes" in the dialog
 
 **Images not loading:**
-- Verify images were uploaded (not just linked externally)
+- Verify uploaded images resolve, or that external image URLs are reachable over HTTPS
 - Republish to ensure assets were copied
 
 ## Next Steps
@@ -108,6 +122,6 @@ Always save in the block/section/site editor before publishing.
 </Card>
 
 <Card title="Site Configuration" icon="gear" href="/reference/site-configuration">
-  Configure domains and settings.
+  Configure shared content, styles, and metadata.
 </Card>
 </CardGroup>

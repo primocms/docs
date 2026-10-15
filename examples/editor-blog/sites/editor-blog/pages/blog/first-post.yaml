@@ -1,0 +1,11 @@
+name: Start a small herb garden
+page_type: blog-post
+fields:
+  title: Start a small herb garden
+  excerpt: Choose three herbs and a sunny spot.
+  publish_date: "2026-10-11"
+  body: <p>Choose three herbs, check their light requirements, and use a container
+    with drainage holes.</p>
+sections:
+  - block: post-content
+    content: {}

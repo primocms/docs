@@ -3,7 +3,7 @@ title: 'Block Library'
 description: 'Manage your server library of reusable blocks.'
 ---
 
-Your personal block library contains reusable blocks that you can use across all your sites.
+The server's block library stores blocks you can copy into sites. The library is shared on the instance; it is separate from each site's own blocks.
 
 ## Watch the workflow
 
@@ -24,21 +24,49 @@ Watch the workflow in Primo.
   Your browser does not support embedded video. [Download this demonstration](/videos/demos/block-library.mp4).
 </video>
 
-## Overview
+[Download video](/videos/demos/block-library.mp4) · [Download captions](/videos/demos/block-library.vtt)
 
-The block library is your collection of components you've built. Unlike site-specific blocks, library blocks can be added to any site you manage.
+<Accordion title="Read the walkthrough">
+1. Browse groups in your shared block library.
+2. Open a library block to inspect its code.
+3. Switch to the content fields that power the block.
+4. Close the block and return to the library.
+</Accordion>
 
-<Info>
-This page is under construction. More documentation coming soon.
-</Info>
+## Manage library blocks
 
-## Next Steps
+Open **Library** from the server dashboard. Choose a group to browse its blocks, open a block to edit its code and default content, or create a block to add a reusable template.
+
+<Steps>
+  <Step title="Create a group">
+    Use the group controls to create a named group, such as Navigation or Content. Select it before creating or importing blocks.
+  </Step>
+  <Step title="Create or import a block">
+    Choose **Create Block** to write a Svelte block with fields, or **Import** to select a compatible `.json` block export. Save the block and check its preview.
+  </Step>
+  <Step title="Organize and export">
+    Use a block's menu to rename it, move it to another group, download its `.json` export, or delete it.
+  </Step>
+  <Step title="Use it in a site">
+    Open a site's page type editor and add a library block in the Blocks tab. Place it in the shared template or enable it for editors to add to page bodies.
+  </Step>
+</Steps>
+
+<Note>
+Primo copies a library block into the site. Existing site copies do not receive later changes to the library original. See [Using the component library](/building-sites/using-the-component-library) for update and reuse workflows.
+</Note>
+
+<Warning>
+Deleting a library group deletes the library blocks inside it. Move blocks you want to keep before deleting the group.
+</Warning>
+
+## Back up the library
+
+Download individual blocks as `.json` files, or use [`primo library pull`](/cli/sync#library-only-sync) to export the full library into a CLI workspace. Keep a PocketBase backup for the server's complete state.
+
+## Next steps
 
 <CardGroup cols={2}>
-  <Card title="Writing Components" icon="code" href="/building-sites/writing-components">
-    Learn how to create blocks
-  </Card>
-  <Card title="Using the Component Library" icon="book-open" href="/building-sites/using-the-component-library">
-    Work with library blocks in your sites
-  </Card>
+  <Card title="Writing blocks" icon="code" href="/building-sites/writing-components">Create reusable Svelte blocks.</Card>
+  <Card title="Using the component library" icon="book-open" href="/building-sites/using-the-component-library">Copy blocks into sites and manage updates.</Card>
 </CardGroup>

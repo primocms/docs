@@ -1,0 +1,8 @@
+name: Home
+page_type: general-page
+fields:
+  meta_title: Garden Studio
+  meta_description: Read our garden notes.
+sections:
+  - block: post-list
+    content: {}

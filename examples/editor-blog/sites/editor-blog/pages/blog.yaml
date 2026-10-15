@@ -1,0 +1,8 @@
+name: Blog
+page_type: general-page
+fields:
+  meta_title: Garden notes
+  meta_description: Seasonal advice from Garden Studio.
+sections:
+  - block: post-list
+    content: {}

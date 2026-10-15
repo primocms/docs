@@ -55,18 +55,22 @@ primo push --force                # Overwrite server changes (asks first, backs 
 - `-t, --token <token>` — Auth token
 - `--force` — Overwrite changes made on the server since your last sync, after confirmation. A backup is saved first.
 - `--yes` — Confirm `--force` without the interactive prompt (for scripts and CI)
-- `--preview` — Preview-only push (doesn't publish). Also reports any site whose server changes would block a normal push.
+- `--preview` — Ask the server for an import diff without applying changes. Also reports conflicts that would block a normal push; skips library uploads.
 - `--dry-run` — Show planned operations without sending requests
 
 <Tip>
-Always run `primo push --dry-run` first when pushing to production. It surfaces import warnings (orphaned uploads, unresolved block references) before they hit the server.
+Run `primo push --dry-run` to inspect planned operations. For an authenticated server-side import diff, use `primo push --preview`; review its output before applying changes. Neither option publishes the public site.
 </Tip>
+
+<Note>
+A push updates the hosted CMS data. It does **not** publish the public site. Open the hosted editor and choose **Publish** after reviewing your pushed changes.
+</Note>
 
 ## Push Safety
 
 A push replaces the server's copy of a site with your local files. To keep it from silently erasing edits a client made in the CMS, Primo checks first: if the site changed on the server since your last pull or push, the push is refused **before anything is uploaded**:
 
-```
+```text
 Push stopped before any uploads:
   my-site: changed on the server since the last sync (or was deleted).
 Nothing was changed. Save your local work before pulling. An intentional overwrite requires --force.
@@ -90,6 +94,33 @@ The check covers sites and the shared library (additions, deletions, field edits
   </Step>
 </Steps>
 
+### Watch: Recover from a refused CLI push
+
+This local demonstration uses an isolated server and an explicit token. A hosted workflow can use the credentials saved by `primo login`. The final push updates the CMS; publish separately in the hosted editor.
+
+<video
+  controls
+  playsInline
+  preload="none"
+  className="w-full rounded-xl"
+  aria-label="Recover from a refused CLI push"
+  poster="/videos/demos/cli-sync-recovery.jpg"
+>
+  <source src="/videos/demos/cli-sync-recovery.mp4" type="video/mp4" />
+  <track kind="captions" src="/videos/demos/cli-sync-recovery.vtt" srcLang="en" label="English" />
+  Your browser does not support embedded video. [Download this demonstration](/videos/demos/cli-sync-recovery.mp4).
+</video>
+
+[Download video](/videos/demos/cli-sync-recovery.mp4) · [Download captions](/videos/demos/cli-sync-recovery.vtt)
+
+<Accordion title="Read the walkthrough">
+1. Pull from the server to record a baseline. Here `PRIMO_SERVER` points to an isolated local demo.
+2. After a local code edit and a server edit, push refuses to overwrite the newer server version.
+3. Save the edited file outside `sites/`, then pull the latest server copy.
+4. Reapply the saved code edit and push again. The server change is preserved.
+5. The pushed headline appears in the CMS. On a hosted server, review and Publish to update the public site.
+</Accordion>
+
 ### Overwrite on purpose with `--force`
 
 If you're sure your local files should win:
@@ -100,7 +131,7 @@ primo push https://cms.example.com --force
 
 Primo lists what will be replaced and asks for confirmation. Before overwriting, the server saves a backup of its version and the CLI downloads a copy:
 
-```
+```text
   Server backup: https://cms.example.com/api/primo/push-backups/<site-id>/backup-<id>.zip
   Local backup: .primo/backups/<site-id>/backup-<id>.zip
 ```
@@ -109,11 +140,17 @@ In a script or CI job, where there's no prompt, pass `--force --yes`.
 
 ### "No saved baseline"
 
-```
+```text
 my-site: has no saved baseline for this server. Pull first, or explicitly overwrite with --force.
 ```
 
 Your workspace has never synced this site with this server, for example because it was copied from another machine or the site was created on the server separately. Pull first, or use `--force` if your files should replace the server's. Pushing a site that doesn't exist on the server yet needs no baseline.
+
+### Duplicate folders after a site rename
+
+Pull names site folders from the site name. If a rename changes that folder name, a later pull can leave the previous folder alongside the new one. Both copies have the same `site_id`, so the CLI refuses to push them.
+
+Save any edits you need, then move the older copy outside `sites/` (for example, into `_backups/`). Keep one folder per `site_id` before pushing again. To create a separate site from a copy, remove its `site_id` and register it with `primo add`.
 
 ### Version requirements
 
@@ -159,6 +196,7 @@ This is useful when curating a block library independently of any particular sit
 ```bash
 primo pull https://cms.example.com ./prod-backup
 cd prod-backup
+git init
 git add . && git commit -m "Snapshot $(date)"
 ```
 
@@ -166,7 +204,7 @@ git add . && git commit -m "Snapshot $(date)"
 
 ```bash
 primo dev                                # Build and edit locally
-primo push --dry-run https://...         # Preview the push
+primo push --dry-run https://cms.example.com         # Preview the push
 primo push https://cms.example.com       # Apply
 ```
 

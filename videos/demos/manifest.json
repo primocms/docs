@@ -10,7 +10,7 @@
     "cleanSource": true,
     "baseUrl": "http://primo.test:43960"
   },
-  "format": "H.264 MP4, 1600×1080, 30 fps, silent with burned-in instructions",
+  "format": "H.264 MP4, silent with burned-in instructions; individual clips specify capture format.",
   "clips": [
     {
       "id": "introduction-overview",
@@ -620,6 +620,386 @@
         }
       ],
       "source": "Actual Primo UI in an isolated local demo"
+    },
+    {
+      "id": "start-local",
+      "title": "Start Primo locally",
+      "recordedOn": "2026-10-11",
+      "exampleSite": {
+        "name": "Garden Demo"
+      },
+      "duration": 34.95,
+      "bytes": 185257,
+      "steps": [
+        {
+          "at": 0,
+          "text": "With Node.js and the CLI installed, create a workspace. This demo skips MCP setup."
+        },
+        {
+          "at": 7,
+          "text": "Inside the workspace, create a site. --skip-dev leaves starting the server to you."
+        },
+        {
+          "at": 14,
+          "text": "Validate the site files before starting Primo."
+        },
+        {
+          "at": 20,
+          "text": "Run primo dev --author files. Open its editor URL: Browse mode keeps local files authoritative."
+        },
+        {
+          "at": 28,
+          "text": "Stop with Ctrl+C, then run primo dev --author cms to edit in the browser."
+        }
+      ],
+      "source": "Paced sequences of actual captured Primo UI screens and actual CLI output. No simulated product UI.",
+      "format": "1280×800, 20 fps, silent with burned-in instructions and WebVTT captions",
+      "cliVersion": "0.2.0",
+      "cliCommit": "26043d87f0baa46d3c35318fd591e121ba9ccfe4",
+      "builds": [
+        {
+          "version": "3.3.1",
+          "commit": "4b994903d4297e6e859df094289b1743d9f8dfde",
+          "binarySha256": "29243895eb6263ac2a4c8182548dfd01dd781265ea2f508d02b2b3ff031131f1"
+        }
+      ],
+      "plannedDuration": 36
+    },
+    {
+      "id": "field-references",
+      "title": "Connect site and page field references",
+      "recordedOn": "2026-10-11",
+      "exampleSite": {
+        "name": "Garden Studio"
+      },
+      "duration": 50.95,
+      "bytes": 383439,
+      "steps": [
+        {
+          "at": 0,
+          "text": "This custom Navigation block reads shared site fields."
+        },
+        {
+          "at": 6,
+          "text": "Brand name is a Site Field reference to the source field in Site content."
+        },
+        {
+          "at": 13,
+          "text": "Editing the reference in the content form updates that source value."
+        },
+        {
+          "at": 20,
+          "text": "The header and footer now display the same shared brand name."
+        },
+        {
+          "at": 26,
+          "text": "The custom Post Content block reads this post’s page fields."
+        },
+        {
+          "at": 32,
+          "text": "Its Title is a Page Field reference to the Blog Post title field."
+        },
+        {
+          "at": 39,
+          "text": "Save a new title for this post."
+        },
+        {
+          "at": 45,
+          "text": "The listing reads the updated title. The second post keeps its own title."
+        }
+      ],
+      "source": "Paced sequences of actual captured Primo UI screens and actual CLI output. No simulated product UI.",
+      "format": "1280×800, 20 fps, silent with burned-in instructions and WebVTT captions",
+      "cliVersion": "0.2.0",
+      "cliCommit": "26043d87f0baa46d3c35318fd591e121ba9ccfe4",
+      "builds": [
+        {
+          "branch": "main",
+          "commit": "b0225f01bed114fd44b7328f2159a6ac9b545628",
+          "commitUrl": "https://github.com/primocms/primo/commit/b0225f01bed114fd44b7328f2159a6ac9b545628",
+          "version": "main-b0225f01b",
+          "builtAt": "2026-10-10T07:36:30.165Z",
+          "binarySha256": "b7cc36cab65a86f3807cfd700cccaccab90e8093dfe7a012d12bbe306451d923",
+          "cleanSource": true,
+          "baseUrl": "http://primo.test:43960"
+        }
+      ],
+      "plannedDuration": 52
+    },
+    {
+      "id": "fixed-flexible-layouts",
+      "title": "Configure fixed and flexible body layouts",
+      "recordedOn": "2026-10-11",
+      "exampleSite": {
+        "name": "Garden Studio"
+      },
+      "duration": 42.95,
+      "bytes": 309918,
+      "steps": [
+        {
+          "at": 0,
+          "text": "Enabling available blocks lets editors change the body structure."
+        },
+        {
+          "at": 7,
+          "text": "Disable the last available block: Primo confirms that the page type becomes static."
+        },
+        {
+          "at": 15,
+          "text": "Existing body sections remain. Editors can change content, but structure is fixed."
+        },
+        {
+          "at": 22,
+          "text": "Enable a block again to restore flexible layout controls, including reordering."
+        },
+        {
+          "at": 29,
+          "text": "This Blog Post type stays fixed: Post Content uses the first post’s own fields."
+        },
+        {
+          "at": 36,
+          "text": "Another post keeps the same structure, with its own title and body."
+        }
+      ],
+      "source": "Paced sequences of actual captured Primo UI screens and actual CLI output. No simulated product UI.",
+      "format": "1280×800, 20 fps, silent with burned-in instructions and WebVTT captions",
+      "cliVersion": "0.2.0",
+      "cliCommit": "26043d87f0baa46d3c35318fd591e121ba9ccfe4",
+      "builds": [
+        {
+          "version": "3.3.1",
+          "commit": "4b994903d4297e6e859df094289b1743d9f8dfde",
+          "binarySha256": "29243895eb6263ac2a4c8182548dfd01dd781265ea2f508d02b2b3ff031131f1"
+        },
+        {
+          "branch": "main",
+          "commit": "b0225f01bed114fd44b7328f2159a6ac9b545628",
+          "commitUrl": "https://github.com/primocms/primo/commit/b0225f01bed114fd44b7328f2159a6ac9b545628",
+          "version": "main-b0225f01b",
+          "builtAt": "2026-10-10T07:36:30.165Z",
+          "binarySha256": "b7cc36cab65a86f3807cfd700cccaccab90e8093dfe7a012d12bbe306451d923",
+          "cleanSource": true,
+          "baseUrl": "http://primo.test:43960"
+        }
+      ],
+      "plannedDuration": 43
+    },
+    {
+      "id": "cli-sync-recovery",
+      "title": "Recover from a refused CLI push",
+      "recordedOn": "2026-10-11",
+      "exampleSite": {
+        "name": "Garden Studio"
+      },
+      "duration": 44.0,
+      "bytes": 267695,
+      "steps": [
+        {
+          "at": 0,
+          "text": "Pull from the server to record a baseline. Here PRIMO_SERVER points to an isolated local demo."
+        },
+        {
+          "at": 8,
+          "text": "After a local code edit and a server edit, push refuses to overwrite the newer server version."
+        },
+        {
+          "at": 18,
+          "text": "Save the edited file outside sites/, then pull the latest server copy."
+        },
+        {
+          "at": 27,
+          "text": "Reapply the saved code edit and push again. The server change is preserved."
+        },
+        {
+          "at": 36,
+          "text": "The pushed headline appears in the CMS. On a hosted server, review and Publish to update the public site."
+        }
+      ],
+      "source": "Paced sequences of actual captured Primo UI screens and actual CLI output. No simulated product UI.",
+      "format": "1280×800, 20 fps, silent with burned-in instructions and WebVTT captions",
+      "cliVersion": "0.2.0",
+      "cliCommit": "26043d87f0baa46d3c35318fd591e121ba9ccfe4",
+      "builds": [
+        {
+          "version": "3.3.1",
+          "commit": "4b994903d4297e6e859df094289b1743d9f8dfde",
+          "binarySha256": "29243895eb6263ac2a4c8182548dfd01dd781265ea2f508d02b2b3ff031131f1"
+        }
+      ],
+      "plannedDuration": 44
+    },
+    {
+      "id": "railway-deployment",
+      "title": "Deploy Primo on Railway with the CLI",
+      "recordedOn": "2026-10-11",
+      "duration": 93.95,
+      "plannedDuration": 96,
+      "bytes": 504978,
+      "exampleSite": {
+        "name": "Garden Studio"
+      },
+      "steps": [
+        {
+          "at": 0,
+          "text": "Create a Railway project. CLI commands in this walkthrough use the linked demo project and service."
+        },
+        {
+          "at": 6,
+          "text": "Add an empty service for Primo."
+        },
+        {
+          "at": 12,
+          "text": "Before deploying, attach persistent storage at /app/pb_data. Verify the mount path."
+        },
+        {
+          "at": 20,
+          "text": "Configure Primo account variables privately. This excerpt hides passwords; normal variable output contains secrets."
+        },
+        {
+          "at": 29,
+          "text": "Connect the service to the published Primo image. This demo pins the 3.3.1 image digest."
+        },
+        {
+          "at": 39,
+          "text": "Wait for the service deployment to report SUCCESS. The waiting period is omitted here."
+        },
+        {
+          "at": 46,
+          "text": "Generate a Railway hostname on port 8080. Railway supplies DNS routing and HTTPS for this address."
+        },
+        {
+          "at": 53,
+          "text": "Open /admin/dashboard over HTTPS. Sign in with the regular Primo account, not the PocketBase superuser."
+        },
+        {
+          "at": 59,
+          "text": "The fresh CMS is ready for sites. Credential entry is omitted from this recording."
+        },
+        {
+          "at": 65,
+          "text": "Garden Studio is prepared fictional demo content, imported off camera."
+        },
+        {
+          "at": 72,
+          "text": "Save a visible headline change before testing a redeployment."
+        },
+        {
+          "at": 80,
+          "text": "Redeploy the same service with the same volume. Deployment waiting is omitted."
+        },
+        {
+          "at": 87,
+          "text": "Reload the editor. The headline survives; all 37 exported files match the pre-redeployment copy."
+        }
+      ],
+      "source": "Paced captures of the actual hosted Primo UI and actual Railway CLI responses. CLI selector arguments and interactive workspace selection are omitted from display. Passwords and non-allowlisted variable values are hidden. Site fixtures are imported off camera. Deployment waits are cut.",
+      "format": "H.264 MP4, 1280×800, 20 fps, silent with burned-in instructions and WebVTT captions",
+      "railwayCliVersion": "5.64.2",
+      "deployment": {
+        "hostname": "primo-docs-demo-production.up.railway.app",
+        "version": "v3.3.1",
+        "commit": "4b994903d4297e6e859df094289b1743d9f8dfde",
+        "dockerDigest": "sha256:2a76210f6203e26a6d5bdec165c6464555974728520d863d8542f2a3c903e6ee"
+      },
+      "verification": {
+        "https": true,
+        "persistentExportFilesMatched": 37,
+        "publicRoutes": [
+          "/",
+          "/about",
+          "/blog",
+          "/blog/first-post"
+        ],
+        "customDnsRecorded": false,
+        "temporaryDeploymentRemoved": true,
+        "temporaryVolumeRemoved": true,
+        "activeDeploymentsAfterCleanup": 0,
+        "reportedUsageDollarsAfterCleanup": 0.0009367137114700856
+      },
+      "publicationStatus": "held",
+      "publicationNote": "Omitted from the docs page and demo gallery at the user’s request; retained for later review."
+    },
+    {
+      "id": "railway-hostname-publishing",
+      "title": "Connect a Railway hostname and publish a site",
+      "recordedOn": "2026-10-11",
+      "duration": 80.95,
+      "plannedDuration": 81,
+      "bytes": 405527,
+      "exampleSite": {
+        "name": "Garden Studio"
+      },
+      "steps": [
+        {
+          "at": 0,
+          "text": "Use the Railway-generated hostname. Its DNS routing and HTTPS are already configured by Railway."
+        },
+        {
+          "at": 7,
+          "text": "The prepared site begins without a public hostname assigned in Primo."
+        },
+        {
+          "at": 13,
+          "text": "Open the site menu and choose Assign domain."
+        },
+        {
+          "at": 19,
+          "text": "Enter the Railway hostname without https:// or a path, then choose Connect."
+        },
+        {
+          "at": 27,
+          "text": "For this generated Railway hostname, skip registrar DNS steps: routing and HTTPS are already verified."
+        },
+        {
+          "at": 36,
+          "text": "Mark as connected records manual connection status. It does not publish the site."
+        },
+        {
+          "at": 44,
+          "text": "Open the editor and choose Publish. Confirm the destination, then choose Publish changes."
+        },
+        {
+          "at": 52,
+          "text": "Wait for Changes published before viewing the public site."
+        },
+        {
+          "at": 59,
+          "text": "Open the public HTTPS homepage and verify the saved headline."
+        },
+        {
+          "at": 67,
+          "text": "Follow a navigation link and verify the About page."
+        },
+        {
+          "at": 74,
+          "text": "Check a nested blog URL too. This walkthrough uses a Railway hostname; custom domains also need your own DNS configuration."
+        }
+      ],
+      "source": "Paced captures of the actual hosted Primo UI and actual Railway CLI responses. CLI selector arguments and interactive workspace selection are omitted from display. Passwords and non-allowlisted variable values are hidden. Site fixtures are imported off camera. Deployment waits are cut.",
+      "format": "H.264 MP4, 1280×800, 20 fps, silent with burned-in instructions and WebVTT captions",
+      "railwayCliVersion": "5.64.2",
+      "deployment": {
+        "hostname": "primo-docs-demo-production.up.railway.app",
+        "version": "v3.3.1",
+        "commit": "4b994903d4297e6e859df094289b1743d9f8dfde",
+        "dockerDigest": "sha256:2a76210f6203e26a6d5bdec165c6464555974728520d863d8542f2a3c903e6ee"
+      },
+      "verification": {
+        "https": true,
+        "persistentExportFilesMatched": 37,
+        "publicRoutes": [
+          "/",
+          "/about",
+          "/blog",
+          "/blog/first-post"
+        ],
+        "customDnsRecorded": false,
+        "temporaryDeploymentRemoved": true,
+        "temporaryVolumeRemoved": true,
+        "activeDeploymentsAfterCleanup": 0,
+        "reportedUsageDollarsAfterCleanup": 0.0009367137114700856
+      }
     }
-  ]
+  ],
+  "updatedOn": "2026-10-11"
 }

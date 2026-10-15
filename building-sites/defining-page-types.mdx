@@ -3,7 +3,7 @@ title: 'Defining Page Types'
 description: 'Set up page types to control structure, available blocks, and editor guardrails.'
 ---
 
-Page types are the blueprints that define what kind of pages can exist in your site. They control which blocks editors can use, what page-level fields are available, and what constraints apply. This guide covers everything you need to know about defining effective page types.
+A page type defines the fields, starting layout, and available blocks for its pages. Create types for pages that need different content or editing options.
 
 ## Watch the workflow
 
@@ -24,370 +24,148 @@ Create a Case Study type for an agency site, then make two projects that share i
   Your browser does not support embedded video. [Download this demonstration](/videos/demos/page-types.mp4).
 </video>
 
-## What Are Page Types?
+[Download video](/videos/demos/page-types.mp4) · [Download captions](/videos/demos/page-types.vtt)
 
-Page types are templates that define:
+<Accordion title="Read the walkthrough">
+1. Open Pages and choose Manage page types.
+2. Create a Case Study type for client projects.
+3. Open its template and enable the project story block.
+4. Add the project layout to the starting template.
+5. Create a project using the Case Study page type.
+6. Give this project its own content.
+7. Create a second case study using the same template.
+8. Same layout, different content for each project.
+</Accordion>
 
-- **Available blocks** - Which blocks editors can add to pages
-- **Required blocks** - Blocks that must appear on every page
-- **Page fields** - Metadata like title, description, publish date
-- **Constraints** - What editors can and cannot modify
-- **URL structure** - How pages of this type are accessed
+## What page types control
 
-<Info>
-Think of page types as guardrails. They give editors freedom to create content while ensuring designs stay intact and structure remains consistent.
-</Info>
+A page type defines page fields, shared header and footer sections, starting body sections, and the blocks editors can insert. Page types do not set URL prefixes or publication schedules.
 
-## Creating a Page Type
+## Create a page type
+
+You need developer access and at least one site block. You can create site blocks in the page type editor or copy them from the server library.
 
 <Steps>
-<Step title="Navigate to page types">
-  In your site dashboard, click "Page Types" in the sidebar, then "Create Page Type".
-</Step>
+  <Step title="Open page types">
+    Open **Pages → Manage page types**, then choose **Create page type**.
+  </Step>
+  <Step title="Set the name and appearance">
+    Enter a descriptive name, such as **Blog Post**, and choose an icon and color. Blog Post is an example name you choose, not a preset.
+  </Step>
+  <Step title="Configure the template">
+    Open the new page type. Add shared navigation to the header and a shared footer to the footer slot. Add body sections if new pages should start with an existing layout.
 
-<Step title="Set basic information">
-  Configure:
+    Header and footer sections are shared across pages of this type. Starting body sections are copied to new pages, which keep their own content.
+  </Step>
+  <Step title="Choose available blocks">
+    In the **Blocks** tab, enable the blocks editors can insert into the body. Include only useful blocks you have built or imported, such as Text, Image, and Quote for blog posts.
 
-  - **Name**: Display name (e.g., "Blog Post", "Default")
-  - **Description**: Internal description for your reference
-  - **Slug**: URL identifier (e.g., "blog-post", "default")
-  
-  <Tip>
-  The slug determines the URL structure. A page of type "blog-post" will be accessible at `/blog-post/[page-slug]` by default.
-  </Tip>
-</Step>
+    Leave the available-block list empty for a static page type: editors can fill in its content but cannot add, remove, or reorder body sections.
+  </Step>
+  <Step title="Add page fields">
+    Define fields such as `title` (Text), `author` (Text or Page), `publish_date` (Date), and `featured_image` (Image). Use a Repeater with a nested Text field for multiple tags.
 
-<Step title="Configure available blocks">
-  Select which blocks from your component library can be used on pages of this type.
-  
-  <Warning>
-  Only blocks you've created in your component library will appear here. Create blocks first, then add them to page types.
-  </Warning>
-</Step>
-
-<Step title="Set required blocks (optional)">
-  Mark certain blocks as required if they must appear on every page of this type.
-  
-  <Example>
-  A "Blog Post" page type might require a "Header" block at the top and a "Footer" block at the bottom.
-  </Example>
-</Step>
-
-<Step title="Add page fields">
-  Define page-level fields that apply to all pages of this type:
-  
-  - SEO fields (meta title, description)
-  - Publishing fields (publish date, author)
-  - Custom metadata (category, tags, featured image)
-  
-  <Info>
-  Page fields are separate from block fields. They apply to the entire page, not individual blocks.
-  </Info>
-</Step>
-
-<Step title="Save the page type">
-  Click "Create" to save your page type. It's now available for editors to use when creating pages.
-</Step>
+    To display page fields in a block, add **Page Field** references to that block. A field name alone does not connect a block to page content.
+  </Step>
+  <Step title="Verify a new page">
+    Save your changes, create a page using this type, and check its starting layout, fields, and block picker. Create a second page to confirm that body content remains independent while shared sections stay consistent.
+  </Step>
 </Steps>
-
-## Common Page Type Patterns
-
-### Blog Post
-
-A typical blog post page type:
-
-**Available Blocks:**
-- Text (for article content)
-- Image (for illustrations)
-- Code Block (for code examples)
-- Quote (for pull quotes)
-
-**Page Fields:**
-- `title` (Text, required) - Post title
-- `author` (Text) - Author name
-- `publish_date` (Date) - Publication date
-- `category` (Select) - Post category
-- `tags` (Tags) - Post tags
-- `featured_image` (Image) - Featured image
-- `excerpt` (Text) - Short description
-- `meta_title` (Text) - SEO title
-- `meta_description` (Text) - SEO description
-
-**Required Blocks:**
-- None (flexibility for different post layouts)
-
-### Product Page
-
-An e-commerce product page:
-
-**Available Blocks:**
-- Hero (with product image)
-- Text (for description)
-- Image Gallery
-- Specifications
-- Reviews
-- Related Products
-
-**Page Fields:**
-- `title` (Text, required) - Product name
-- `price` (Number) - Product price
-- `sku` (Text) - SKU code
-- `in_stock` (Boolean) - Stock status
-- `category` (Select) - Product category
-- `featured_image` (Image) - Main product image
-- `meta_title` (Text) - SEO title
-- `meta_description` (Text) - SEO description
-
-**Required Blocks:**
-- Hero (must have product image)
-
-## Page Fields
-
-Page fields are metadata that applies to the entire page, not individual blocks. Common uses:
-
-### SEO Fields
-
-Every page type should include SEO fields:
-
-- `meta_title` (Text) - Page title for search engines
-- `meta_description` (Text) - Page description for search results
-- `og_image` (Image, optional) - Social sharing image
-
-### Publishing Fields
-
-For content with publication workflows:
-
-- `publish_date` (Date) - When the page was/will be published
-- `author` (Text) - Content author
-- `last_updated` (Date, auto) - Last modification date
-
-### Taxonomy Fields
-
-For organizing content:
-
-- `category` (Select) - Single category
-- `tags` (Tags) - Multiple tags
-- `topic` (Select) - Topic classification
-
-### Custom Metadata
-
-Any additional data you need:
-
-- `featured` (Boolean) - Whether to feature this page
-- `priority` (Number) - Display priority
-- `external_url` (Text) - Link to external resource
-
-<Example>
-A "Team Member" page type might have fields for: name, role, bio, email, social links, and profile photo. These are page-level because they describe the person, not individual blocks on the page.
-</Example>
-
-## Available Blocks
-
-### Choosing Which Blocks to Include
-
-Consider what editors need:
-
-- **Too few blocks**: Editors feel constrained, can't create varied content
-- **Too many blocks**: Overwhelming, harder to find the right block
-- **Just right**: Enough variety for flexibility, but not overwhelming
-
-<Tip>
-Start with essential blocks, then add more as needed. You can always edit page types later to add or remove blocks.
-</Tip>
 
 <Note>
-**Rule of thumb:** 5-10 blocks per page type is usually optimal. More than 15 blocks can be overwhelming for editors.
+Blocks such as Quote, Gallery, and Product Hero are examples you build or import. These names do not identify built-in block presets. A block uses built-in field types such as Text or Image to make its content editable. See the [field type reference](/reference/field-types) for supported fields.
 </Note>
 
-### Block Organization
+## Shared content and page content
 
-Group related blocks in your component library to make selection easier:
+Use site fields for navigation, branding, and footer content that should stay consistent across page types. Use page fields for titles, descriptions, and other values that vary by page. Use block fields for content specific to a section.
 
-- **Content blocks**: Text, Image, Video, Code
-- **Layout blocks**: Card Grid, Columns, Container
-- **Interactive blocks**: Form, Button, CTA
-- **Specialized blocks**: Testimonials, Pricing, FAQ
-
-## Required Blocks
-
-Required blocks must appear on every page of a given type. Use them sparingly:
-
-**Good use cases:**
-- Header block that must appear at the top
-- Footer block that must appear at the bottom
-- Navigation block for specific page types
-
-**Avoid requiring:**
-- Content blocks (editors need flexibility)
-- Multiple blocks (too restrictive)
+A header section can have the same layout on every blog post while displaying each post's own title through a Page Field reference. Ordinary fields on a shared header or footer section keep shared values.
 
 <Warning>
-Required blocks can't be removed by editors. Only mark blocks as required if they're truly essential for every page of that type.
+Changing a shared section or removing a field can affect existing pages. Starting body sections are copied when a page is created; editing that starting template does not change existing pages' body sections. Test an existing page as well as a new one after structural changes.
 </Warning>
 
-<Tip>
-**Best practice:** Start with no required blocks. Add them only if you discover editors consistently need the same block on every page. Flexibility is usually better than constraints.
-</Tip>
+## Page URLs
 
-## URL Structure
+A page's slug and parent pages determine its URL. For example, create a **Blog** page with slug `blog`, then a child page with slug `my-first-post` to get `/blog/my-first-post`. The child can use the **Blog Post** page type, but the type's name does not add a URL prefix.
 
-Page types influence URL structure:
+The homepage lives at `/`. In CLI files, page paths follow the folder structure under `pages/`; `pages/blog/my-first-post.yaml` maps to `/blog/my-first-post`.
 
-### Default Behavior
+## Metadata and publishing
 
-By default, pages follow this pattern:
-```
-/[page-type-slug]/[page-slug]
-```
+SEO fields store content; they do not generate tags automatically. Add title and description tags to the page type's **Head HTML**, which has access to its page fields:
 
-<Example>
-A page of type "blog-post" with slug "my-first-post" would be accessible at `/blog-post/my-first-post`.
-</Example>
-
-### Custom URL Patterns
-
-You can configure custom URL patterns in page type settings:
-
-- **Prefix**: Add a prefix to all pages of this type
-- **Suffix**: Add a suffix to all pages
-- **Custom pattern**: Define your own URL structure
-
-<Info>
-URL patterns are configured at the site level, but page types can have their own defaults.
-</Info>
-
-## Page Type Settings
-
-### Publishing Workflow
-
-Configure how pages of this type are published:
-
-- **Draft mode**: Pages start as drafts
-- **Auto-publish**: Pages publish immediately when saved
-- **Scheduled publishing**: Allow scheduling future publication
-
-### Editor Permissions
-
-Control what editors can do:
-
-- **Can duplicate pages**: Allow editors to clone pages
-- **Can delete pages**: Allow editors to remove pages
-- **Can change page type**: Allow switching between types
-
-<Warning>
-Be careful with editor permissions. Restricting certain actions helps maintain site structure and prevents accidental deletions.
-</Warning>
-
-## Best Practices
-
-### 1. Start Simple
-
-Begin with essential blocks and fields. You can always add more later:
-
-```yaml
-Simple Blog Post:
-  Blocks: Text, Image
-  Fields: title, author, publish_date
+```svelte head.svelte
+<title>{meta_title || title || "Blog"}</title>
+{#if meta_description}
+  <meta name="description" content={meta_description} />
+{/if}
 ```
 
-### 2. Use Descriptive Names
+Create `meta_title`, `title`, and `meta_description` as Text page fields before using this example. Paste the fragment into the page type's Head HTML without a `<svelte:head>` wrapper.
 
-Clear names help editors understand what each page type is for:
+A Date field such as `publish_date` is content metadata. It does not schedule publication. Saved changes become public when you [publish the site](/content-management/publishing); there is no per-page draft, auto-publish, or scheduling switch in page type settings.
 
-- ✅ "Blog Post"
-- ✅ "Default"
-- ✅ "Team Member Profile"
-- ❌ "Type 1"
-- ❌ "Generic"
+## Define page types in files
 
-### 3. Document Your Page Types
+A page type uses separate files for configuration, fields, content defaults, and layout:
 
-Add descriptions that explain when to use each type:
+```text
+page-types/blog-post/
+├── config.yaml
+├── fields.yaml
+├── content.yaml
+├── layout.yaml
+├── head.svelte
+└── foot.html
+```
 
-<Example>
-**Blog Post**: For articles, news, and blog content. Includes author, publish date, and category fields.
-</Example>
+`config.yaml` contains editor metadata and available block folder names:
 
-### 4. Plan for Growth
+```yaml config.yaml
+name: Blog Post
+icon: mdi:file-document-outline
+color: "#004e89"
+allowed_blocks:
+  - text
+  - image
+```
 
-Consider how page types might evolve:
+`fields.yaml` is a list, with no `fields:` wrapper:
 
-- Will you need more fields later?
-- Will editors need additional blocks?
-- Are there related page types you'll create?
+```yaml fields.yaml
+- name: title
+  label: Post title
+  type: text
+- name: publish_date
+  label: Publication date
+  type: date
+```
 
-### 5. Test with Editors
+`content.yaml` stores starting page-field values:
 
-Get feedback from content editors:
+```yaml content.yaml
+title: New blog post
+publish_date: "2026-10-11"
+```
 
-- Are the available blocks sufficient?
-- Are page fields clear and useful?
-- Is anything missing or confusing?
+`layout.yaml` references existing site block folders:
 
-## Advanced Patterns
+```yaml layout.yaml
+header:
+  - block: navigation
+body:
+  - block: text
+footer:
+  - block: footer
+```
 
-### Conditional Blocks
+Create the referenced blocks first. Run `primo validate -d sites/my-site` from the workspace root, then create a page in the CMS to verify the result. Keep exported `_id` values stable; omit IDs when creating new records.
 
-Some page types benefit from conditional block availability:
-
-<Example>
-A "Product" page type might show different blocks based on product category. While Primo doesn't support conditional blocks directly, you can create separate page types for different product categories.
-</Example>
-
-### Nested Page Types
-
-Create page types that reference other page types:
-
-<Example>
-A "Category" page type might include a block that displays pages of type "Blog Post" filtered by category.
-</Example>
-
-## Editing Page Types
-
-You can edit page types after creation:
-
-<Steps>
-<Step title="Open page type editor">
-  Go to Page Types → Select the page type you want to edit.
-</Step>
-
-<Step title="Make changes">
-  Update:
-  - Available blocks (add or remove)
-  - Required blocks
-  - Page fields
-  - Settings
-</Step>
-
-<Step title="Save changes">
-  Click "Save" to update the page type.
-  
-  <Warning>
-  Changes to page types affect all existing pages of that type. Removing a required block or field may cause issues with existing pages.
-  </Warning>
-</Step>
-</Steps>
-
-## Next Steps
+## Next steps
 
 <CardGroup cols={2}>
-<Card title="Working with Fields" icon="pen-to-square" href="/building-sites/working-with-fields">
-  Learn about all available field types for pages and blocks.
-</Card>
-
-<Card title="Setting Up for Editors" icon="users" href="/collaboration/setting-up-page-types-for-editors">
-  Configure page types to make editing easy for non-technical users.
-</Card>
-
-<Card title="Using the Editor" icon="pen-to-square" href="/content-management/using-the-editor">
-  See how editors use page types to create content.
-</Card>
-
-<Card title="Your First Site" icon="rocket" href="/building-sites/your-first-site">
-  See page types in action with a complete example.
-</Card>
+  <Card title="Understanding slots" icon="layer-group" href="/building-sites/understanding-slots">Choose shared and per-page layouts.</Card>
+  <Card title="Working with fields" icon="pen-to-square" href="/building-sites/working-with-fields">Connect blocks to page and site content.</Card>
 </CardGroup>
-
-<Tip>
-The best page types balance structure with flexibility. Give editors enough options to be creative, but enough constraints to maintain design consistency.
-</Tip>

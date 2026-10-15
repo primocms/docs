@@ -3,7 +3,7 @@ title: 'Using the Component Library'
 description: 'Reuse blocks across sites and browse the marketplace for starter templates.'
 ---
 
-The Component Library is your personal collection of reusable blocks. Once you create a block, it's saved to your library and available across all your sites. This guide covers managing your library, reusing blocks, and exploring the marketplace.
+The block library stores reusable starting points for sites on your server. Create a block there when you want to copy it into multiple sites. A block created inside a site stays in that site unless you save a copy to the library.
 
 ## Watch the workflow
 
@@ -24,444 +24,101 @@ Watch the workflow in Primo.
   Your browser does not support embedded video. [Download this demonstration](/videos/demos/block-library.mp4).
 </video>
 
-## What is the Component Library?
+[Download video](/videos/demos/block-library.mp4) · [Download captions](/videos/demos/block-library.vtt)
 
-The Component Library stores all the blocks you create:
+<Accordion title="Read the walkthrough">
+1. Browse groups in your shared block library.
+2. Open a library block to inspect its code.
+3. Switch to the content fields that power the block.
+4. Close the block and return to the library.
+</Accordion>
 
-- **Blocks you build** - Your custom components
-- **Available everywhere** - Use blocks in any site
-- **Version controlled** - Track changes and updates
-- **Shareable** - Export and import blocks
+## How library blocks work
 
-<Info>
-Blocks in your library are independent of sites. Create a block once, use it in multiple sites, update it everywhere at once.
-</Info>
+The server's block library holds reusable Svelte code, field definitions, and default content. You can copy a library block into any site on that server. Blocks created inside a site's page type editor remain site-specific unless you save a copy to the library.
 
-## Managing Your Library
+<Note>
+Adding a library block to a site creates an independent site block. Updating the library original does not update existing site copies. Editing a site block updates the sections using that block within the site after you publish.
+</Note>
 
-### Viewing Your Blocks
+## Create and organize library blocks
 
-<Steps>
-<Step title="Open the Component Library">
-  Click "Component Library" in the sidebar of any site.
-</Step>
-
-<Step title="Browse your blocks">
-  You'll see all blocks you've created, organized by:
-  - **Recently used** - Blocks you've used recently
-  - **All blocks** - Complete list of your blocks
-  - **Categories** - If you've organized them
-  
-  <Tip>
-  Use the search bar to quickly find blocks by name or description.
-  </Tip>
-</Step>
-</Steps>
-
-### Creating New Blocks
+You need developer access to the server dashboard.
 
 <Steps>
-<Step title="Create a new block">
-  Click "Create Block" in the Component Library.
-</Step>
-
-<Step title="Write your component">
-  Use the in-browser editor to write your component code.
-  
-  <Info>
-  The editor provides syntax highlighting, auto-completion, and instant preview.
-  </Info>
-</Step>
-
-<Step title="Add fields">
-  Attach content fields to make the block editable.
-  
-  <Tip>
-  See the [Working with Fields](/building-sites/working-with-fields) guide for details.
-  </Tip>
-</Step>
-
-<Step title="Save to library">
-  Click "Save Block" and give it a name. The block is now in your library.
-</Step>
-</Steps>
-
-### Editing Existing Blocks
-
-<Steps>
-<Step title="Find the block">
-  Browse or search for the block you want to edit.
-</Step>
-
-<Step title="Open the block">
-  Click on the block to open it in the editor.
-</Step>
-
-<Step title="Make changes">
-  Update the component code, fields, or settings as needed.
-</Step>
-
-<Step title="Save changes">
-  Click "Save" to update the block.
-  
-  <Warning>
-  Changes to blocks affect all sites using that block. Test changes carefully.
-  </Warning>
-</Step>
-</Steps>
-
-### Organizing Blocks
-
-Keep your library organized:
-
-<Steps>
-<Step title="Use descriptive names">
-  Name blocks clearly:
-  - ✅ "Hero Block"
-  - ✅ "Text with Image"
-  - ✅ "Card Grid"
-  - ❌ "Block 1"
-  - ❌ "Test"
-</Step>
-
-<Step title="Add descriptions">
-  Include descriptions that explain what each block does:
-  
-  <Example>
-  **Name**: "Hero Block"
-  **Description**: "Full-width hero section with headline, subheadline, CTA button, and optional background image. Perfect for landing pages."
-  </Example>
-</Step>
-
-<Step title="Use categories (if available)">
-  Group related blocks:
-  - **Content**: Text, Image, Video
-  - **Layout**: Grid, Columns, Container
-  - **Interactive**: Form, Button, CTA
-  - **Specialized**: Testimonials, Pricing, FAQ
-</Step>
-</Steps>
-
-## Reusing Blocks Across Sites
-
-### Adding Blocks to a Site
-
-Once a block is in your library, use it in any site:
-
-<Steps>
-<Step title="Open page type editor">
-  Go to Page Types and edit the page type where you want to use the block.
-</Step>
-
-<Step title="Add available blocks">
-  In the "Available Blocks" section, click "Add Block" and select from your library.
-</Step>
-
-<Step title="Blocks are now available">
-  Editors can now use these blocks when creating pages of this type.
-</Step>
-</Steps>
-
-<Check>
-Blocks in your library are available to all your sites. Create once, use everywhere.
-</Check>
-
-### Updating Blocks Globally
-
-When you update a block in your library:
-
-<Steps>
-<Step title="Edit the block">
-  Make your changes in the Component Library.
-</Step>
-
-<Step title="Save changes">
-  Click "Save" to update the block.
-</Step>
-
-<Step title="Changes apply everywhere">
-  All sites using that block get the update automatically.
-  
-  <Warning>
-  Test updates carefully. Breaking changes affect all sites using the block.
-  </Warning>
-</Step>
-</Steps>
-
-### Block Versions
-
-Primo tracks block versions:
-
-- **View history** - See previous versions of a block
-- **Revert changes** - Go back to an earlier version if needed
-- **Compare versions** - See what changed between versions
-
-<Tip>
-Use version history to safely experiment with block changes. You can always revert if something breaks.
-</Tip>
-
-## Building a Server Library
-
-### Start with Essentials
-
-Build a core set of blocks:
-
-1. **Hero** - Landing page hero sections
-2. **Text** - Rich text content
-3. **Image** - Image with optional caption
-4. **Card Grid** - Flexible grid layouts
-5. **Call-to-Action** - CTA sections
-6. **Footer** - Site footer
-
-### Expand Gradually
-
-Add blocks as you need them:
-
-- **Content blocks** - Text, Image, Video, Code
-- **Layout blocks** - Grid, Columns, Container, Spacer
-- **Interactive blocks** - Form, Button, CTA, Modal
-- **Specialized blocks** - Testimonials, Pricing Table, FAQ, Team
-
-### Refine and Improve
-
-Continuously improve your blocks:
-
-- **Add features** - New fields, variants, options
-- **Improve styling** - Better responsive design, animations
-- **Fix bugs** - Address issues as you find them
-- **Optimize** - Better performance, smaller code
-
-<Info>
-Your library grows with every project. Blocks you build for one site become reusable assets for future projects.
-</Info>
-
-## Block Patterns
-
-### Simple Content Blocks
-
-Basic blocks for common content:
-
-**Text Block:**
-- Rich text content
-- Alignment options
-- Background color
-
-**Image Block:**
-- Image upload
-- Alt text
-- Caption
-- Full-width option
-
-**Video Block:**
-- Video upload or embed
-- Autoplay options
-- Caption
-
-### Layout Blocks
-
-Blocks for organizing content:
-
-**Card Grid:**
-- Repeater for cards
-- Configurable columns
-- Responsive layout
-
-**Columns:**
-- 2, 3, or 4 column layouts
-- Equal or custom widths
-- Responsive stacking
-
-**Container:**
-- Max-width container
-- Padding options
-- Background styling
-
-### Interactive Blocks
-
-Blocks with user interaction:
-
-**Call-to-Action:**
-- Headline and description
-- CTA button
-- Background styling
-
-**Form:**
-- Form fields (repeater)
-- Submit action
-- Success message
-
-**Modal:**
-- Trigger button
-- Modal content
-- Close options
-
-## Sharing Blocks
-
-### Exporting Blocks
-
-Export blocks to share or backup:
-
-<Steps>
-<Step title="Select a block">
-  Open the block you want to export.
-</Step>
-
-<Step title="Export">
-  Click "Export" to download the block as a file.
-</Step>
-
-<Step title="Share or backup">
-  Share the file with others or keep it as a backup.
-</Step>
-</Steps>
-
-### Importing Blocks
-
-Import blocks from others:
-
-<Steps>
-<Step title="Open import">
-  Click "Import Block" in the Component Library.
-</Step>
-
-<Step title="Select file">
-  Choose the block file to import.
-</Step>
-
-<Step title="Review and import">
-  Review the block code and fields, then import.
-</Step>
+  <Step title="Open the library">
+    Open **Library** from the dashboard. Select a block group, or create a group for related blocks such as Navigation, Content, or Forms. You choose these group names.
+  </Step>
+  <Step title="Create a block">
+    Choose **Create Block**, give it a descriptive name, and write its Svelte markup, script, and styles.
+  </Step>
+  <Step title="Add fields and defaults">
+    Add editable fields in the Content tab. Set default content so you can preview the block before placing it on a page. Use [supported field types](/reference/field-types) and handle empty images, links, and repeaters in your code.
+  </Step>
+  <Step title="Save and verify">
+    Save the block and reopen it to check its code, field definitions, and default content. Use its menu to rename, move, download, or delete it.
+  </Step>
 </Steps>
 
 <Warning>
-Only import blocks from trusted sources. Review the code before importing to ensure it's safe.
+Deleting a library group removes the library blocks inside it. Move blocks you want to keep before deleting the group. Existing independent copies in sites are separate records.
 </Warning>
 
-## Marketplace (Future Feature)
+## Use a library block in a site
 
-Primo will include a marketplace for:
+<Steps>
+  <Step title="Open the page type">
+    Open your site, choose **Pages → Manage page types**, and open the target type.
+  </Step>
+  <Step title="Add the block">
+    In the Blocks tab, add a block from the library. Primo copies its code, fields, and defaults into the site.
+  </Step>
+  <Step title="Choose its placement">
+    Enable the block in the available-block list if editors should insert it into page bodies. Add shared navigation and footers to the template's header or footer slot instead.
+  </Step>
+  <Step title="Check a page">
+    Add a section using the block and edit its content. Verify that section content is independent of the block's defaults and of other sections.
+  </Step>
+</Steps>
 
-- **Starter sites** - Complete site templates
-- **Block packs** - Collections of related blocks
-- **Individual blocks** - Single blocks from the community
-- **Themes** - Design system templates
+## Update reusable code
 
-<Tip>
-The marketplace will let you discover blocks built by the community and share your own creations.
-</Tip>
+Edit the library block to improve the starting point for future copies. To update a block already in a site, edit that site's block directly and test the pages that use it. Repeat the update for other site copies as needed, then publish each affected site.
 
-## Best Practices
+Use Git with a [CLI workspace](/cli/local-development) to review and retain code history. The library does not provide a built-in block-version comparison and rollback interface.
 
-### 1. Build Reusable Blocks
+## Import and export blocks
 
-Design blocks to work in multiple contexts by choosing field names carefully:
+Use a block's **Download** action to export it as a `.json` file. Use **Import** in the library or page type's block panel to select a compatible exported block. Review its code, fields, and preview before using it.
 
-```svelte
-<!-- Good: Flexible and reusable field names -->
-<h1 class="hero-{variant}">{headline}</h1>
-<!-- Fields: headline, variant (select: default, large, small) -->
+Keep site snapshots or Git commits before changing field keys or types. A downloaded block is a reusable template; it is not a full backup of page content or the server's users and settings.
 
-<!-- Avoid: Too specific field names -->
-<h1>{homepage_headline}</h1>
-<!-- Field: homepage_headline (limits reusability) -->
+## Use the library in files
+
+Workspace library blocks live under a group folder:
+
+```text
+library/
+├── groups.yaml
+└── shared/
+    └── footer/
+        ├── config.yaml
+        ├── component.svelte
+        ├── fields.yaml
+        └── content.yaml
 ```
 
-Use generic field names like `headline`, `content`, `image` instead of context-specific names like `homepage_headline` or `about_page_content`.
+To use one in a file-authored site, copy the block folder into `sites/my-site/blocks/`, omit copied `_id` values, and reference its folder name from the page type's layout or available blocks. The site copy remains independent.
 
-### 2. Document Your Blocks
+Use [`primo library pull` and `primo library push`](/cli/sync#library-only-sync) to sync the shared library with a hosted server.
 
-Add clear descriptions:
+## Marketplace
 
-<Example>
-**Hero Block**
-A flexible hero section with headline, subheadline, CTA, and optional background image. Supports multiple variants (default, large, minimal) and works on any page type.
-</Example>
+Open the [Marketplace](/dashboard/marketplace) to browse starter designs. Browse starter sites and blocks, inspect a preview, and copy useful blocks into your library. Imported starters and blocks are independent copies; marketplace changes do not automatically update your sites.
 
-### 3. Version Carefully
-
-Test updates before saving:
-
-1. Make changes in the editor
-2. Test with preview
-3. Check on multiple sites if possible
-4. Save when confident
-
-### 4. Organize Early
-
-Start organizing from the beginning:
-
-- Use clear naming conventions
-- Add descriptions immediately
-- Group related blocks
-- Keep a consistent structure
-
-### 5. Reuse and Refine
-
-Don't recreate blocks:
-
-- Check your library first
-- Adapt existing blocks when possible
-- Improve blocks over time
-- Remove unused blocks
-
-## Common Workflows
-
-### Creating a New Site
-
-<Steps>
-<Step title="Check your library">
-  Review existing blocks before creating new ones.
-</Step>
-
-<Step title="Reuse what you can">
-  Add existing blocks to your new site's page types.
-</Step>
-
-<Step title="Create only what's needed">
-  Build new blocks only for site-specific needs.
-</Step>
-</Steps>
-
-### Updating a Block
-
-<Steps>
-<Step title="Identify the block">
-  Find the block in your library.
-</Step>
-
-<Step title="Review usage">
-  Check which sites use this block.
-</Step>
-
-<Step title="Test changes">
-  Make changes and test thoroughly.
-</Step>
-
-<Step title="Save and verify">
-  Save changes and verify they work on all sites.
-</Step>
-</Steps>
-
-## Next Steps
+## Next steps
 
 <CardGroup cols={2}>
-<Card title="Writing Components" icon="code" href="/building-sites/writing-components">
-  Learn how to build effective reusable components.
-</Card>
-
-<Card title="Working with Fields" icon="pen-to-square" href="/building-sites/working-with-fields">
-  Add fields to make blocks editable.
-</Card>
-
-<Card title="Your First Site" icon="rocket" href="/building-sites/your-first-site">
-  See how to build a library of blocks for a complete site.
-</Card>
-
-<Card title="Defining Page Types" icon="layer-group" href="/building-sites/defining-page-types">
-  Use library blocks in your page types.
-</Card>
+  <Card title="Writing blocks" icon="code" href="/building-sites/writing-components">Build reusable Svelte blocks.</Card>
+  <Card title="Block library" icon="layer-group" href="/dashboard/block-library">Manage library groups and exports.</Card>
 </CardGroup>
-
-<Tip>
-Your Component Library is an investment. Every block you create saves time on future projects. Build thoughtfully, and your library becomes a valuable asset.
-</Tip>

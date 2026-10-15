@@ -1,0 +1,4 @@
+name: Blog Post
+allowed_blocks:
+  - text
+  - image

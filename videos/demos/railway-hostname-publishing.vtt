@@ -1,0 +1,34 @@
+WEBVTT
+
+00:00:00.000 --> 00:00:07.000
+Use the Railway-generated hostname. Its DNS routing and HTTPS are already configured by Railway.
+
+00:00:07.000 --> 00:00:13.000
+The prepared site begins without a public hostname assigned in Primo.
+
+00:00:13.000 --> 00:00:19.000
+Open the site menu and choose Assign domain.
+
+00:00:19.000 --> 00:00:27.000
+Enter the Railway hostname without https:// or a path, then choose Connect.
+
+00:00:27.000 --> 00:00:36.000
+For this generated Railway hostname, skip registrar DNS steps: routing and HTTPS are already verified.
+
+00:00:36.000 --> 00:00:44.000
+Mark as connected records manual connection status. It does not publish the site.
+
+00:00:44.000 --> 00:00:52.000
+Open the editor and choose Publish. Confirm the destination, then choose Publish changes.
+
+00:00:52.000 --> 00:00:59.000
+Wait for Changes published before viewing the public site.
+
+00:00:59.000 --> 00:01:07.000
+Open the public HTTPS homepage and verify the saved headline.
+
+00:01:07.000 --> 00:01:14.000
+Follow a navigation link and verify the About page.
+
+00:01:14.000 --> 00:01:21.000
+Check a nested blog URL too. This walkthrough uses a Railway hostname; custom domains also need your own DNS configuration.

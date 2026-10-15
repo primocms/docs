@@ -13,7 +13,7 @@ If you're a developer setting up Primo, share this guide with your content edito
 
 The Primo editor has three main areas:
 
-1. **Sidebar** - Draggable blocks and library
+1. **Sidebar** - Page outline and available blocks
 2. **Canvas** - Visual page editor
 3. **Toolbar** - Site navigation, Pages, and Publish button
 
@@ -34,6 +34,15 @@ Watch the workflow in Primo.
   Your browser does not support embedded video. [Download this demonstration](/videos/demos/create-page.mp4).
 </video>
 
+[Download video](/videos/demos/create-page.mp4) · [Download captions](/videos/demos/create-page.vtt)
+
+<Accordion title="Read the walkthrough">
+1. Open Pages, then choose Create page.
+2. Name the page. Primo generates its URL.
+3. Create the page using its default page type.
+4. Open the new page to start editing.
+</Accordion>
+
 
 <Steps>
 <Step title="Open Pages dialog">
@@ -45,7 +54,7 @@ Watch the workflow in Primo.
 </Step>
 
 <Step title="Choose page type">
-  Select a page type (e.g., "Blog Post", "Default").
+  Choose from the page types your developer configured. Their names and layouts depend on your site.
 
   <Info>
   Page types determine which blocks you can use. Your developer configures these.
@@ -54,19 +63,19 @@ Watch the workflow in Primo.
 
 <Step title="Set page details">
   Fill in:
-  - **Name**: Page title
+  - **Name**: Name shown in the page list; it appears to visitors only if your developer uses it in the design
   - **Slug**: URL path (auto-generated)
-  - Any other fields the page type requires
+  - Content fields your developer defined, such as an article title or author
 </Step>
 </Steps>
 
 <Check>
-Your page is created. Now add blocks to build content.
+Your page is created. Fill in its content; if its page type allows layout changes, you can also add blocks.
 </Check>
 
 ## Working with Blocks
 
-Blocks are the building blocks of your pages.
+A block is a reusable design your developer builds or imports. Each placement on a page has its own section content. The blocks available to you depend on the page type.
 
 ### Adding Blocks
 
@@ -85,6 +94,15 @@ Watch the workflow in Primo.
   Your browser does not support embedded video. [Download this demonstration](/videos/demos/add-block.mp4).
 </video>
 
+[Download video](/videos/demos/add-block.mp4) · [Download captions](/videos/demos/add-block.vtt)
+
+<Accordion title="Read the walkthrough">
+1. Choose where the new block will go.
+2. Find a block in the Blocks tab.
+3. Drag the block onto the page.
+4. The new block appears in the page outline.
+</Accordion>
+
 
 <Steps>
 <Step title="Find a block in sidebar">
@@ -100,7 +118,7 @@ Watch the workflow in Primo.
 </Step>
 
 <Step title="Edit content">
-  Click the block to open its editor and fill in the fields.
+  Open **Edit content** from the block toolbar and fill in the fields, then choose **Save**.
 </Step>
 </Steps>
 
@@ -121,11 +139,20 @@ Watch the workflow in Primo.
   Your browser does not support embedded video. [Download this demonstration](/videos/demos/form-editing.mp4).
 </video>
 
+[Download video](/videos/demos/form-editing.mp4) · [Download captions](/videos/demos/form-editing.vtt)
+
+<Accordion title="Read the walkthrough">
+1. Open Edit content for a block.
+2. Update the headline in its content field.
+3. Save to update the page.
+4. Your saved content appears on the canvas.
+</Accordion>
+
 
 1. **Hover over a block** to see the block toolbar
 2. **Click Edit** to open the editor
 3. Fill in text, images, links, etc.
-4. Changes auto-save
+4. Click **Save** (or press `Cmd/Ctrl + S`) to apply dialog changes
 
 <Tip>
 You can also double-click a block to open its editor.
@@ -148,12 +175,23 @@ Watch the workflow in Primo.
   Your browser does not support embedded video. [Download this demonstration](/videos/demos/reorder-blocks.mp4).
 </video>
 
+[Download video](/videos/demos/reorder-blocks.mp4) · [Download captions](/videos/demos/reorder-blocks.vtt)
+
+<Accordion title="Read the walkthrough">
+1. Select a block in the page outline.
+2. Open the block actions menu.
+3. Move the block up one position.
+4. The canvas and outline use the new order.
+</Accordion>
+
 
 Drag blocks to reorder them:
 
 1. Hover over a block
 2. Use the drag handle (appears in toolbar)
 3. Drag up or down to new position
+
+You can also open the block actions menu in the page outline and choose **Move up** or **Move down**. Use Tab to focus the menu and Enter or Space to open it; this avoids dragging.
 
 ### Deleting Blocks
 
@@ -163,25 +201,25 @@ Drag blocks to reorder them:
 
 ## Publishing
 
-When your page is ready:
+When the site's saved changes are ready, publish the site. Publishing includes changes on other pages too:
 
 1. Click "Publish" in the toolbar (or press `Cmd/Ctrl + P`)
 2. Click "Publish Changes" in the dialog
-3. Wait for completion (~10-30 seconds)
+3. Wait for the success message; timing depends on site size and your browser
 
 <Check>
 Your changes are now live!
 </Check>
 
 <Info>
-Changes auto-save as you work, but aren't live until you publish.
+Inline edits and page layout changes auto-save. Changes in block, section, and site dialogs require **Save**. Saved changes become public when you publish the site.
 </Info>
 
 ## Keyboard Shortcuts
 
 - `Cmd/Ctrl + P`: Publish
 - `Cmd/Ctrl + ↑/↓`: Navigate between pages
-- `Cmd/Ctrl + E`: Toggle to code tab (in block/section editors)
+- `Cmd/Ctrl + E`: Open the hovered section editor; developers can also toggle Code and Content tabs
 - `Cmd/Ctrl + S`: Save (in block/section editors)
 
 ## Next Steps

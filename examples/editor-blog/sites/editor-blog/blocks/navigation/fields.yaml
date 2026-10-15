@@ -1,0 +1,15 @@
+- name: brand_name
+  label: Brand name
+  type: site-field
+  config:
+    field: brand_name
+- name: logo
+  label: Logo
+  type: site-field
+  config:
+    field: logo
+- name: links
+  label: Links
+  type: site-field
+  config:
+    field: navigation

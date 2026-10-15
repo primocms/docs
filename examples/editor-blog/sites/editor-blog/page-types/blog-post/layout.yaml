@@ -1,0 +1,9 @@
+header:
+  - block: navigation
+    content: {}
+body:
+  - block: post-content
+    content: {}
+footer:
+  - block: footer
+    content: {}

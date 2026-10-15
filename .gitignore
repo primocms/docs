@@ -11,3 +11,11 @@ devenv.local.yaml
 
 # npm
 node_modules
+
+# macOS metadata
+.DS_Store
+
+# Railway deployment recording held for later review
+videos/demos/railway-deployment.jpg
+videos/demos/railway-deployment.mp4
+videos/demos/railway-deployment.vtt

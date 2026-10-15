@@ -1,0 +1,17 @@
+name: Start a small herb garden
+page_type: blog-post
+fields:
+  title: Start a small herb garden
+  author: Garden Studio
+  publish_date: "2026-10-11"
+  featured_image: null
+  excerpt: Choose three herbs and a sunny spot.
+  meta_title: Start a small herb garden
+  meta_description: A simple plan for a small herb garden.
+sections:
+  - block: text
+    content:
+      content: <h1>Start a small herb garden</h1><p>By Garden Studio</p><p>Choose
+        three herbs, check their light requirements, and use a container with
+        drainage holes.</p>
+      alignment: left

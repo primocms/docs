@@ -1,0 +1,93 @@
+---
+title: 'Connect a site domain'
+description: 'Assign a hostname, configure DNS and HTTPS, and verify the public site.'
+---
+
+Assign a domain to choose which Primo site visitors see at that hostname. A CMS server can host multiple sites; each public hostname routes to one site.
+
+## Before you start
+
+You need a deployed Primo instance, access to the site's dashboard controls, and a hostname you can use. For a custom domain, you also need access to its DNS settings and the hosting service or reverse proxy that handles HTTPS. Railway configures DNS and HTTPS for a Railway-generated hostname.
+
+Your site can stay in the editor while you configure its public address. Connecting a domain and publishing content are separate steps.
+
+## Watch: Connect a Railway hostname and publish a site
+
+Railway provides DNS routing and HTTPS for its generated hostname. This recording uses Primo’s default manual domain mode to assign that address, publish the site, and check public pages. For a custom domain, also follow the DNS steps below.
+
+<video
+  controls
+  playsInline
+  preload="none"
+  className="w-full rounded-xl"
+  aria-label="Connect a Railway hostname and publish a site"
+  poster="/videos/demos/railway-hostname-publishing.jpg"
+>
+  <source src="/videos/demos/railway-hostname-publishing.mp4" type="video/mp4" />
+  <track kind="captions" src="/videos/demos/railway-hostname-publishing.vtt" srcLang="en" label="English" />
+  Your browser does not support embedded video. [Download this demonstration](/videos/demos/railway-hostname-publishing.mp4).
+</video>
+
+[Download video](/videos/demos/railway-hostname-publishing.mp4) · [Download captions](/videos/demos/railway-hostname-publishing.vtt)
+
+<Accordion title="Read the walkthrough">
+1. Use the Railway-generated hostname. Its DNS routing and HTTPS are already configured by Railway.
+2. The prepared site begins without a public hostname assigned in Primo.
+3. Open the site menu and choose `Assign domain`.
+4. Enter the Railway hostname without https:// or a path, then choose Connect.
+5. For this generated Railway hostname, skip registrar DNS steps: routing and HTTPS are already verified.
+6. `Mark as connected` records manual connection status. It does not publish the site.
+7. Open the editor and choose Publish. Confirm the destination, then choose `Publish changes`.
+8. Wait for `Changes published` before viewing the public site.
+9. Open the public HTTPS homepage and verify the saved headline.
+10. Follow a navigation link and verify the About page.
+11. Check a nested blog URL too. This walkthrough uses a Railway hostname; custom domains also need your own DNS configuration.
+</Accordion>
+
+## Connect the domain
+
+<Steps>
+  <Step title="Assign the hostname in Primo">
+    Open the site's dashboard menu and choose **Assign domain**. Enter the hostname visitors should use, such as `garden.example.com`.
+
+    The hostname identifies a site; it is not the site's display name or a page slug.
+  </Step>
+  <Step title="Connect the hostname to your host">
+    A Railway-generated hostname is already attached to the service. You can continue to HTTPS verification.
+
+    For a custom domain on a Railway instance with the domain integration configured, Primo attaches the hostname and shows DNS instructions. Otherwise, add the domain in your hosting provider's controls or configure it in your VPS reverse proxy.
+
+    Follow [Railway domain setup](/reference/deployment#quick-deploy-railway) or [VPS reverse proxy setup](/reference/deployment#configure-reverse-proxy). Railway's [public networking guide](https://docs.railway.com/networking/public-networking) describes its HTTPS and domain controls.
+  </Step>
+  <Step title="Add the DNS records">
+    If you use a Railway-generated hostname, skip this step: Railway already configures its DNS.
+
+    For a custom domain, copy the record type, host, and destination from your hosting provider or Primo's domain dialog into your DNS provider. Use the values for your deployment, not the tutorial hostname.
+
+    For a VPS, point the hostname to your server and configure the reverse proxy to accept it. Wait for DNS resolution and certificate issuance before marking a manual connection complete.
+  </Step>
+  <Step title="Verify HTTPS and the connection">
+    Open the hostname over HTTPS and confirm the certificate is valid and the request reaches your Primo instance. In manual mode, use **Mark as connected** only after this verification. The Railway integration reports connection status as provisioning completes.
+  </Step>
+  <Step title="Publish and check the site">
+    Save open editor dialogs, then choose **Publish → Publish changes**. This publishes the site's saved changes across its pages.
+
+    Open the public hostname in a separate browser tab. Check the homepage, one nested page, images, and navigation links.
+  </Step>
+</Steps>
+
+## Automatic subdomains
+
+[`PRIMO_BASE_DOMAIN`](/reference/environment-variables#primo_base_domain) gives new sites a subdomain on your base domain. Configure wildcard DNS and TLS as well; assigning an address does not make it reachable by itself.
+
+## Troubleshoot a connection
+
+| What you see | What to check |
+| --- | --- |
+| The hostname does not resolve | Confirm the record name and destination in your DNS provider; check whether the change has propagated |
+| A certificate error | Verify HTTPS provisioning or your reverse proxy's certificate configuration |
+| The wrong site appears | Check which site has the hostname assigned and whether the host routes requests to the right Primo instance |
+| The editor works but the public page is empty or old | Publish the site and verify the public URL rather than the admin URL |
+| Primo shows a pending connection | Finish the displayed DNS steps and verify the host's domain status before marking a manual connection complete |
+
+For server errors, see [Network and SSL troubleshooting](/reference/troubleshooting#ssl-certificate-errors).

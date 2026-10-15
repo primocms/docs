@@ -1,0 +1,14 @@
+cards:
+  - title: Design
+    description: Plan a garden that fits your space.
+    image: null
+    link: /about
+  - title: Planting
+    description: Choose plants for your light and soil.
+    image: null
+    link: /about
+  - title: Care
+    description: Build a practical seasonal routine.
+    image: null
+    link: /about
+columns: 3

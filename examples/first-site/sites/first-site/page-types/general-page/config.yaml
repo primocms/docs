@@ -1,0 +1,6 @@
+name: General Page
+allowed_blocks:
+  - hero
+  - text
+  - image
+  - card-grid

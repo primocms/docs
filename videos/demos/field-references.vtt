@@ -1,0 +1,25 @@
+WEBVTT
+
+00:00:00.000 --> 00:00:06.000
+This custom Navigation block reads shared site fields.
+
+00:00:06.000 --> 00:00:13.000
+Brand name is a Site Field reference to the source field in Site content.
+
+00:00:13.000 --> 00:00:20.000
+Editing the reference in the content form updates that source value.
+
+00:00:20.000 --> 00:00:26.000
+The header and footer now display the same shared brand name.
+
+00:00:26.000 --> 00:00:32.000
+The custom Post Content block reads this post’s page fields.
+
+00:00:32.000 --> 00:00:39.000
+Its Title is a Page Field reference to the Blog Post title field.
+
+00:00:39.000 --> 00:00:45.000
+Save a new title for this post.
+
+00:00:45.000 --> 00:00:52.000
+The listing reads the updated title. The second post keeps its own title.

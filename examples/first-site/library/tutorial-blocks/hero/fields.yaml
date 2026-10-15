@@ -1,0 +1,15 @@
+- name: headline
+  label: Headline
+  type: text
+- name: subheadline
+  label: Subheadline
+  type: text
+- name: cta_text
+  label: Cta text
+  type: text
+- name: cta_link
+  label: Cta link
+  type: url
+- name: background_image
+  label: Background image
+  type: image

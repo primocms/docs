@@ -1,0 +1,17 @@
+- name: content
+  label: Content
+  type: rich-text
+- name: alignment
+  label: Alignment
+  type: select
+  config:
+    options:
+      - value: left
+        label: Left
+        icon: ""
+      - value: center
+        label: Center
+        icon: ""
+      - value: right
+        label: Right
+        icon: ""

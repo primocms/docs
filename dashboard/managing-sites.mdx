@@ -24,7 +24,16 @@ Watch the workflow in Primo.
   Your browser does not support embedded video. [Download this demonstration](/videos/demos/create-site.mp4).
 </video>
 
-## Watch the workflow
+[Download video](/videos/demos/create-site.mp4) · [Download captions](/videos/demos/create-site.vtt)
+
+<Accordion title="Read the walkthrough">
+1. Choose Create Site from the dashboard.
+2. Give the new site a name.
+3. Browse starters in the Marketplace.
+4. Choose Hawthorn Veterinary and review its design.
+5. Review optional blocks, then create your site.
+6. Your new site is ready in the dashboard.
+</Accordion>
 
 ### Organize sites in dashboard groups
 
@@ -43,37 +52,42 @@ Watch the workflow in Primo.
   Your browser does not support embedded video. [Download this demonstration](/videos/demos/site-management.mp4).
 </video>
 
-## Creating Your First Site
+[Download video](/videos/demos/site-management.mp4) · [Download captions](/videos/demos/site-management.vtt)
 
-When you first access Primo from a domain, you'll be prompted to create a site for that hostname. The site is automatically tied to the domain you accessed it from.
+<Accordion title="Read the walkthrough">
+1. Use groups to organize the sites you manage.
+2. Switch groups to see another set of sites.
+3. Return to active clients and open a site.
+</Accordion>
 
-## Creating Additional Sites
-
-To create additional sites, you need to connect them to new domain names:
+## Create sites from the dashboard
 
 <Steps>
-  <Step title="Connect a new domain to your server">
-    Point your domain's DNS records to your Primo server, or configure your hosting provider to route traffic to the server.
+  <Step title="Open Sites">
+    Sign in and open the Sites dashboard at `/admin/dashboard/sites`. Select the group where you want the site, then choose **Create Site**.
   </Step>
-
-  <Step title="Access the server from the new domain">
-    Visit your new domain in a web browser (e.g., `https://newsite.com`).
+  <Step title="Choose a starting point">
+    Enter a name, choose an existing site, a marketplace starter, or a blank starter, then review optional blocks and create the site.
   </Step>
-
-  <Step title="Sign in and create the site">
-    You'll be shown the site creation screen. Complete the setup and your site will be automatically connected to the domain.
+  <Step title="Open the editor">
+    Open the new site from its card. You can edit it through `/admin/sites/<site-id>` before it has a public hostname.
+  </Step>
+  <Step title="Connect a domain">
+    Use the site's menu → **Assign domain**. Follow the displayed DNS instructions. With manual domain setup, configure your reverse proxy and TLS, then use **Mark as connected** after verifying reachability. See [Deployment](/reference/deployment) for Railway and VPS setup.
   </Step>
 </Steps>
 
-<Info>
-Each site is tied to a specific hostname/domain. You cannot have multiple sites on the same domain.
-</Info>
+<Note>
+One public hostname routes to one site. You can create multiple sites on a server before connecting domains. If the server has `PRIMO_BASE_DOMAIN` configured, new sites receive subdomains; wildcard DNS and TLS must also be configured.
+</Note>
 
 ## Site Groups
 
-**Site Groups** help you organize multiple sites into folders. They're purely organizational - they don't affect how sites function.
+**Site Groups** help you organize multiple sites into folders. They organize the dashboard; they do not create publishing stages, separate environments, or different permissions.
 
-### Common Use Cases
+### Example group names
+
+You choose the group names. For example:
 
 - **Client Organization**: Group sites by client (e.g., "Client A Sites", "Client B Sites")
 - **Project Type**: Organize by type (e.g., "Blogs", "Portfolios", "E-commerce")
@@ -83,7 +97,7 @@ Each site is tied to a specific hostname/domain. You cannot have multiple sites 
 
 <Steps>
   <Step title="Create a group">
-    From the Sites dashboard, site groups are created automatically when you first access the dashboard. You can rename them as needed.
+    Use the sidebar group controls to choose **Create Group** and enter a name. A group created during setup can also be renamed.
   </Step>
 
   <Step title="Move sites between groups">
@@ -111,7 +125,7 @@ Each site card in the dashboard provides quick actions:
 
 **Move**: Move the site to a different group
 
-**Download**: Export the site's data (coming soon)
+**Download**: Export the site as a `.primo` snapshot. Use the CLI pull workflow for YAML and Svelte files; neither export includes server accounts and settings.
 
 **Delete**: Permanently delete the site and all its content
 

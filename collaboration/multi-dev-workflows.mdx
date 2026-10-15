@@ -1,5 +1,57 @@
 ---
-title: 'Multi-Developer Workflows'
-description: 'Collaborate with other developers using version control and team features.'
+title: "Multi-developer workflows"
+description: "Use Git and guarded CLI sync to coordinate code changes with visual content editing."
 ---
 
+Use Git to review developer changes and Primo's revision checks to protect newer edits made in the hosted CMS. A CLI push replaces site data; it does not merge content automatically or publish the site.
+
+## Prerequisites
+
+- Primo server 3.3.0 or later and CLI 0.2.0 or later for guarded pushes
+- Developer access to the hosted site
+- Git and a team agreement about who pushes and publishes
+
+## Work on a change
+
+<Steps>
+  <Step title="Pull and record the starting point">
+    Authenticate, pull the hosted workspace into a new folder, and initialize Git:
+
+    ```bash
+    primo login https://cms.example.com
+    primo pull https://cms.example.com team-workspace
+    cd team-workspace
+    git init
+    git add .
+    git commit -m "Record hosted workspace"
+    git switch -c feature/update-hero
+    ```
+
+    Keep authentication credentials and database files out of Git. Commit workspace source files and the generated `.gitignore`; handle `.primo` sync metadata as local state.
+  </Step>
+  <Step title="Develop and review">
+    Run `primo dev` from the workspace root. Use files-author mode for code changes and `--author cms` for browser authoring. Avoid simultaneous file and CMS writes to the same content.
+
+    Validate the affected site with `primo validate -d sites/my-site`, check its preview, and review the source diff in Git.
+  </Step>
+  <Step title="Check before pushing">
+    Save or commit your changes, then run `primo push --dry-run`. Push only the intended site with `primo push --only my-site` when the shared library should remain untouched.
+
+    A refused push means hosted data changed since the last sync. Preserve local work, pull, reconcile your changes, and push again. See [Recover from a refused push](/cli/sync#recover-from-a-refused-push).
+  </Step>
+  <Step title="Review and publish">
+    Open the hosted editor and inspect the saved changes. Choose **Publish** when the team is ready to update the public site. Other developers should pull the accepted server state before starting their next change.
+  </Step>
+</Steps>
+
+## Coordinate shared work
+
+Agree on ownership of page types, block field definitions, and shared site content. A Git merge handles file changes; it does not update the sync baseline for a teammate's machine. If that machine has no baseline for the hosted site, pull first and reapply its source changes.
+
+Use `--force` only for an intentional replacement of hosted changes. Primo saves a backup before a forced push, but the backup does not merge those changes into your local branch.
+
+Library blocks are copied into sites. Updating the shared library does not patch existing site copies; coordinate those updates explicitly.
+
+## Verify the handoff
+
+After a developer update, sign in as an editor and confirm that content is intact, fields still work, and page layouts remain editable within the intended constraints. Keep [off-site backups](/reference/deployment#database-backups) in addition to Git history.

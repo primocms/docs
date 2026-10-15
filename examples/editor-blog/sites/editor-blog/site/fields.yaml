@@ -1,0 +1,16 @@
+- name: brand_name
+  label: Brand name
+  type: text
+- name: logo
+  label: Logo
+  type: image
+- name: navigation
+  label: Navigation
+  type: repeater
+  subfields:
+    - name: label
+      label: Label
+      type: text
+    - name: url
+      label: Url
+      type: url

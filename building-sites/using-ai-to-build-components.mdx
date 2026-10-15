@@ -3,10 +3,10 @@ title: 'Using AI to Build Components'
 description: 'Generate components with AI assistance.'
 ---
 
-Use AI to quickly generate block code, then paste into Primo and configure fields manually.
+Use AI to generate block code for the browser editor, or let a coding agent edit a [CLI workspace](/cli/local-development) with the [Primo MCP tools](/reference/mcp-server).
 
 <Info>
-A native AI integration is coming soon! Primo's philosophy is to be a creative tool where AI handles the boring parts and gets out of the way most of the time. The upcoming integration will help with repetitive tasks without being heavy-handed.
+For file-based work, run `primo mcp install` to connect your coding agent. The workspace's AGENTS.md explains its layout; MCP tools provide validation and scaffolds. Review generated code, validate it, and check the rendered result before publishing.
 </Info>
 
 ## Watch the workflow
@@ -28,17 +28,30 @@ Watch the field setup and paste a generated component into Primo.
   Your browser does not support embedded video. [Download this demonstration](/videos/demos/component-fields.mp4).
 </video>
 
+[Download video](/videos/demos/component-fields.mp4) · [Download captions](/videos/demos/component-fields.vtt)
+
+<Accordion title="Read the walkthrough">
+1. Open the page type to create a reusable block.
+2. Switch to content and create a Text field.
+3. Label the field Headline. Its key is headline.
+4. Set the default content for the field.
+5. Reference the field in your component markup.
+6. Preview the result, then create the block.
+</Accordion>
+
 ## Prompt Template
 
-```
+```text
 Generate a Svelte 5 component for a [describe your block].
 
 Requirements:
-- Use Svelte 5 syntax (no export let - fields are globally available)
+- Use Svelte 5 runes. The Primo browser compiler supplies field props; do not use export let or $: statements.
 - Use snake_case for all field names
 - Include null checks (e.g., {#if image?.url})
 - Make it responsive
-- Don't include imports unless needed
+- Use $state and $derived for logic; do not use legacy $: statements
+- Add data-key attributes for inline-editable content
+- Keep the block self-contained; do not import other block folders
 
 Fields:
 - [list fields with types, e.g., "headline (text)", "image (image with url and alt)"]
@@ -50,7 +63,7 @@ Style: [describe design]
 
 <Steps>
 <Step title="Generate code">
-  Use the prompt with Claude, ChatGPT, etc.
+  Send the prompt to your chosen AI tool. This workflow uses that external tool to generate code; paste the result into Primo in the next step.
 </Step>
 
 <Step title="Paste into Primo">
@@ -58,7 +71,7 @@ Style: [describe design]
 </Step>
 
 <Step title="Add fields">
-  Switch to Fields tab and manually add each field with proper types.
+  Switch to **Content** and add each field with its matching type. Field names in the generated code do not create fields automatically.
 </Step>
 
 <Step title="Test">
@@ -69,11 +82,11 @@ Style: [describe design]
 ## Example
 
 **Prompt:**
-```
+```text
 Generate a Svelte 5 component for a feature card.
 
 Requirements:
-- Use Svelte 5 syntax (no export let - fields are globally available)
+- Use Svelte 5 runes. The Primo browser compiler supplies field props; do not use export let or $: statements.
 - Use snake_case for all field names
 - Include null checks
 - Responsive
@@ -87,7 +100,7 @@ Fields:
 Style: Card with shadow, rounded corners, hover effect
 ```
 
-**Result:**
+**Example output:**
 ```svelte
 <div class="card">
   {#if icon?.url}
@@ -131,7 +144,7 @@ Then add fields in Primo: icon (Image), headline (Text), description (Text), cta
 ## Common Issues
 
 **AI uses `export let`:**
-Remove it. Fields are globally available in Primo.
+Remove legacy `export let` declarations. The browser compiler supplies field props automatically unless your component declares its own `$props()`. If you use `$props()`, declare every field the component reads.
 
 ```svelte
 <!-- ❌ Don't do this -->
@@ -157,7 +170,7 @@ Add them, especially for images and links.
 ```
 
 **Unnecessary imports:**
-Only import if you actually need Svelte lifecycle hooks or advanced features.
+Use imports only when their module can be resolved by your preview and publishing workflow. Do not assume that another block is available as a relative Svelte import.
 
 ## Next Steps
 

@@ -3,7 +3,7 @@ title: "Introduction"
 description: "Primo is a visual CMS where AI agents edit files and humans edit visually — same source of truth."
 ---
 
-Primo is a visual CMS that represents your entire site as files. Pull it down, edit with Claude Code, Cursor, or any agent, push it back. Your team manages content visually in the browser.
+Primo is a visual CMS for building sites with Svelte blocks and editable fields. Your team edits content in the browser. As a developer, you can also use the CLI to pull the site into files, edit it with your own tools or a coding agent, and push changes back to the CMS.
 
 See how you can edit content, create a blog post, and publish a site in Primo.
 
@@ -20,23 +20,36 @@ See how you can edit content, create a blog post, and publish a site in Primo.
   Your browser does not support embedded video. [Download this demonstration](/videos/demos/introduction-overview.mp4).
 </video>
 
+[Download video](/videos/demos/introduction-overview.mp4) · [Download captions](/videos/demos/introduction-overview.vtt)
+
+<Accordion title="Read the walkthrough">
+1. A complete site, ready for your content.
+2. Click the headline and make it your own.
+3. Replace a photo directly on the page.
+4. Create a blog post from a reusable page type.
+5. The same design, with this post’s own content.
+6. Arrange the homepage with reusable blocks.
+7. Publish when your changes are ready.
+8. View the finished site.
+</Accordion>
+
 ```bash
-docker run -d -p 8080:8080 ghcr.io/primocms/primo:latest
+docker run -d -p 8080:8080 -v primo-data:/app/pb_data ghcr.io/primocms/primo:latest
 ```
 
 ## What Makes Primo Different
 
-Most web tools force a tradeoff: code control *or* visual editing. Primo keeps both in the same source of truth.
+You define the code, fields, and page layouts. Content editors use those fields and layouts in the browser. The CLI connects a local file workspace to the CMS database.
 
 <CardGroup cols={2}>
-  <Card title="Files as the source of truth" icon="file-code">
-    Blocks, pages, fields, and content all live as YAML and Svelte on disk. Version them in Git, edit them in any editor.
+  <Card title="Work in files" icon="file-code">
+    Pull blocks, pages, fields, and content into YAML and Svelte files with the CLI. Version them in Git and edit them in any editor.
   </Card>
   <Card title="AI agents edit files" icon="robot">
     Any tool that reads files works — Claude Code, Cursor, Cline. The [official MCP server](/reference/mcp-server) gives agents live schema validation and scaffolding.
   </Card>
   <Card title="Humans edit visually" icon="pen-to-square">
-    Non-technical teammates open the site in the browser, click anything, and edit it. No code, no broken designs.
+    Content editors change the fields you expose and arrange the blocks you allow. You control the code and page type definitions.
   </Card>
   <Card title="Self-hosted and open source" icon="server">
     Run it on Railway, Fly, a VPS, or your laptop. MIT license, single Docker container, SQLite under the hood.
@@ -47,7 +60,7 @@ Most web tools force a tradeoff: code control *or* visual editing. Primo keeps b
 
 1. **Build with code.** Write Svelte components and attach content fields with YAML. The [CLI](/cli/overview) runs the full CMS locally and watches your files.
 2. **Hand off visually.** Invite [collaborators](/collaboration/inviting-collaborators) — they edit content in the browser without touching code.
-3. **Edit anywhere, anytime.** Pull the site to your laptop, let an agent change a layout, push it back. Or stay in the browser. Same files either way.
+3. **Edit anywhere, anytime.** Pull the site to your laptop, let an agent change a layout, and push it back to the CMS. Publish from the browser when ready. [Revision checks](/cli/sync#push-safety) protect newer editor changes.
 
 ## Who It's For
 
@@ -57,7 +70,7 @@ Primo is built for **developers who build sites for other people** — freelance
 
 <CardGroup cols={2}>
   <Card title="Quickstart" icon="bolt" href="/getting-started/quickstart">
-    Build your first site in 5 minutes — local or deployed
+    Create your first site locally or on a deployed server
   </Card>
   <Card title="Install" icon="rocket" href="/getting-started/installation">
     Self-host with Docker, Railway, or Fly.io

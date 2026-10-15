@@ -1,0 +1,15 @@
+- name: title
+  label: Title
+  type: page-field
+  config:
+    field: blog-post--title
+- name: publish_date
+  label: Publish date
+  type: page-field
+  config:
+    field: blog-post--publish_date
+- name: body
+  label: Body
+  type: page-field
+  config:
+    field: blog-post--body

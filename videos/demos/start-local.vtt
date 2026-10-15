@@ -1,0 +1,16 @@
+WEBVTT
+
+00:00:00.000 --> 00:00:07.000
+With Node.js and the CLI installed, create a workspace. This demo skips MCP setup.
+
+00:00:07.000 --> 00:00:14.000
+Inside the workspace, create a site. --skip-dev leaves starting the server to you.
+
+00:00:14.000 --> 00:00:20.000
+Validate the site files before starting Primo.
+
+00:00:20.000 --> 00:00:28.000
+Run primo dev --author files. Open its editor URL: Browse mode keeps local files authoritative.
+
+00:00:28.000 --> 00:00:36.000
+Stop with Ctrl+C, then run primo dev --author cms to edit in the browser.

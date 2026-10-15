@@ -1,0 +1,12 @@
+- name: image
+  label: Image
+  type: image
+- name: alt_text
+  label: Alt text
+  type: text
+- name: caption
+  label: Caption
+  type: text
+- name: full_width
+  label: Full width
+  type: switch

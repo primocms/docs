@@ -1,0 +1,4 @@
+site_groups:
+  - id: tutorials
+    name: Tutorials
+    index: 0

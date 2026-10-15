@@ -1,259 +1,108 @@
 ---
 title: 'Core Concepts'
-description: 'Learn the fundamental concepts behind Primo: sites, page types, pages, blocks, and sections.'
+description: 'Understand sites, page types, pages, blocks, sections, and fields.'
 ---
 
-Understanding Primo's core concepts helps you build sites more effectively. Everything in Primo follows a clear hierarchy that separates structure from content, giving you control while empowering editors.
+You build a Primo site from pages. Each page uses a page type to define its layout and editing options. You create reusable blocks, then place them on pages as sections with their own content.
 
-## The Content Hierarchy
+## How the pieces fit together
 
-Primo organizes content in three levels:
+| Concept | What it means | Example |
+| --- | --- | --- |
+| Site | One website with its own pages, blocks, and settings | Your agency's website |
+| Page type | A template that defines fields, starting layout, and available blocks | A Blog Post type you create |
+| Page | One page created from a page type | An article at `/blog/first-post` |
+| Block | Reusable Svelte code with editable fields | A Hero block you build |
+| Section | One use of a block, with content for that placement | The Hero on your homepage |
+| Field | One editable value, such as text, an image, or a link | The Hero's headline |
 
-```
-Site → Pages → Sections
-```
-
-This is your actual content structure - what lives in your database and what gets published.
-
-**Page Types** and **Blocks** aren't part of this hierarchy - they're blueprints that define structure and behavior for pages and sections, respectively.
-
-### Understanding the Structure
-
-Let's break down how everything fits together with three focused diagrams:
-
-**1. Content Hierarchy** - Your actual content structure:
-
-```mermaid
-graph TB
-    Site[Site<br/>Your website]
-    Pages[Pages<br/>Individual pages]
-    Sections[Sections<br/>Content blocks on pages]
-
-    Site --> Pages
-    Pages --> Sections
-
-    style Site fill:#ff6b35,stroke:#333,stroke-width:2px,color:#fff
-    style Pages fill:#4a90e2,stroke:#333,stroke-width:2px,color:#fff
-    style Sections fill:#27ae60,stroke:#333,stroke-width:2px,color:#fff
-```
-
-**2. Templates & Structure** - How structure is defined:
-
-```mermaid
-graph LR
-    PageTypes[Page Types<br/>Templates for pages]
-    Blocks[Blocks<br/>Reusable components]
-
-    PageTypes -.defines structure.-> Pages[Pages]
-    Blocks -.instantiated as.-> Sections[Sections]
-
-    PageTypes --> PTFields[Page Fields<br/>title, description, etc.]
-    PageTypes --> Slots[Fixed Sections<br/>Header, Body, Footer]
-    PageTypes --> Available[Available Blocks<br/>Which blocks editors can use]
-    PageTypes --> HTML[Head HTML & Body Footer HTML<br/>Scripts, styles, meta tags]
-
-    Blocks --> Code[Code<br/>HTML, CSS, JS]
-    Blocks --> BlockFields[Block Fields<br/>headline, image, etc.]
-
-    style PageTypes fill:#004e89,stroke:#333,stroke-width:2px,color:#fff
-    style Blocks fill:#f39c12,stroke:#333,stroke-width:2px,color:#fff
-```
-
-**3. Data Model** - How content is stored:
-
-```mermaid
-graph TB
-    Fields[Fields<br/>Content schemas]
-    Entries[Entries<br/>Actual values]
-
-    Fields -.defines.-> Entries
-
-    Fields --> SiteFields[Site Fields<br/>logo, nav, etc.]
-    Fields --> PageFields[Page Fields<br/>title, description, etc.]
-    Fields --> BlockFields[Block Fields<br/>headline, image, etc.]
-
-    Entries --> SiteEntries[Site Entries<br/>Global content]
-    Entries --> PageEntries[Page Entries<br/>Page content]
-    Entries --> SectionEntries[Section Entries<br/>Block content]
-
-    style Fields fill:#9b59b6,stroke:#333,stroke-width:2px,color:#fff
-    style Entries fill:#1abc9c,stroke:#333,stroke-width:2px,color:#fff
-```
-
-<Info>
-**Key concepts:** **Blocks** are self-contained full-width components written in Svelte. They define a content schema using fields and are instantiated as sections when added to pages. **Page Types** define which blocks can be used, fixed sections (header/body/footer), and page-level fields. **Fields** define data schemas, **Entries** store the actual values.
-</Info>
+Blog Post and Hero are example names you choose. Primo supplies the page, block, and field controls; you build or import the templates and designs.
 
 ## Sites
 
-A **site** is your top-level container. Each site is completely independent with its own:
+A **site** contains its own pages, page types, blocks, and shared settings. Create one from a marketplace starter, copy an existing site, or start blank. A starter includes code and sample content you can change.
 
-- **Site-wide content** - Navigation menus, logo, footer content, social links
-- **Design system** - CSS variables for colors, typography, spacing
-- **Page types** - Templates that define page structure
-- **Site-specific blocks** - Blocks available only to this site
-- **Domain** - Each site is tied to a specific hostname
+You can edit a site before it has a public address. [Assign a domain](/dashboard/connecting-domains) when you want to serve it to visitors.
 
-When you create a new site, you choose a starter:
-- Pick one of your existing sites as a template
-- Choose a starter from the marketplace (blog, portfolio, restaurant, etc.)
-- Start with a blank starter to build from scratch
+## Page types
 
-## Page Types
+A **page type** defines:
 
-**Page types** are templates that define the structure and capabilities of pages. To create one, you simply give it a name, icon, and color. Then you configure:
+- **Page fields:** Values each page can store, such as a title, author, or article body.
+- **Starting layout:** Header and footer sections shared across pages of the type, plus body sections copied into each new page.
+- **Available blocks:** The blocks editors can add to the body.
 
-- **Page fields** - Content like title, description, publish date, or relational fields (e.g. author, location, etc.)
-- **Available blocks** - Which blocks editors can add to pages
-- **Fixed sections** - Static header/body/footer sections that appear on every page of this type (also called "Static page types" in the UI when body sections are fixed)
+### Choose page types for your content
 
-### Example Page Type Uses
+You can use a page type for specific content, such as a blog post, or for general pages, such as About and Services.
 
-Page types are completely customizable. Here are common examples:
+| Example page type you create | Pages that use it | Possible setup |
+| --- | --- | --- |
+| Blog Post | Individual articles | Title and body fields with a fixed post layout |
+| Person | Team member profiles | Name, photo, and biography fields with a profile layout |
+| General Page | About, Services, and landing pages | Shared navigation and footer, with blocks editors can arrange in the body |
 
-**Content Types:**
-- **Blog Post** - For individual blog articles
-- **Person** - For team member profiles
-- **Event** - For event listings
-- **Case Study** - For portfolio pieces
-- **Location** - For store/office locations
-- **Product** - For e-commerce items
-- **Documentation** - For help articles
+These names are examples, not built-in presets. Pages with similar layouts can use the same type; you do not need a separate type for every page.
 
-**Layout Types:**
-- **Blank** - No fixed sections, all blocks available
-- **Standard** - Header/footer with standard blocks
-- **Editorial** - Reading-focused layout with limited blocks
+### Fixed or flexible body layouts
 
-Everything in Primo is a page. Whether it's a content entity (blog post, team member) or a flexible layout page (homepage, about page), so long as it has a common structure you create a page type for it.
+The available-block list controls how much editors can change the body:
 
-<Accordion title="Example: Blog Post Page Type">
-A "Blog Post" page type might include:
-- **Fixed header sections** - Site navigation (static content across all blog posts) + page header (pulls title from page field) 
-- **Page fields**: Title, Description, Author, Publish Date, Featured Image
-- **Available blocks**: Hero, Text, Image, Code Block, Call-to-Action, Video
-- **Fixed footer sections** - Newsletter signup form (static content across all blog posts) + site footer
+- **With available blocks:** Editors can add those blocks, remove sections, and change their order.
+- **With no available blocks:** Editors can edit the existing content but cannot add, remove, or reorder body sections.
 
-Blocks unavailable might include those specific to other page types, like "Person Bio" blocks that depend on "Person" page fields.
-</Accordion>
+Header and footer structure is set in the page type. Ordinary content in these sections is shared across pages of that type. Body content belongs to each page. Changes to the starting body template apply to new pages; they do not replace existing pages' body sections.
 
-### About Fixed Sections
-
-Fixed sections (ie sections within the header/footer slots) contain static content that stays the same across all pages of that type. If you want dynamic content in a fixed section (like showing the page title), you should connect it to a page field:
-
-```svelte
-<!-- In your header block -->
-<h1>{title}</h1>  <!-- connects to page field -->
-```
-
-### Block Availability
-
-Primo doesn't differentiate between types of blocks - you control which blocks are available per page type. For one-time-use blocks (like a homepage hero), toggle it on, place it on the page, then toggle it off. Toggling it off doesn't remove it from existing pages, just prevents editors from adding it again.
-
-**Cross-page type dependencies:** When a block references fields from a different page type, Primo shows a broken link icon with "References Page Fields from [Page Type]". You can still add the block, but those fields won't have data. To use a block across multiple page types, give each field the same key (e.g., a header block with `title` fields connected to both "Blank" and "Standard" page types, both referenced as `{title}` in the code).
+See [Understanding slots](/building-sites/understanding-slots) for the full layout behavior.
 
 ## Pages
 
-**Pages** are instances of page types. In Primo, everything is a page - whether it's content (blog post, team member) or layout (homepage, about page).
+A **page** is one use of a page type, with its own content. For example, two articles can use your Blog Post type while having different titles and bodies.
 
-### Creating Pages
+Create pages from **Pages** in the toolbar. Choose a type, enter a name and slug, then fill in its fields and sections.
 
-To create a page:
+The **slug** is a segment of the page's URL. A page with slug `first-post` under a parent with slug `blog` has the URL `/blog/first-post`. The homepage is the root page at `/`. Naming a page or page type "Homepage" does not make it the root page.
 
-1. **Open the page list** - Click "Pages" in the toolbar
-2. **Choose creation method:**
-   - Click "Create Page" for a top-level page
-   - Click "Create Subpage" next to a page to create a child page (or click the three-dot menu on a child-less page)
-3. **Configure the page:**
-   - **Name** - Internal identifier (or external if using `_meta.name`)
-   - **Slug** - URL path segment
-   - **Page Type** - Template to use (hidden if only one exists)
-4. **Add content:**
-   - Fill out page fields
-   - Add sections from available blocks (or edit existing default sections)
-   - Fixed sections (if any) are already in place and can't be removed
-5. **Publish when ready**
-
-Pages are built by stacking sections vertically. Each page follows the structure defined by its page type, ensuring consistency while allowing flexibility in content and layout.
+Page fields only appear on the rendered page when your code uses them. For example, create a Page Field reference in a block to display a page title, or add metadata tags to the page type's Head HTML for search engines. See [Working with fields](/building-sites/working-with-fields).
 
 ## Blocks
 
-**Blocks** are self-contained full-width components written in Svelte. They define a content schema using fields and are instantiated as sections when added to pages.
+A **block** combines Svelte markup, styles, and logic with fields editors can fill in. For example, you can build a Hero block with a headline, image, and link. You control how those values appear.
 
-### Two Types of Blocks
+### Library blocks and site blocks
 
-**Library Blocks:**
-- Stored in your server library
-- Reusable across all your sites
-- Build once, use everywhere
+- **Library blocks** are reusable starting points stored in the server's block library. Adding one to a site creates an independent copy.
+- **Site blocks** belong to one site. Editing their code updates the sections using them in that site; publish to update the public pages.
 
-**Site-Specific Blocks:**
-- Available only to one site
-- Useful for site-specific components
-- Don't clutter your server library
-
-### Block Structure
-
-Each block contains:
-- **Component code** - Svelte component with HTML, CSS, and JavaScript
-- **Content fields** - Editable data that editors can modify
-- **Field configuration** - Define what content can be edited and how
-
-Blocks stack vertically to create page layouts through sections (instances of blocks with actual content).
+Editing a library original does not update existing site copies. See [Using the component library](/building-sites/using-the-component-library) for reuse and update workflows.
 
 ## Sections
 
-**Sections** are instances of blocks placed on pages. When you add a block to a page, you're actually creating a section - an instance of that block with its own content.
+A **section** is one placement of a block with content for that placement. If you add the same Hero block twice, each section can have a different headline and image while using the same code.
 
-Think of it this way:
-- **Block** = template/blueprint (the code and schema)
-- **Section** = instance (the actual content on a page)
+For body sections, changing one section's content leaves the other sections' content alone. Header and footer sections are shared by pages of the same type.
 
-<Accordion title="Example: Blocks vs Sections">
-You have a "Hero" block in your library. When editors add it to the homepage, they create a section. That section has its own content (headline, image, etc.) separate from other Hero sections on different pages.
-</Accordion>
+## Fields
 
-This separation allows:
-- The same block to be used multiple times with different content
-- Block code updates to apply to all sections using that block
-- Each section to maintain its own content independently
+Fields make content editable. You choose supported types such as Text, Image, Link, and Repeater, then give each field a label and key.
 
-## The Collaboration Model
+| Where you define a field | Use it for |
+| --- | --- |
+| Site | Shared content, such as a logo or navigation links |
+| Page type | Content each page stores, such as an article title or body |
+| Block | Content for a section, such as a headline or image |
 
-This hierarchy enables a powerful collaboration model:
+Names such as `logo`, `title`, and `headline` are examples you define. To use site or page content in a block, add a **Site Field** or **Page Field** reference and select its source. Matching names alone do not create a connection.
 
-**Developer Role:**
-- Define page types with available blocks
-- Set required blocks and constraints
-- Build and style components
-- Configure content fields
+See [Field types](/reference/field-types) for the built-in types and their values.
 
-**Editor Role:**
-- Create pages from page types
-- Add and arrange sections from blocks
-- Edit content within fields
-- Publish when ready
+## Working with content editors
 
-**Result:** Developers control structure and design. Editors control content and layout. Both work independently without breaking each other's work.
+As a developer, you create the blocks, fields, and page types. Content editors create pages, fill in fields, and arrange body sections where the page type allows it. They cannot edit code or redefine the page types.
 
-<Info>
-Editors cannot modify page types, edit component code, or change design settings (unless pre-configured, like block variations). They work within the guardrails you define, ensuring designs stay intact while content remains flexible.
-</Info>
+Inline edits and layout changes save automatically. Changes in editor dialogs require **Save**. Publishing makes the site's saved changes public, including changes on other pages.
 
-## Putting It Together
-
-Here's how it all works in practice:
-
-1. **You create a site** and choose a starter
-2. **You define page types** like "Blog Post" with available blocks and fixed sections
-3. **You build blocks** (Hero, Text, Image) and add them to your library
-4. **Editors create pages** using the "Blog Post" page type
-5. **Editors add sections** (instances of blocks) from the available options
-6. **Editors edit content** within each section's fields
-7. **Editors publish** when ready
-8. **Repeat** from step 2 as required or desired
-
-The hierarchy ensures consistency while maintaining flexibility. Every page follows its page type's structure, but editors have full control over which sections to add and what content to include.
+For example, you can create a Blog Post type and a block that displays its title and body. An editor then creates articles from that type and fills in the fields. Both articles keep the layout you defined, with their own content.
 
 ## Next Steps
 

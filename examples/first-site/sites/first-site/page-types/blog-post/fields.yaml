@@ -1,0 +1,21 @@
+- name: title
+  label: Title
+  type: text
+- name: author
+  label: Author
+  type: text
+- name: publish_date
+  label: Publish date
+  type: date
+- name: featured_image
+  label: Featured image
+  type: image
+- name: excerpt
+  label: Excerpt
+  type: text
+- name: meta_title
+  label: Meta title
+  type: text
+- name: meta_description
+  label: Meta description
+  type: text

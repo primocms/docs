@@ -1,0 +1,19 @@
+- name: cards
+  label: Cards
+  type: repeater
+  subfields:
+    - name: title
+      label: Title
+      type: text
+    - name: description
+      label: Description
+      type: text
+    - name: image
+      label: Image
+      type: image
+    - name: link
+      label: Link
+      type: url
+- name: columns
+  label: Columns
+  type: number

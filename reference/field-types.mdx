@@ -3,16 +3,22 @@ title: 'Field Types'
 description: 'Complete reference of all available field types for blocks and pages.'
 ---
 
-Fields are what make blocks editable. You attach fields to your blocks, and editors can fill them in without touching code. This reference covers all available field types in Primo.
+Fields are what make blocks editable. You attach fields to your blocks, and editors can fill them in without touching code. This reference covers Primo's built-in field types. Variable names and block designs in the examples are choices you define; create the matching fields before using the code.
 
 <Info>
 Fields can be added to three places:
 - **Sites** - Site-wide content (logo, navigation, footer, etc.)
-- **Page Types** - Page-level metadata (title, author, publish date, etc.)
+- **Page Types** - Content each page stores, such as a title, author, or article body
 - **Blocks** - Section-level content (headlines, images, descriptions, etc.)
 
 Most field types work the same in all contexts, with some exceptions noted below.
 </Info>
+
+## Type names in files
+
+Field definitions use `name`, `label`, `type`, and optional `config`. Use lowercase type IDs: `text`, `rich-text`, `markdown`, `number`, `date`, `select`, `switch` (Toggle), `slider`, `image`, `icon`, `link`, `url`, `site-field`, `page-field`, `page`, `page-list`, `repeater`, `group`, and `info`. Nested Group and Repeater fields use `subfields`.
+
+Defaults belong in `content.yaml`, not a `default` or `required` property on the field. See [file examples](/building-sites/working-with-fields#define-fields-in-files).
 
 ## Text Fields
 
@@ -33,7 +39,7 @@ Text input that automatically grows to accommodate content.
 </Accordion>
 
 <Accordion title="Rich Text">
-WYSIWYG editor for formatted text with HTML output.
+Rich text editor with formatting controls. It supplies HTML to your block.
 
 **Use for:**
 - Article content
@@ -82,16 +88,16 @@ Markdown editor for formatted text.
 ```
 </Accordion>
 
-## Number Fields
+## Number and date fields
 
 <Accordion title="Number">
-Numeric input for integers.
+Numeric input that stores a number. The implementation parses values with `parseFloat`, so values are not restricted to integers.
 
 **Use for:**
 - Quantities
 - Counts
 - Whole number ratings
-- Integer values
+- Numeric values
 
 **Component usage:**
 ```svelte
@@ -116,7 +122,7 @@ Date picker that outputs dates in YYYY-MM-DD format.
 
 <!-- Formatted for display -->
 <time datetime={publish_date}>
-  {new Date(publish_date).toLocaleDateString()}
+  {new Date(publish_date).toLocaleDateString("en-US", { timeZone: "UTC" })}
 </time>
 
 <!-- Custom formatting -->
@@ -124,13 +130,14 @@ Date picker that outputs dates in YYYY-MM-DD format.
   {new Date(publish_date).toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long',
-    day: 'numeric'
+    day: 'numeric',
+    timeZone: 'UTC'
   })}
 </time>
 ```
 
 <Info>
-The Date field outputs a string in YYYY-MM-DD format (e.g., "2024-01-15"). Use JavaScript's `new Date()` constructor to parse and format it for display. The raw value is perfect for the `datetime` attribute in `<time>` elements.
+The Date input uses YYYY-MM-DD format (e.g., "2024-01-15"). Values are strings; resolved references or imported dates can include an ISO timestamp such as "2024-01-15T00:00:00Z". Use JavaScript's `new Date()` constructor with an explicit UTC display time zone for date-only strings, which are parsed as UTC. Without that option, users west of UTC can see the previous day. Quote date values in YAML, such as `publish_date: "2026-10-11"`, so parsers keep them as strings. A Date field does not schedule publication. Use the raw value for the `datetime` attribute in `<time>` elements.
 </Info>
 </Accordion>
 
@@ -206,7 +213,7 @@ Image upload and selection field. Returns an object with `url` and `alt` propert
 
 **Component usage:**
 ```svelte
-{#if image}
+{#if image?.url}
   <img src={image.url} alt={image.alt} />
 {/if}
 ```
@@ -240,7 +247,7 @@ Icon picker for selecting icons from [Iconify](https://icon-sets.iconify.design/
 <style>
   .icon {
     font-size: 2rem;
-    color: var(--primary-color);
+    color: var(--color-primary, #4f46b6);
   }
 </style>
 ```
@@ -262,7 +269,9 @@ Link field for both internal and external links. Returns an object with `url` an
 
 **Component usage:**
 ```svelte
-<a href={link.url}>{link.label}</a>
+{#if link?.url}
+  <a href={link.url}>{link.label || "Learn more"}</a>
+{/if}
 ```
 </Accordion>
 
@@ -277,14 +286,16 @@ Simple URL input field.
 
 **Component usage:**
 ```svelte
-<a href={website_url} target="_blank">Visit Website</a>
+{#if website_url}
+  <a href={website_url} target="_blank" rel="noopener noreferrer">Visit website</a>
+{/if}
 ```
 </Accordion>
 
 ## Relational Fields
 
 <Accordion title="Site Field">
-Reference site-wide content fields. The site field references the complete value of the site field, regardless of its type.
+Connect a block or page type field to a field defined on the site. It receives the source field's value, whether that value is text, an image, or structured content.
 
 **Use for:**
 - Displaying site-wide content in blocks
@@ -294,7 +305,9 @@ Reference site-wide content fields. The site field references the complete value
 **Component usage:**
 ```svelte
 <!-- If the site has a "logo" image field -->
-<img src={logo.url} alt={logo.alt} />
+{#if logo?.url}
+  <img src={logo.url} alt={logo.alt || ""} />
+{/if}
 
 <!-- If the site has a "company_name" text field -->
 <h1>{company_name}</h1>
@@ -310,7 +323,7 @@ When you edit a site field from the block form view, it updates the value site-w
 </Accordion>
 
 <Accordion title="Page Field">
-Reference page-level fields from the current page. The page field references the complete value of the page field, regardless of its type.
+Connect a block field to a field defined on the current page's type. It receives that page's value.
 
 **Use for:**
 - Displaying page title in blocks
@@ -322,7 +335,9 @@ Reference page-level fields from the current page. The page field references the
 <h1>{title}</h1>
 
 <!-- If the page has a "featured_image" image field -->
-<img src={featured_image.url} alt={featured_image.alt} />
+{#if featured_image?.url}
+  <img src={featured_image.url} alt={featured_image.alt || ""} />
+{/if}
 ```
 
 <Note>
@@ -330,7 +345,7 @@ Available in blocks to reference page-level content.
 </Note>
 
 <Info>
-When you edit a page field from the block form view, it updates the value for that specific page across all blocks that reference it. For example, if a blog post has a `featured_image` page field, changing it might update the image in the page's header block, the meta tags in the head, and on the articles list page—all from one edit (if integrated in those places).
+When you edit a page field from the block form view, it updates the value for that specific page across all blocks that reference it. For example, updating `featured_image` changes every place your code uses that page field. Header images, social metadata, and article lists must each be connected explicitly.
 </Info>
 
 <Note>
@@ -339,7 +354,7 @@ Page fields cannot be edited inline on the page yet.
 </Accordion>
 
 <Accordion title="Page">
-Select a specific page from a list. You must specify a page type to limit which pages appear in the selection list.
+Let an editor choose one page of a configured page type. Create that page type first; names such as Person and Blog Post below are examples.
 
 **Use for:**
 - Article author (Person page type)
@@ -349,10 +364,12 @@ Select a specific page from a list. You must specify a page type to limit which 
 **Component usage:**
 ```svelte
 <!-- Access page fields like title or custom fields -->
-<a href={author._meta.url}>
-  <h3>{author.name}</h3>
-  <p>{author.bio}</p>
-</a>
+{#if author?._meta?.url}
+  <a href={author._meta.url}>
+    <h3>{author.name || author._meta.name}</h3>
+    <p>{author.bio}</p>
+  </a>
+{/if}
 ```
 
 The `_meta` property provides:
@@ -366,7 +383,7 @@ The `_meta` property provides:
 </Accordion>
 
 <Accordion title="Page List">
-Automatically outputs all pages of a specified page type. Editors cannot select which pages to include—it returns all pages of the given type.
+Supply all pages of a configured page type to your block code. Your code renders the list; editors do not choose individual entries in this field.
 
 **Use for:**
 - Team member listings (all Person pages)
@@ -376,7 +393,7 @@ Automatically outputs all pages of a specified page type. Editors cannot select 
 **Component usage:**
 ```svelte
 <div class="team">
-  {#each members as member}
+  {#each members ?? [] as member}
     <a href={member._meta.url}>
       <h3>{member.name}</h3>
       <p>{member.title}</p>
@@ -390,7 +407,7 @@ Automatically outputs all pages of a specified page type. Editors cannot select 
 - **Page Type**: Required. Specifies which page type to output (e.g., "Person", "Blog Post")
 
 <Info>
-If you want editors to choose specific pages, use a **Repeater field** with nested **Page fields** instead. For selection by exclusion, combine a Page List with a Repeater > Page field.
+If you want editors to choose specific pages, use a **Repeater field** with nested **Page fields** instead. To exclude selected pages, add a Repeater containing a Page field and filter the Page List in your block code; see the example below.
 </Info>
 </Accordion>
 
@@ -409,9 +426,11 @@ Repeatable group of fields.
 **Component usage:**
 ```svelte
 <ul>
-  {#each features as feature}
+  {#each features ?? [] as feature}
     <li>
-      <img src={feature.icon.url} alt={feature.icon.alt} />
+      {#if feature.icon?.url}
+        <img src={feature.icon.url} alt={feature.icon.alt || ""} />
+      {/if}
       <h3>{feature.title}</h3>
       <p>{feature.description}</p>
     </li>
@@ -420,9 +439,11 @@ Repeatable group of fields.
 
 <!-- Or with destructuring -->
 <ul>
-  {#each features as { icon, title, description }}
+  {#each features ?? [] as { icon, title, description }}
     <li>
-      <img src={icon.url} alt={icon.alt} />
+      {#if icon?.url}
+        <img src={icon.url} alt={icon.alt || ""} />
+      {/if}
       <h3>{title}</h3>
       <p>{description}</p>
     </li>
@@ -431,28 +452,30 @@ Repeatable group of fields.
 ```
 
 <Tip>
-Avoid naming your loop variable the same as a nested field. For example, if you have a nested `link` field, use `{#each links as item}` instead of `{#each links as link}` to prevent confusion when accessing `item.link.url`.
+Avoid naming your loop variable the same as a nested field. For example, if you have a nested `link` field, use `{#each links ?? [] as item}` instead of `{#each links ?? [] as link}` to prevent confusion when accessing `item.link.url`.
 </Tip>
 
-<Example>
+<Note>
 A "Features" block might use a repeater named `features` with fields: `title` (Text), `description` (Text), and `icon` (Image). Editors can add multiple features, and each gets the same set of fields.
-</Example>
+</Note>
 </Accordion>
 
 <Accordion title="Group">
 Group of related fields displayed together.
 
 **Use for:**
-- Contact form (inputs + endpoint + submit_label)
+- Contact details (email + phone + address)
 - Card content (title + description + cta_link)
 - Author info (name + bio + photo)
 
 **Component usage:**
 ```svelte
 <div class="author">
-  <img src={author.photo.url} alt={author.photo.alt} />
-  <h3>{author.name}</h3>
-  <p>{author.bio}</p>
+  {#if author?.photo?.url}
+    <img src={author.photo.url} alt={author.photo.alt || ""} />
+  {/if}
+  <h3>{author?.name}</h3>
+  <p>{author?.bio}</p>
 </div>
 ```
 </Accordion>
@@ -468,7 +491,7 @@ Display-only field for showing helpful information to editors. Supports Markdown
 - Documentation for editors
 
 <Tip>
-Consider combining Info fields with conditions to show context-specific help. For example, add an Info field that only appears when "Custom Layout" is selected from a Select field, explaining the custom layout options.
+Consider combining Info fields with conditions to show context-specific help. For example, create a Select option named "Custom Layout" and an Info field explaining the options you implement for it. Add a condition to show that help when the option is selected.
 </Tip>
 </Accordion>
 
@@ -492,7 +515,7 @@ Some field types have additional configuration options:
 - **Max Dimension (px)**: Maximum dimension (width or height) in pixels
 
 **Page / Page List:**
-- **Page Type**: Restrict selection to a specific page type
+- **Page Type**: The type editors choose from (Page) or the type whose pages are returned (Page List)
 
 ### Conditional Display
 
@@ -504,7 +527,7 @@ When you add a condition ("Show if"):
 - **Value**: The value to compare against
 
 <Info>
-Conditional fields help create dynamic editing interfaces that show relevant fields based on other selections. For example, to show an image field only when a "Show Image" toggle is enabled, the "Show Image" toggle must come first in the field list, then the image field below it with the condition. Fields can only reference fields that appear before them in the list.
+Conditions show relevant form fields based on other selections; they do not hide content in the published page. Add a matching condition in your block code when needed. For example, to show an image field only when a "Show Image" toggle is enabled, the "Show Image" toggle must come first in the field list, then the image field below it with the condition. Fields can only reference fields that appear before them in the list.
 </Info>
 
 ## Best Practices
@@ -520,9 +543,9 @@ Match field types to their purpose:
 - ❌ Text for long articles (use Rich Text)
 - ❌ Number for phone numbers (use Text)
 
-### 2. Provide Defaults
+### 2. Handle empty values
 
-Fields in Primo are globally available in your block code, but you should always handle empty/missing values:
+The browser compiler supplies your defined fields as block props. Handle empty or missing values with fallbacks or conditional rendering:
 
 ```svelte
 <!-- Good: Handles empty values -->
@@ -548,16 +571,18 @@ Clear labels help editors understand fields:
 - ❌ "Field 1"
 - ❌ "Data"
 
-### 4. Add Help Text
+### 4. Add an Info field
 
-Help text guides editors:
+Use an Info field to guide editors:
 
-<Example>
+<Note>
 **Field**: "Featured Image"
-**Help text**: "This image appears at the top of the post and in social media shares. Recommended size: 1200x630px."
-</Example>
+**Example Info field content**: "Choose a landscape image for the post header and add descriptive alt text." Describe social-sharing use only if your code connects the image to social metadata.
+</Note>
 
 ## Field Combinations
+
+These are examples you can build from the field types above, not predefined block schemas. Create the listed fields and any referenced page types before using the code.
 
 ### Common Patterns
 
@@ -594,7 +619,7 @@ Help text guides editors:
   <h3>{title}</h3>
   <div class="description">{@html description}</div>
   {#if link?.url}
-    <a href={link.url}>{link.label}</a>
+    <a href={link.url}>{link.label || "Learn more"}</a>
   {/if}
 </div>
 ```
@@ -607,10 +632,10 @@ Help text guides editors:
 
 ```svelte
 <ul class="features">
-  {#each features as feature}
+  {#each features ?? [] as feature}
     <li>
       {#if feature.icon?.url}
-        <img src={feature.icon.url} alt={feature.icon.alt} />
+        <img src={feature.icon.url} alt={feature.icon.alt || ""} />
       {/if}
       <h3>{feature.title}</h3>
       <p>{feature.description}</p>
@@ -625,11 +650,13 @@ Help text guides editors:
 
 ```svelte
 <div class="employees">
-  {#each employees as { employee }}
-    <a href={employee._meta.url}>
-      <h3>{employee.name}</h3>
-      <p>{employee.title}</p>
-    </a>
+  {#each employees ?? [] as { employee }}
+    {#if employee?._meta?.url}
+      <a href={employee._meta.url}>
+        <h3>{employee.name || employee._meta.name}</h3>
+        <p>{employee.title}</p>
+      </a>
+    {/if}
   {/each}
 </div>
 ```
@@ -641,10 +668,12 @@ Help text guides editors:
 
 ```svelte
 <script>
-  // Filter out excluded members
-  const displayed_team = all_team.filter(person =>
-    !excluded_members.some(({ member }) => member._meta.slug === person._meta.slug)
-  )
+  // Add both fields before using this block. Compare full URLs so pages
+  // with the same slug under different parents remain distinct.
+  let displayed_team = $derived((all_team ?? []).filter(person =>
+    !(excluded_members ?? []).some(({ member }) => member?._meta?.url === person._meta.url)
+  ));
+
 </script>
 
 <div class="team">

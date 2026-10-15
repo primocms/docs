@@ -5,11 +5,9 @@ description: 'Configure Primo using environment variables for deployment.'
 
 Environment variables let you configure Primo for different deployment environments. These are particularly useful for Docker deployments and automated setup.
 
-<Note>
 <Warning>
 Legacy `PALA_*` variable names are **no longer read**. If an older deployment still sets `PALA_SUPERUSER_EMAIL` or similar, rename those variables to their `PRIMO_*` equivalents below; otherwise they're silently ignored.
 </Warning>
-</Note>
 
 ## Initial Setup Variables
 
@@ -17,7 +15,7 @@ These variables only take effect on **first startup** when initializing a new in
 
 ### `PRIMO_SUPERUSER_EMAIL`
 
-Creates an initial superuser account (admin) with full access.
+Creates the initial PocketBase superuser for the backend dashboard at `/_/`. This is separate from the regular user account you use to sign in to Primo.
 
 - **Type**: String (email address)
 - **Required**: No
@@ -54,11 +52,11 @@ Creates an initial regular user account.
 - **Type**: String (email address)
 - **Required**: No
 - **Default**: None
-- **When to use**: Pre-populate with a content editor account
+- **When to use**: Create the initial Primo administrator. This account receives the server **Developer** role; it is not a restricted Content Editor.
 
 **Example:**
 ```bash
-PRIMO_USER_EMAIL=editor@example.com
+PRIMO_USER_EMAIL=developer@example.com
 ```
 
 ### `PRIMO_USER_PASSWORD`
@@ -81,7 +79,7 @@ Sets the base URL for the application. Used for generating links in emails and b
 
 - **Type**: String (URL)
 - **Required**: No
-- **Default**: Auto-detected from request
+- **Default**: PocketBase's configured application URL; set the public HTTPS URL explicitly for automated setup
 - **When to use**: Email notifications, API callbacks
 
 **Example:**
@@ -96,8 +94,9 @@ creation, and connecting a site's own custom domain.
 
 ### `PRIMO_BASE_DOMAIN`
 
-A wildcard base domain under which new sites get an automatic, live subdomain
-(`<site-slug>.<base-domain>`) the moment they're created. Without it, new sites
+A base domain used to assign new sites a subdomain
+(`<site-slug>.<base-domain>`) when they are created. The address works publicly
+only after you configure wildcard DNS and TLS. Without it, new sites
 start unassigned (editable but not publicly served) until a domain is connected.
 
 - **Type**: String (domain)
@@ -197,28 +196,38 @@ This is read only on the first start of a new instance. After that, manage the s
 
 ### `PRIMO_ENABLE_USAGE_STATS`
 
-Controls CMS usage analytics, including server heartbeats and editor events. Starting with CMS v3.3.1, analytics are enabled by default on hosted and self-hosted instances. Earlier versions default to off on self-hosted instances.
+Controls CMS usage analytics, including server heartbeats and editor events. In the v3.3.1 source, self-hosted instances default to off and hosted mode defaults to on. The variable overrides this default when set.
 
 - **Type**: `true` or `false`
 - **Required**: No
-- **Default**: `true` in v3.3.1 and later, outside development mode
+- **Default**: `false` for self-hosted instances; `true` in hosted mode (`PRIMO_HOSTED_MODE=true`) in the v3.3.1 source
 
 **Example:**
 ```bash
 PRIMO_ENABLE_USAGE_STATS=false
 ```
 
-Set this to `false` to opt out, then restart or redeploy your CMS service. Development mode (`PRIMO_DEV_MODE=1`) always disables analytics, even if this variable is `true`.
+Set this to `false` to opt out, then restart or redeploy your CMS service. Use `false` explicitly when analytics must stay off. Verify the effective setting with `curl -fsS https://cms.example.com/api/primo/info` and check `telemetry_enabled`; do not rely only on the deployment mode.
 
 See [Usage analytics in the self-hosting guide](/getting-started/installation#usage-analytics) for a short overview.
+
+### `CORS_ALLOWED_ORIGINS`
+
+Controls the custom CORS middleware for requests from another origin. Leave it unset for ordinary same-origin CMS use. For an external dashboard, set a comma-separated list of complete origins, including the scheme and any port.
+
+```bash
+CORS_ALLOWED_ORIGINS=https://dashboard.example.com,http://localhost:5173
+```
+
+The value `*` allows any origin without credentials and is intended for public marketplace access. `PRIMO_APP_URL` does not configure CORS. Restart the service after changing this setting.
 
 ## Common Configurations
 
 ### Development Setup
 
 ```bash
-# No environment variables needed
-# Just run: docker-compose up
+# With docker-compose.yml from the deployment guide:
+docker compose up -d
 ```
 
 The setup screen will guide you through creating your first account.
@@ -237,11 +246,11 @@ Access the setup screen to create your admin account manually.
 PRIMO_APP_URL=https://cms.example.com
 PRIMO_SUPERUSER_EMAIL=admin@example.com
 PRIMO_SUPERUSER_PASSWORD=strong-random-password
-PRIMO_USER_EMAIL=editor@example.com
+PRIMO_USER_EMAIL=developer@example.com
 PRIMO_USER_PASSWORD=another-strong-password
 ```
 
-No setup screen - go straight to sign-in.
+This example creates both accounts. Sign in to Primo with `PRIMO_USER_EMAIL`; use `PRIMO_SUPERUSER_EMAIL` for the PocketBase dashboard.
 
 ## Docker Compose Example
 
@@ -257,16 +266,16 @@ services:
     environment:
       - PRIMO_APP_URL=https://cms.example.com
       - PRIMO_SUPERUSER_EMAIL=admin@example.com
-      - PRIMO_SUPERUSER_PASSWORD=${SUPERUSER_PASSWORD}
-      - PRIMO_USER_EMAIL=editor@example.com
-      - PRIMO_USER_PASSWORD=${USER_PASSWORD}
+      - PRIMO_SUPERUSER_PASSWORD=${SUPERUSER_PASSWORD:?Set SUPERUSER_PASSWORD}
+      - PRIMO_USER_EMAIL=developer@example.com
+      - PRIMO_USER_PASSWORD=${USER_PASSWORD:?Set USER_PASSWORD}
 
 volumes:
   primo-data:
 ```
 
 <Tip>
-Use `.env` files or secrets management to avoid hardcoding passwords in docker-compose.yml
+Set `SUPERUSER_PASSWORD` and `USER_PASSWORD` to distinct generated passwords in a private `.env` file beside `docker-compose.yml`. Keep it out of version control. Compose stops if either password is missing.
 </Tip>
 
 ## Railway Template
@@ -275,16 +284,18 @@ Use `.env` files or secrets management to avoid hardcoding passwords in docker-c
 
 1. Deploy using the Railway button
 2. Set environment variables in Railway dashboard
-3. Railway restarts the service automatically
+3. Apply the staged variable changes and redeploy the service
 
 ```bash
 # Railway environment variables
-PRIMO_APP_URL=${RAILWAY_STATIC_URL}
+PRIMO_APP_URL=https://your-service.up.railway.app
 PRIMO_SUPERUSER_EMAIL=admin@example.com
-PRIMO_SUPERUSER_PASSWORD=<secret>
+PRIMO_SUPERUSER_PASSWORD="replace-with-a-generated-password"
+PRIMO_USER_EMAIL=developer@example.com
+PRIMO_USER_PASSWORD="replace-with-another-generated-password"
 # Connect site domains from the Primo dashboard (see Custom Domain Variables)
 PRIMO_DOMAIN_PROVIDER=railway
-PRIMO_RAILWAY_TOKEN=<project-token>
+PRIMO_RAILWAY_TOKEN="replace-with-your-project-token"
 ```
 
 ## Security Best Practices
@@ -321,38 +332,15 @@ PRIMO_RAILWAY_TOKEN=<project-token>
 
 ## Troubleshooting
 
-### Setup screen appears even with PRIMO_SUPERUSER_EMAIL set
+### Setup screen appears even with account variables set
 
-**Cause**: Environment variables not loaded, or database already initialized
+Both email and password must be present when the initialization migration runs. Check container logs for validation errors and confirm the variables reached the service. Existing databases do not re-run account creation when you change these variables.
 
-**Solution**:
-1. Check environment variables are correctly set
-2. Verify Docker/Railway configuration
-3. If database exists, delete `/app/pb_data` volume and restart
+To recover PocketBase access without deleting data, see [Locked out of admin](/reference/troubleshooting#locked-out-of-admin). In PocketBase, create or update a regular `users` record with the intended server role for CMS access.
 
-### Can't sign in after setting environment variables
+### Account variables do not update existing passwords
 
-**Cause**: Wrong password, or user wasn't created
-
-**Solution**:
-1. Check logs for errors during startup
-2. Verify password meets minimum requirements (8 characters)
-3. Check that both EMAIL and PASSWORD variables are set
-
-### Variables not taking effect
-
-**Cause**: Variables only work on first startup
-
-**Solution**:
-Environment variables for user creation only work when the database is first initialized. To reset:
-
-1. Stop the container
-2. Delete the volume: `docker volume rm primo-data`
-3. Restart with new environment variables
-
-<Warning>
-Deleting the volume deletes all your data. Only do this for fresh installs or if you have backups.
-</Warning>
+Change an existing user's password through PocketBase or the password-reset workflow. Changing `PRIMO_USER_PASSWORD` or `PRIMO_SUPERUSER_PASSWORD` after initialization does not rotate the account password. You do not need to delete a database or Docker volume to recover access.
 
 ## Next Steps
 

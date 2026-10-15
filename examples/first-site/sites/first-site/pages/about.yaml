@@ -1,0 +1,18 @@
+name: About
+page_type: general-page
+fields:
+  meta_title: About Garden Studio
+  meta_description: Meet our fictional tutorial studio.
+sections:
+  - block: hero
+    content:
+      headline: Meet Garden Studio
+      subheadline: Small spaces, thoughtful planting, and care you can keep up with.
+      cta_text: Read our first article
+      cta_link: /blog/first-post
+      background_image: null
+  - block: text
+    content:
+      content: <h2>Our approach</h2><p>Start with your space, choose plants that fit,
+        and make a plan you can maintain.</p>
+      alignment: left

@@ -22,7 +22,7 @@ Understanding Primo's architecture helps with self-hosting, troubleshooting, and
 
 ## Data Flow
 
-<Columns cols={2}>
+<CardGroup cols={2}>
   <Card title="Development Workflow">
     <div class="flex justify-center">
       ```mermaid
@@ -47,7 +47,13 @@ Understanding Primo's architecture helps with self-hosting, troubleshooting, and
       ```
     </div>
   </Card>
-</Columns>
+</CardGroup>
+
+## CLI workspaces and database sync
+
+The visual CMS stores records in PocketBase. The CLI exports those records as YAML, Svelte, and media files in a workspace. `primo dev` imports file changes, or writes browser changes back to files depending on its [author mode](/cli/local-development#author-modes).
+
+`primo pull` records a server revision alongside exported source. `primo push` checks that revision before replacing hosted CMS data. A successful push does not publish the site; publication is a separate browser action.
 
 ## Key Components
 
@@ -57,7 +63,7 @@ Understanding Primo's architecture helps with self-hosting, troubleshooting, and
 
 - SQLite database management
 - User authentication and permissions
-- File uploads and serving (local filesystem and optinally S3)
+- File uploads and serving (local filesystem and optionally S3)
 - Realtime subscriptions for live updates
 - Custom API routes
 
@@ -75,14 +81,15 @@ Understanding Primo's architecture helps with self-hosting, troubleshooting, and
 **Role:** Transforms block code into production JavaScript
 
 **Where it runs:**
-- **In the browser** using Web Workers (not server-side)
+- **Browser publishing and previews:** Web Workers in the editor
+- **CLI static builds:** Node.js on the machine running `primo build`
 - Rollup worker for JavaScript bundling
 - PostCSS worker for CSS processing
 
 **When it runs:**
 - On publish: Compiles all blocks to static files
 - In preview: Compiles blocks for live preview
-- Not during content edits (content changes don't trigger compilation)
+- Content changes refresh the editor preview; publishing regenerates pages from saved content
 
 **Process:**
 1. Fetches block HTML/CSS/JS from database
@@ -91,7 +98,7 @@ Understanding Primo's architecture helps with self-hosting, troubleshooting, and
 4. Generates static HTML for each page
 
 <Tip>
-  Browser-based compilation means no server CPU usage during builds. All compilation happens client-side, making the server lightweight and scalable.
+  Browser publishing compiles Svelte on the editor's device. The server still processes uploads, database writes, and static-file generation. CLI builds use the developer's machine instead.
 </Tip>
 
 ### CodeMirror
@@ -102,21 +109,21 @@ Understanding Primo's architecture helps with self-hosting, troubleshooting, and
 - Syntax highlighting for HTML, CSS, JavaScript
 - Autocompletion for field variables
 - Error detection
-- Keyboard shortcuts (`Cmd/Ctrl + 1/2/3` to switch panes)
+- A single Svelte code pane with formatting, save, and preview shortcuts
 
 ### TipTap
 
 **Role:** Rich text editor for content
 
 **Features:**
-- WYSIWYG editing with formatting toolbar
+- Rich text editing with a formatting toolbar
 - Markdown shortcuts
 - Paste from Word/Google Docs
 - Link editing
 
 ## File Structure
 
-```
+```text
 pb_data/
 ├── data.db                     # SQLite database (code, content, config)
 ├── storage/
@@ -175,7 +182,7 @@ pb_data/
 - Static HTML files for every page
 - Shared JavaScript bundles
 - Fast, CDN-friendly output
-- No database queries on page load
+- Published page content is served statically; domain routing can still query the site record
 
 ## Preview vs Published
 
@@ -183,7 +190,7 @@ pb_data/
 - Compiles blocks on-demand
 - Shows unsaved changes
 - Uses iframe for isolation
-- Hot module replacement for fast updates
+- Recompiles and refreshes iframe content as code or content changes
 
 **Published (live site):**
 - Pre-compiled static files
@@ -202,7 +209,7 @@ Primo uses PocketBase's realtime subscriptions for live collaboration:
 - Field value updates
 
 **How it works:**
-- SSE connection to PocketBase
+- Server-sent events (SSE) connection to PocketBase
 - Receive updates as they happen
 - UI updates automatically
 
@@ -210,16 +217,15 @@ Primo uses PocketBase's realtime subscriptions for live collaboration:
 
 **Database:**
 - SQLite is fast for read-heavy workloads
-- Single-file makes backups trivial
+- Use PocketBase backups, or stop the application before copying SQLite files
 - No network latency (in-process database)
-- Scales to millions of rows
+- Capacity depends on workload, storage, and server resources; measure your deployment
 
 **Publishing:**
-- Compile time grows linearly with page count
-- ~3-20 seconds for most sites
-- Compilation is parallelized in browser workers
-- Limited by user's browser/device, not server
-- Static output is extremely fast to serve
+- Browser publishing generates the site's pages from saved data
+- Build time depends on blocks, pages, browser/device, and network speed
+- Compilation and uploads can run in parallel
+- Static output avoids rendering page content for every request
 
 **Editor:**
 - CodeMirror handles large files well
@@ -235,18 +241,17 @@ Primo uses PocketBase's realtime subscriptions for live collaboration:
 - Persistent disk storage
 
 **Scaling:**
-- Compilation happens client-side (no server CPU for builds)
-- Server only needs to serve API requests and static files
-- Horizontal scaling not needed (static output can be served from CDN)
-- Database size grows with content (~1MB per 50 pages)
-- Use S3 storage to better integrate with content delivery networks
+- Use one active Primo process for a SQLite data directory
+- Keep `pb_data` on persistent storage
+- Put published output behind a CDN when useful, while bypassing admin and API traffic
+- S3-compatible upload storage is separate from the SQLite database and needs its own backup policy
 
 **Backups:**
 - SQLite file contains code/content (`pb_data/data.db`)
 - Storage directory contains uploaded files (`pb_data/storage/`)
 - Backup both database + storage directory
 - Or create and download backup from PocketBase
-- If using S3, you only need to backup the database
+- If using S3 for uploads, back up the database and the external media bucket; PocketBase backup ZIPs exclude S3-uploaded files
 
 ## Technology Stack Summary
 
@@ -255,7 +260,7 @@ Primo uses PocketBase's realtime subscriptions for live collaboration:
 - Svelte 5 (with runes)
 - TailwindCSS
 - CodeMirror 6
-- TipTap 2
+- TipTap 3
 
 **Backend:**
 - Golang

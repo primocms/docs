@@ -3,9 +3,9 @@
   "theme": "maple",
   "name": "Primo Docs",
   "colors": {
-    "primary": "#ff6b35",
+    "primary": "#bf4a1e",
     "light": "#ff6b35",
-    "dark": "#ff6b35"
+    "dark": "#bf4a1e"
   },
   "favicon": "/favicon.png",
   "navigation": {
@@ -48,7 +48,9 @@
         "icon": "users",
         "pages": [
           "collaboration/setting-up-page-types-for-editors",
-          "collaboration/inviting-collaborators"
+          "collaboration/inviting-collaborators",
+          "collaboration/example-blog",
+          "collaboration/multi-dev-workflows"
         ]
       },
       {
@@ -65,6 +67,7 @@
         "icon": "grid-2",
         "pages": [
           "dashboard/managing-sites",
+          "dashboard/connecting-domains",
           "dashboard/block-library",
           "dashboard/marketplace"
         ]
@@ -103,6 +106,10 @@
     {
       "source": "/reference/analytics",
       "destination": "/getting-started/installation#usage-analytics"
+    },
+    {
+      "source": "/quickstart",
+      "destination": "/getting-started/quickstart"
     }
   ],
   "navbar": {
@@ -124,9 +131,7 @@
   },
   "footer": {
     "socials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/primocms/primo",
-      "linkedin": "https://linkedin.com/company/mintlify"
+      "github": "https://github.com/primocms/primo"
     }
   }
 }

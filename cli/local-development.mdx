@@ -41,7 +41,7 @@ This check does not pull data or change your saved sync history. To update an ou
 
 `primo dev` uses two ports: the CMS port (3000 by default, or `port:` in `server.yaml`) and the next one up for live reload. If either is taken, it picks the next free pair and tells you:
 
-```
+```text
 ℹ Port 3000 or reload port 3001 is in use. Using http://localhost:3002 for this session.
 ```
 
@@ -53,7 +53,7 @@ If you chose the port yourself (with `-p` or `port:` in `server.yaml`), `primo d
 
 If a previous `primo dev` was killed without shutting down its CMS, the next start tells you which process is in the way:
 
-```
+```text
 ✖ Failed to start: A Primo CMS from an earlier session is still running on port 3002 (pid 8087); the command that started it exited without stopping it. Stop it with `kill 8087`, or run `primo dev --force` to stop it and start fresh.
 ```
 
@@ -77,7 +77,7 @@ primo dev --author both      # Bidirectional (beta)
 
 <Tabs>
   <Tab title="files (default)">
-    **Files are source of truth.**
+    **Your files control the local CMS content.**
 
     - Edits to local files are imported into the CMS on save.
     - The CMS UI is **read-only** for content that's tracked in files — you'll see a banner.
@@ -89,7 +89,7 @@ primo dev --author both      # Bidirectional (beta)
   </Tab>
 
   <Tab title="cms">
-    **CMS is source of truth.**
+    **The local CMS controls the files.**
 
     - Edits in the CMS are written to local files.
     - Edits to local files get reverted on the next CMS write.
@@ -101,7 +101,7 @@ primo dev --author both      # Bidirectional (beta)
   </Tab>
 
   <Tab title="both (beta)">
-    **Bidirectional sync.**
+    **Both files and the local CMS can write.**
 
     - Both sides can write.
     - On conflict, CMS edits are often lost in favor of file edits — treat this as preview-quality.
@@ -116,22 +116,28 @@ primo dev --author both      # Bidirectional (beta)
 
 Each site folder follows this layout:
 
-```
+```text
 sites/my-site/
 ├── site.yaml          # Site name, id, group
 ├── site/
 │   ├── fields.yaml    # Site-wide fields (logo, nav, etc.)
 │   ├── content.yaml   # Values for site fields
 │   ├── head.svelte    # Custom <head> content
-│   └── foot.svelte    # Custom end-of-body content
+│   └── foot.html    # Custom end-of-body content
 ├── blocks/
 │   └── hero/
+│       ├── config.yaml
 │       ├── component.svelte
 │       ├── fields.yaml
 │       └── content.yaml
 ├── page-types/
 │   └── blog-post/
-│       └── config.yaml
+│       ├── config.yaml
+│       ├── fields.yaml
+│       ├── content.yaml
+│       ├── layout.yaml
+│       ├── head.svelte
+│       └── foot.html
 ├── pages/
 │   └── index.yaml
 └── uploads/           # Images and files (see below)
@@ -143,7 +149,7 @@ See [Architecture](/reference/architecture) for the underlying data model.
 
 Files dropped into `sites/my-site/uploads/` are automatically imported into the CMS as `site_uploads` records:
 
-```
+```text
 sites/my-site/uploads/
 ├── hero.jpg
 └── logo.svg
@@ -151,9 +157,18 @@ sites/my-site/uploads/
 
 - On import, new files become uploads with stable IDs.
 - Hash comparison skips re-upload when content is unchanged.
-- A file removed from `uploads/` becomes an orphan upload warning — clean it up in the CMS or remove the record from the file system to delete it.
+- Files removed from `uploads/` can leave referenced upload records orphaned. Check import warnings and remove or update content references before deleting an upload in the CMS.
 
-This means you can drop an image into `uploads/` and reference it from an image field without ever opening the CMS.
+Drop an image into `uploads/` and reference it from an Image field using an upload path:
+
+```yaml content.yaml
+image:
+  url: ""
+  alt: Team at the studio
+  upload: uploads/hero.jpg
+```
+
+Define `image` with `type: image` in the block's `fields.yaml`. On import, Primo resolves the file to an upload record; exports can replace the path with a record ID and rename the file to match its upload record. Preserve those exported values.
 
 ## site.yaml
 
@@ -177,7 +192,7 @@ Keep backup copies of a site **outside** `sites/` (for example in a `_backups/` 
 
 `primo new <name>` creates a site folder under `sites/`, and `primo dev` imports it into the CMS. In an interactive terminal, `primo new` starts the CMS for you; with `--skip-dev`, or from a script, it only creates the files:
 
-```
+```text
 My Site was created. Start the local CMS to import it:
   primo dev
 ```
@@ -196,7 +211,7 @@ To start a new site from a copy of an existing one, **delete the `site_id` line 
 
 `primo status` lists any folders on disk that aren't registered yet:
 
-```
+```text
   1 site on disk but not registered in the CMS:
     ! other  run `primo add other`
 ```
@@ -220,7 +235,7 @@ For validation and scaffolding tools, connect the [Primo MCP server](/reference/
 
 ## Site Groups
 
-Groups organize sites in the dashboard (Home Services, Food & Hospitality, and so on). Declare them in the workspace's `server.yaml`, giving each a local `id` and a display `name`:
+Groups organize sites in the dashboard. For example, you could name your groups Home Services and Food & Hospitality. Declare them in the workspace's `server.yaml`, giving each a local `id` and a display `name`:
 
 ```yaml
 site_groups:
@@ -263,7 +278,7 @@ To rebuild a site's preview while `primo dev` is running, pass the site folder:
 primo preview --dir sites/my-site
 ```
 
-For AI-assisted development, the [MCP server](/reference/mcp-server) exposes per-file validators (`validate_block`, `validate_page`, `validate_site`) that agents call automatically.
+For AI-assisted development, the [MCP server](/reference/mcp-server) exposes per-file validators (`validate_block`, `validate_page`, `validate_site`) that your agent can call. Check its validation results; connecting MCP does not guarantee that every edit is validated.
 
 ## Next Steps
 

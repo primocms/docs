@@ -1,0 +1,6 @@
+- name: meta_title
+  label: Meta title
+  type: text
+- name: meta_description
+  label: Meta description
+  type: text

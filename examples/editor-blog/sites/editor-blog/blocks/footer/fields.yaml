@@ -1,0 +1,5 @@
+- name: brand_name
+  label: Brand name
+  type: site-field
+  config:
+    field: brand_name

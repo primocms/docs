@@ -1,0 +1,12 @@
+- name: title
+  label: Title
+  type: text
+- name: excerpt
+  label: Excerpt
+  type: text
+- name: publish_date
+  label: Publish date
+  type: date
+- name: body
+  label: Body
+  type: rich-text

@@ -24,418 +24,106 @@ Watch the workflow in Primo.
   Your browser does not support embedded video. [Download this demonstration](/videos/demos/collaborators.mp4).
 </video>
 
-## The Collaboration Model
+[Download video](/videos/demos/collaborators.mp4) · [Download captions](/videos/demos/collaborators.vtt)
 
-Primo enables clean separation between developers and editors:
+<Accordion title="Read the walkthrough">
+1. Open More options, then Collaborators.
+2. Enter the collaborator email address.
+3. Choose Content Editor to allow content changes.
+4. Generate an invitation link to share with the editor.
+</Accordion>
 
-- **Developers** control structure, design, and available options
-- **Editors** manage content, create pages, and publish
-- **Both** work independently without breaking each other's work
+## Before you invite an editor
 
-<Info>
-The goal: Mutual autonomy. Developers can update structure anytime, and editors can manage content without waiting for developers.
-</Info>
+You need developer access to a deployed site. Configure its page types, available blocks, and fields, then create an example page for each workflow. Collaborator controls are hidden in local development mode (`primo dev`).
 
-<Note>
-Collaborators are available on any deployed Primo instance. They're hidden in local dev mode (`primo dev`) since there's no shared server to invite people to.
-</Note>
+Connect a reachable site domain before generating invitation links. For email invitations, enable SMTP in the PocketBase dashboard at `/_/` and configure a sender address. You can generate a link without SMTP.
 
-## Inviting Collaborators
+## Invite a collaborator
 
 <Steps>
-<Step title="Open site settings">
-  Navigate to your site and click "Settings" in the sidebar.
-</Step>
+  <Step title="Open collaborators">
+    In the site toolbar, open **More options → Collaborators**.
+  </Step>
+  <Step title="Enter an email and choose a role">
+    Enter the collaborator's email address. Choose **Content Editor** for content work or **Developer** for code and structure changes. Check the role before submitting: the form initially selects Developer.
+  </Step>
+  <Step title="Generate a link or send an email">
+    Choose **Generate link**, then copy the displayed link and share it with the intended person. A new user follows it to create a password; an existing user signs in with their existing account.
 
-<Step title="Go to Team section">
-  Click on "Team" or "Collaborators" to see current team members.
-</Step>
-
-<Step title="Click Invite">
-  Click the "Invite Collaborator" button.
-</Step>
-
-<Step title="Enter email and role">
-  Fill in the invitation form:
-
-  - **Email**: The collaborator's email address
-  - **Role**: Choose their permission level (Content Editor or Developer)
-  - **Message** (optional): Add a personal note to the invitation
-
-  <Tip>
-  Include a message explaining what you want them to do: "I've set up the blog structure. You can start creating posts!"
-  </Tip>
-</Step>
-
-<Step title="Send invitation">
-  Click "Send Invitation". The collaborator receives an email with a link to accept.
-</Step>
+    If SMTP is enabled, **Send invite** sends the invitation email. The form has no custom-message field; include handoff instructions when you share the link or follow up separately.
+  </Step>
+  <Step title="Verify access">
+    Ask the collaborator to sign in, open the example page, edit content, save, and preview it. For a Content Editor, verify that code and page type controls are unavailable.
+  </Step>
 </Steps>
-
-<Check>
-The invitation is sent! Your collaborator will receive an email with instructions to get started.
-</Check>
-
-## Roles and Permissions
-
-Primo has two primary roles:
-
-### Content Editor
-
-**What they can do:**
-- Create, edit, and delete pages
-- Add and remove blocks (from available options)
-- Edit block content
-- Upload images and media
-- Publish and unpublish pages
-- View site analytics (if enabled)
-
-**What they can't do:**
-- Modify page types
-- Change available blocks
-- Edit component code
-- Change site settings
-- Invite other collaborators
-- Access developer tools
-
-<Tip>
-Use the Content Editor role for content managers, copywriters, and anyone who only needs to manage pages.
-</Tip>
-
-### Developer
-
-**What they can do:**
-- Everything Content Editors can do, plus:
-- Create and modify page types
-- Add and configure blocks
-- Change site settings
-- Invite collaborators
-- Manage team members
-- Access developer tools
-- Deploy and manage hosting
 
 <Warning>
-Developer access gives full control over the site, including the ability to break things. Only give Developer access to trusted developers or technical staff.
+Treat a password-creation link as private. Share it only with the invited person. Developer access allows code and structural changes, so grant it only to people who need those controls.
 </Warning>
 
-### Choosing the Right Role
+## Roles and permissions
 
-**Use Content Editor role for:**
-- Content writers
-- Marketing team members
-- Client staff managing their own content
-- Anyone who only needs to create/edit pages
+| Capability | Content Editor | Developer |
+| --- | --- | --- |
+| Edit content and upload images | Yes | Yes |
+| Create and manage pages | Yes | Yes |
+| Add and arrange available body blocks | Yes, when the page type has available blocks | Yes |
+| Publish the site | Yes | Yes |
+| Edit block code or field definitions | No | Yes |
+| Configure page types and shared layout | No | Yes |
+| Manage site collaborators | No | Yes |
 
-**Use Developer role for:**
-- Developers
-- Technical leads
-- Agency staff managing client sites
-- Anyone who needs to modify structure
+Publication applies to the site. Primo does not offer a per-page unpublish switch or a site-analytics dashboard as part of these roles. Hosting-provider access is managed separately from Primo roles.
 
-## The Handoff Process
+Site-level assignments grant access to that site. Users with a **server role** can access sites across the instance; they appear separately in the collaborator list and cannot be removed through a site's remove action. A PocketBase superuser is a separate administrative account with access to the backend.
 
-Follow these steps for a smooth developer-to-editor handoff:
+## Manage access
 
-### 1. Before Inviting
+Open **More options → Collaborators** to view server members and site collaborators. Use the remove action on a site collaborator and confirm removal. Their content remains in the site.
 
-Prepare the site for editors:
+The current collaborator list displays roles without an editable role dropdown. To change a site assignment through this interface, remove it and add the existing user again with the intended role. Their account and password remain in place. Server-role access must be changed by a server administrator.
 
-<Steps>
-<Step title="Set up page types">
-  Create all necessary page types with:
-
-  - Available blocks configured
-  - Page fields defined
-  - Header and footer slots set up
-  - Helpful field labels and descriptions
-</Step>
-
-<Step title="Create example pages">
-  Build 1-2 example pages for each page type:
-
-  - Shows editors what's possible
-  - Demonstrates best practices
-  - Serves as templates to duplicate
-
-  <Tip>
-  Editors often duplicate example pages instead of starting from scratch. Make them good!
-  </Tip>
-</Step>
-
-<Step title="Test the editor experience">
-  Put yourself in the editor's shoes:
-
-  - Can you build complete pages with available blocks?
-  - Are field labels clear?
-  - Is anything confusing or missing?
-  - Do example pages look good?
-</Step>
-
-<Step title="Prepare documentation">
-  Create a quick guide covering:
-
-  - How to create each page type
-  - Which blocks to use for what
-  - Any specific guidelines (brand, tone, etc.)
-  - Common tasks (publishing, adding images, etc.)
-
-  <Info>
-  You can share the [Using the Editor](/content-management/using-the-editor) guide from these docs as a starting point.
-  </Info>
-</Step>
-</Steps>
-
-### 2. During the Invitation
-
-Make the invitation clear and helpful:
-
-<Example>
-**Good invitation message:**
-
-"Hey Sarah! I've set up the blog structure for our site. You can start creating blog posts right away. I've added a few examples to show you what's possible. Check out the 'Blog Post' page type when creating new pages. Let me know if you need anything added!"
-
-**Bad invitation message:**
-"You're invited to edit the site."
-</Example>
-
-### 3. After They Accept
-
-Follow up to ensure they're successful:
+## Hand off the site
 
 <Steps>
-<Step title="Schedule a quick walkthrough">
-  Spend 15-30 minutes showing them:
-
-  - How to create their first page
-  - Where to find example pages
-  - How to add and edit blocks
-  - How to publish when ready
-</Step>
-
-<Step title="Be available for questions">
-  The first few days, be responsive to questions:
-
-  - Answer quickly to avoid blockers
-  - Note repeated questions (might indicate unclear design)
-  - Offer to add features if they're struggling
-</Step>
-
-<Step title="Gather feedback">
-  After they've created a few pages, ask:
-
-  - What was confusing?
-  - What blocks are you wishing you had?
-  - What feels limiting?
-  - What's working well?
-
-  Use this feedback to improve page types and blocks.
-</Step>
+  <Step title="Prepare examples">
+    Create representative pages with useful content, clear field labels, and a focused selection of blocks. Explain which content is shared across pages.
+  </Step>
+  <Step title="Walk through editing">
+    Show the editor how to create a page, edit inline, use the content form, save, and publish. Share [Using the editor](/content-management/using-the-editor).
+  </Step>
+  <Step title="Agree on publication">
+    Decide who reviews changes before the site is published. This is a team process; page metadata such as a Date field does not enforce approval or scheduling.
+  </Step>
+  <Step title="Keep backups">
+    Configure [PocketBase backups](/reference/deployment#database-backups) and save your local work before pulling from the hosted server. CLI revision checks prevent stale pushes from silently replacing editor changes.
+  </Step>
 </Steps>
-
-## Managing Team Members
-
-### Viewing Team Members
-
-To see all collaborators on a site:
-
-1. Open site settings
-2. Go to Team section
-3. View list of all members with their roles
-
-### Changing Roles
-
-To change a collaborator's role:
-
-1. Find the team member in the list
-2. Click on their role dropdown
-3. Select the new role (Content Editor or Developer)
-4. Confirm the change
-
-<Warning>
-Changing someone from Developer to Content Editor immediately removes their access to developer tools and settings.
-</Warning>
-
-### Removing Collaborators
-
-To remove someone from the site:
-
-1. Find them in the team list
-2. Click the remove/delete icon
-3. Confirm removal
-
-<Info>
-Removed collaborators lose all access to the site immediately. Their created content remains on the site.
-</Info>
-
-## Multi-Site Access
-
-If you manage multiple sites, you can invite the same person to different sites:
-
-- **Same role across sites**: Invite them with the same email to each site
-- **Different roles per site**: They can be a Content Editor on one site and Developer on another
-- **Separate permissions**: Access to one site doesn't grant access to others
-
-<Tip>
-This is useful for agencies managing client sites. You might be a Developer on all sites, but clients are Content Editors on only their own site.
-</Tip>
-
-## Best Practices
-
-### 1. Start with Content Editor Role
-
-When in doubt, start with the Content Editor role:
-
-- Gives enough access for content work
-- Protects site structure from accidents
-- Can always upgrade to Developer later if needed
-
-### 2. Create Clear Examples
-
-Good example pages teach without documentation:
-
-- Show all available blocks in use
-- Demonstrate best practices
-- Include helpful placeholder content
-- Make them easy to duplicate
-
-### 3. Provide Context in Invitations
-
-A good invitation message includes:
-
-- What you want them to do
-- Where to start (which page types, examples)
-- Who to ask if they have questions
-- Any relevant guidelines or docs
-
-### 4. Set Expectations Early
-
-Be clear about:
-
-- **What they can change**: Content, images, page structure (within page types)
-- **What they can't change**: Design, colors, fonts, available blocks
-- **How to request changes**: Who to ask for new features or blocks
-
-### 5. Iterate Based on Usage
-
-Watch how editors use the site:
-
-- What do they struggle with?
-- What do they ask for repeatedly?
-- What blocks go unused?
-- What workarounds are they creating?
-
-Use this to improve page types and add helpful blocks.
-
-## Common Scenarios
-
-### Client Handoff
-
-**Scenario**: Building a site for a client who will manage their own content
-
-**Best approach:**
-1. Build and configure everything as Developer
-2. Create comprehensive examples for each page type
-3. Invite client as Content Editor
-4. Walk them through the basics (15-30 min)
-5. Share documentation link
-6. Be available for first few days
-7. Schedule check-in after 1-2 weeks
-
-### Team Collaboration
-
-**Scenario**: Multiple content writers on your team
-
-**Best approach:**
-1. Invite all as Content Editors
-2. Create clear examples for each content type
-3. Establish content guidelines (tone, style, formatting)
-4. Set up review process if needed
-5. Use page status/drafts for collaboration
-
-### Agency Multi-Site
-
-**Scenario**: Managing many client sites
-
-**Best approach:**
-1. You're Developer on all sites
-2. Each client is Content Editor on their own site only
-3. Use consistent page type patterns across sites
-4. Create a reusable library of blocks
-5. Document common processes for efficiency
-
-### Developer Team
-
-**Scenario**: Multiple developers working on one site
-
-**Best approach:**
-1. All developers have Developer role
-2. Communicate changes to page types/structure
-3. Test thoroughly before deploying
-4. Use version control for code
-5. Coordinate on block library changes
 
 ## Troubleshooting
 
-### Invitation Not Received
+<AccordionGroup>
+  <Accordion title="Send invite is missing or the email does not arrive">
+    Without SMTP, use **Generate link**. If SMTP is enabled, check the sender settings, PocketBase server logs, recipient address, and spam folder. Test delivery from the PocketBase settings before inviting more users.
+  </Accordion>
+  <Accordion title="The invitation link opens the wrong address">
+    Check the site's assigned hostname, DNS, HTTPS certificate, and reachability. A site editable through its server ID can still need a connected domain for invitation links.
+  </Accordion>
+  <Accordion title="Collaborator already exists">
+    Check both the server-member list and site assignments. The user may already have access through a server role or an earlier invitation. Give them the site's admin URL to sign in.
+  </Accordion>
+  <Accordion title="An editor cannot find a block">
+    Enable the block in the page type's available-block list. If the page type has no available blocks, editors can edit existing body content but cannot add new sections.
+  </Accordion>
+  <Accordion title="An editor needs a design change">
+    Update the block as a developer or expose a specific Select or Toggle field. Avoid granting Developer access just to change one content option.
+  </Accordion>
+</AccordionGroup>
 
-**Problem**: Collaborator didn't get the email
-
-**Solutions**:
-- Check spam/junk folder
-- Verify email address is correct
-- Resend the invitation
-- Check if email service is blocking
-
-### Content Editor Can't Find Blocks
-
-**Problem**: "I need X block but I don't see it"
-
-**Solution**:
-- Add the block to the page type's available blocks
-- Or explain which available block to use instead
-
-### Content Editor Wants to Change Design
-
-**Problem**: "Can I change the colors/fonts?"
-
-**Solution**:
-- Explain that design is controlled by you (developer)
-- Offer to make the change for them
-- If it's a common request, consider adding it as a configurable option (site field or block field)
-
-### Too Many Requests
-
-**Problem**: Content editor constantly asking for changes
-
-**Solutions**:
-- Review their requests for patterns
-- Add commonly requested blocks to page types
-- Make fields more flexible if appropriate
-- Set expectations about what's configurable vs. fixed
-
-### Accidental Deletion
-
-**Problem**: Content editor deleted something important
-
-**Solution**:
-- Check if there's a backup or revision history (if enabled)
-- Recreate from example page if available
-- For future: educate on being careful with deletions
-- Consider more restrictive permissions if repeated issue
-
-## Next Steps
+## Next steps
 
 <CardGroup cols={2}>
-<Card title="Setting Up Page Types" icon="layer-group" href="/collaboration/setting-up-page-types-for-editors">
-  Configure page types before inviting collaborators.
-</Card>
-
-<Card title="Using the Editor" icon="pen-to-square" href="/content-management/using-the-editor">
-  Share this guide with your content editors.
-</Card>
-
+  <Card title="Set up page types for editors" icon="layer-group" href="/collaboration/setting-up-page-types-for-editors">Choose useful fields and editing guardrails.</Card>
+  <Card title="Using the editor" icon="pen-to-square" href="/content-management/using-the-editor">Share the editing workflow with your team.</Card>
 </CardGroup>
-
-<Tip>
-The best collaborations start with clear communication. Explain what you've built, what editors can do, and how to ask for help. A good 15-minute walkthrough saves hours of confusion later.
-</Tip>

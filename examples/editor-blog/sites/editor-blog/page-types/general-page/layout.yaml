@@ -1,0 +1,7 @@
+header:
+  - block: navigation
+    content: {}
+body: []
+footer:
+  - block: footer
+    content: {}

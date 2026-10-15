@@ -1,5 +1,85 @@
 ---
-title: 'Example: Building a Blog'
-description: 'Step-by-step guide to building a client-proof blog with page types and blocks.'
+title: "Build a blog for content editors"
+description: "Create blog page fields, a fixed post template, and a flexible blog index."
 ---
 
+Create a Blog Post page type and two blocks for this example: Post Content displays one article, and Post List links to all articles. You build these with ordinary Primo fields and Svelte code; they are not built-in blog presets.
+
+## Download the complete example
+
+[Download the editor blog workspace](/downloads/editor-blog.zip) to compare the finished blocks, fields, page types, and content with this guide. Extract the ZIP into its own folder.
+
+After installing `primo-cli`, run from the extracted folder:
+
+```bash
+primo validate
+primo add editor-blog
+primo dev --author files
+```
+
+Open the editor URL printed by the CLI and verify the sample pages. This first run imports the source and any library blocks. The editor is read-only in files mode. To edit in the browser, stop it with **Ctrl+C**, then run `primo dev --author cms`. The included README explains the field connections and differences from the browser tutorial. Use a copy if you want to keep the original example.
+
+## Prerequisites
+
+You need developer access to a site and familiarity with [fields](/building-sites/working-with-fields) and [page types](/building-sites/defining-page-types).
+
+## Create the blog
+
+<Steps>
+  <Step title="Define the Blog Post page type">
+    Add `title` (Text), `excerpt` (Text), `publish_date` (Date), and `body` (Rich Text) page fields. Use an Info field to explain the expected content. A Date field does not schedule publication.
+  </Step>
+  <Step title="Build a Post Content block">
+    Add Page Field references named `title`, `publish_date`, and `body`, pointing to the corresponding Blog Post fields. Paste this code:
+
+    ```svelte component.svelte
+    <article>
+      <h1>{title || "Untitled post"}</h1>
+      {#if typeof publish_date === "string" && publish_date}
+        <time datetime={publish_date}>{new Date(publish_date).toLocaleDateString("en-US", { timeZone: "UTC" })}</time>
+      {/if}
+      <div class="post-body">{@html typeof body === "string" ? body : ""}</div>
+    </article>
+
+    <style>
+      article { max-width: 48rem; margin: auto; padding: 2rem 1rem; }
+      .post-body :global(p) { line-height: 1.7; margin-block: 1rem; }
+    </style>
+    ```
+  </Step>
+  <Step title="Set the post template">
+    Add navigation to the header, Post Content to the starting body, and a footer to the footer slot. Leave available blocks empty for a fixed post layout. Editors fill in page fields rather than rearranging the post.
+  </Step>
+  <Step title="Create the index">
+    Create a Blog page with slug `blog` using a page type with a flexible body, such as a General Page type you create. Build a Post List block with a Page List field named `posts`, restricted to Blog Post:
+
+    ```svelte component.svelte
+    <section aria-label="Blog posts">
+      {#each posts ?? [] as post}
+        <article>
+          <h2><a href={post._meta.url}>{post.title || post._meta.name}</a></h2>
+          {#if post.excerpt}<p>{post.excerpt}</p>{/if}
+        </article>
+      {:else}
+        <p>No posts yet.</p>
+      {/each}
+    </section>
+    ```
+
+    Enable Post List on the Blog page's type and add it to that page. Page List returns all pages of its configured type; it does not filter by a publication date or let editors select posts.
+  </Step>
+  <Step title="Create and verify a post">
+    Create a child of Blog using the Blog Post type, with slug `first-post`. Fill in its page fields. Confirm `/blog/first-post` appears in the index and uses the fixed post layout.
+  </Step>
+  <Step title="Publish and hand off">
+    Save open dialogs and publish the site. Check the public index and post URL, then [invite a Content Editor](/collaboration/inviting-collaborators) and have them create a second post.
+  </Step>
+</Steps>
+
+<Note>
+Add SEO tags to the page type's Head HTML if you want page fields to populate search metadata. Field names alone do not generate title or description tags.
+</Note>
+
+<Warning>
+Publishing updates the site, including every saved post. Keep unfinished material outside the production site if it must remain private. Render only trusted editor content with `{@html}`.
+</Warning>

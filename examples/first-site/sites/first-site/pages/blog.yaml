@@ -1,0 +1,11 @@
+name: Blog
+page_type: general-page
+fields:
+  meta_title: Garden notes
+  meta_description: Seasonal advice from Garden Studio.
+sections:
+  - block: text
+    content:
+      content: <h1>Garden notes</h1><p><a href="/blog/first-post">Start a small herb
+        garden</a></p>
+      alignment: left

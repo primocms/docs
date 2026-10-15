@@ -1,5 +1,11 @@
 {
   "devDependencies": {
     "mint": "^4.2.194"
+  },
+  "scripts": {
+    "dev": "mint dev",
+    "check:links": "mint broken-links",
+    "check:a11y": "mint a11y",
+    "build:examples": "python3 scripts/build-tutorial-downloads.py"
   }
 }

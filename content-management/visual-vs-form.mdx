@@ -3,7 +3,7 @@ title: 'Visual vs Form Editing'
 description: 'Understand the difference between viewing blocks on-page and editing in the form dialog.'
 ---
 
-Primo offers two ways to work with content: viewing blocks visually on the page, or opening them in the editor dialog to edit fields.
+Primo offers two ways to edit content: edit supported fields directly on the page, or open a structured content form. Inline edits auto-save; form dialog changes require Save.
 
 ## Watch the workflow
 
@@ -24,6 +24,14 @@ Watch the workflow in Primo.
   Your browser does not support embedded video. [Download this demonstration](/videos/demos/inline-editing.mp4).
 </video>
 
+[Download video](/videos/demos/inline-editing.mp4) · [Download captions](/videos/demos/inline-editing.vtt)
+
+<Accordion title="Read the walkthrough">
+1. Click text on the page to edit it.
+2. Type your new headline.
+3. The change saves automatically.
+</Accordion>
+
 ### Edit content with structured fields
 
 Watch the workflow in Primo.
@@ -41,9 +49,18 @@ Watch the workflow in Primo.
   Your browser does not support embedded video. [Download this demonstration](/videos/demos/form-editing.mp4).
 </video>
 
-## Visual View (On-Page)
+[Download video](/videos/demos/form-editing.mp4) · [Download captions](/videos/demos/form-editing.vtt)
 
-The visual view shows your page as it will appear to visitors.
+<Accordion title="Read the walkthrough">
+1. Open Edit content for a block.
+2. Update the headline in its content field.
+3. Save to update the page.
+4. Your saved content appears on the canvas.
+</Accordion>
+
+## Inline editing (on the page)
+
+The page preview shows content in context. Which fields you can edit and which blocks you can rearrange depend on your developer's setup.
 
 **What you see:**
 - All blocks stacked vertically
@@ -51,14 +68,16 @@ The visual view shows your page as it will appear to visitors.
 - Spacing, layout, and design
 
 **What you can do:**
+- Click supported text, rich text, Markdown, images, and links to edit them inline
+- Use the form for empty fields, structured values, and Site Field or Page Field references
 - Hover over blocks to see the toolbar
-- Drag blocks to reorder them
+- Reorder body sections when the page type allows layout changes
 - Click "Edit" to open the form dialog
-- Delete blocks
-- Add new blocks via drag-and-drop from sidebar
+- Remove body sections when the page type allows layout changes
+- Add blocks from the sidebar's available-block list
 
 <Tip>
-Use the visual view to see how your page looks and to rearrange blocks.
+Use inline editing for quick changes in context. If clicking a value does not open an editing control, use **Edit content** instead.
 </Tip>
 
 ## Form Editor (Dialog)
@@ -66,7 +85,7 @@ Use the visual view to see how your page looks and to rearrange blocks.
 Click "Edit" in the block toolbar to open the editor dialog.
 
 **Content Tab:**
-- Shows all fields in a structured form
+- Shows content fields in a structured form, including fields not visible on the page
 - Edit text, images, links, etc.
 - Scroll through all fields
 - See what's filled in and what's empty
@@ -82,17 +101,15 @@ Content editors only see the Content tab. Developers can switch between Content 
 
 ## When to Use Each
 
-**Use Visual View When:**
-- Building page layouts
-- Rearranging blocks
+**Edit on the page when:**
+- Changing a visible text, image, or link field
 - Checking how content looks
-- Adding or removing blocks
+- Arranging blocks, if the page type permits it
 
-**Open Form Editor When:**
-- Editing block content
-- Filling in multiple fields
-- Updating text, images, links
-- Need to see all fields at once
+**Open the content form when:**
+- Filling an empty field or editing several fields together
+- Editing repeaters, groups, or referenced site and page content
+- Reviewing fields that are not visible on the page
 
 ## Workflow
 

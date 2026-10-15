@@ -3,7 +3,7 @@ title: 'Working with Fields'
 description: 'Add content fields to blocks and pages to make them editable.'
 ---
 
-Fields are what transform your components into editable blocks. You write the component code, then attach fields to make specific parts editable by content editors. This guide shows you how to add and configure fields effectively.
+Add fields to let editors change specific values in your block, such as a headline, image, or link. You choose the field names and use them in your Svelte code.
 
 ## Watch the workflow
 
@@ -24,744 +24,258 @@ Watch the workflow in Primo.
   Your browser does not support embedded video. [Download this demonstration](/videos/demos/component-fields.mp4).
 </video>
 
-## Understanding Fields
+[Download video](/videos/demos/component-fields.mp4) · [Download captions](/videos/demos/component-fields.vtt)
 
-Fields bridge the gap between code and content:
+<Accordion title="Read the walkthrough">
+1. Open the page type to create a reusable block.
+2. Switch to content and create a Text field.
+3. Label the field Headline. Its key is headline.
+4. Set the default content for the field.
+5. Reference the field in your component markup.
+6. Preview the result, then create the block.
+</Accordion>
 
-- **Component code** defines structure and styling
-- **Fields** define what content editors can edit
-- **Together** they create blocks that are both powerful and editable
+## Where fields live
 
-<Info>
-Fields can be added to both blocks (for component-level editing) and page types (for page-level metadata). The process is the same for both.
-</Info>
+Fields define editable content on **sites**, **page types**, and **blocks**. A definition specifies the label, key, and type; the content holds its value. Use site fields for global content, page fields for content that describes a page, and block fields for an individual section.
 
-## Adding Fields to a Block
+## Add fields in the browser
+
+You need developer access to change field definitions.
 
 <Steps>
-<Step title="Create or open your component">
-  In the Component Library, create a new block or open an existing one.
-</Step>
+  <Step title="Open the block">
+    Create or open a block in the library or the page type's Blocks tab. Switch to **Content** to add fields and default content.
+  </Step>
+  <Step title="Set the label, key, and type">
+    Add a field with a clear label, such as **Headline**. Set its key to `headline` and its type to **Text**. Keys are case-sensitive and must match the variables in your block code.
+  </Step>
+  <Step title="Write the markup">
+    Reference the field directly. The browser compiler supplies field variables automatically. You can omit `$props()` in this workflow; if you declare it yourself, include every field the block uses. Use Svelte 5 runes instead of `export let`.
 
-<Step title="Write your component code">
-  Build your component. Fields are globally available—no need to declare them:
+    ```svelte component.svelte
+    <section class="hero">
+      {#if headline}
+        <h1 data-key="headline">{headline}</h1>
+      {/if}
+      {#if image?.url}
+        <img src={image.url} alt={image.alt || ""} data-key="image" />
+      {/if}
+    </section>
+    ```
 
-  ```svelte
-  <section class="hero">
-    <h1>{headline}</h1>
-    <p>{description}</p>
-    {#if image?.url}
-      <img src={image.url} alt={image.alt} />
-    {/if}
-  </section>
-  ```
-
-  <Tip>
-  Fields are automatically available in your component code. Just reference them directly like `{headline}` or `{image.url}`.
-  </Tip>
-</Step>
-
-<Step title="Open the field editor">
-  Click "Add Field" or the fields panel in the component editor.
-</Step>
-
-<Step title="Create your first field">
-  Configure the field:
-  
-  - **Field name**: Must match your prop name (e.g., `headline`)
-  - **Field type**: Choose the appropriate type (e.g., Text, Rich Text, Image)
-  - **Label**: Display name for editors (e.g., "Headline")
-  - **Default value**: Optional pre-filled value
-  
-  <Check>
-  The field name must exactly match the prop name in your component code.
-  </Check>
-</Step>
-
-<Step title="Add more fields">
-  Repeat for each prop you want to make editable:
-
-  - `description` → Rich Text field
-  - `image` → Image field
-
-  <Info>
-  You don't need to create fields for every prop. Only create fields for content you want editors to control.
-  </Info>
-</Step>
-
-<Step title="Save your block">
-  Click "Save Block" to save your component with its fields.
-</Step>
+    Add `image` as an **Image** field before using this example. `data-key` connects the element to its field for inline editing; it is especially useful when content repeats.
+  </Step>
+  <Step title="Set default content and save">
+    Enter a headline and, optionally, select an image. Save the block. Defaults seed new sections; later edits to a section belong to that section.
+  </Step>
+  <Step title="Verify on a page">
+    Add the block to the page type's available blocks, place it on a page, and edit both inline and through **Edit content**. Save the dialog and confirm the page shows the values you entered.
+  </Step>
 </Steps>
 
-## Field Naming
+## Define fields in files
 
-When you create a field, the field name determines how you reference it in your component:
+A block needs `config.yaml`, `component.svelte`, `fields.yaml`, and `content.yaml`. Create them under `sites/my-site/blocks/hero/`:
 
-```svelte
-<!-- If you create a field named "cta_text" -->
-<button>{cta_text}</button>
+```yaml config.yaml
+name: Hero
 ```
 
-**Field configuration:**
-- **Field name**: `cta_text` (how you reference it in code)
-- **Label**: "CTA Text" (what editors see in the UI)
+```yaml fields.yaml
+- name: headline
+  label: Headline
+  type: text
+- name: image
+  label: Hero image
+  type: image
+  config:
+    maxSizeMB: 2
+    maxWidthOrHeight: 1920
+```
 
-<Warning>
-Field names are case-sensitive. `cta_text` and `ctaText` are different variables in your component.
-</Warning>
+```yaml content.yaml
+headline: A place to grow
+image:
+  url: ""
+  alt: ""
+```
 
-## Common Field Patterns
+For `component.svelte`, you can declare the field props explicitly. This works in the browser, in CLI 0.2.1, and with older static builders:
 
-### Hero Block
+```svelte component.svelte
+<script>
+  let { headline, image } = $props();
+</script>
 
-A typical hero block might use these fields in the template:
-
-```svelte
-<section class="hero" style={background_image?.url ? `background-image: url(${background_image.url})` : ''}>
-  <h1>{headline}</h1>
-  <p>{subheadline}</p>
-  {#if cta_link?.url}
-    <a href={cta_link.url}>{cta_link.label}</a>
+<section class="hero">
+  {#if headline}
+    <h1 data-key="headline">{headline}</h1>
+  {/if}
+  {#if image?.url}
+    <img src={image.url} alt={image.alt || ""} data-key="image" />
   {/if}
 </section>
 ```
 
-**Fields to create:**
-- `headline` (Text) - Main headline
-- `subheadline` (Text) - Supporting text
-- `cta_link` (Link) - Button link with label
-- `background_image` (Image, optional) - Background image
+`fields.yaml` is a bare list; `content.yaml` is an object keyed by field name. Use `config` for field-specific options. Keep existing `_id` values when editing an export and omit them for new fields.
 
-### Text Block
+Run `primo validate -d sites/my-site` from the workspace root. If `primo dev --author files` is already running, wait for it to import the files and check the preview.
 
-A simple text block:
+## Choose supported field types
 
-```svelte
-<div class="text-{alignment}">
-  {@html content}
-</div>
+See [Field types](/reference/field-types) for the complete list. Use:
+
+- **Text** for plain text, including email addresses and phone numbers.
+- **Rich Text** or **Markdown** for formatted content; render the resolved HTML with `{@html content}`.
+- **Image** for images; check `image?.url` before rendering.
+- **Link** for a URL and label; check `link?.url` and use `link.url` and `link.label`.
+- **Toggle** for true/false values (`type: switch` in files).
+- **Repeater** for a list of objects and **Group** for one object.
+- **Info** for instructions displayed in the editor.
+
+There are no built-in Email, Textarea, Tags, Video, or general File field types. Use Text for emails, a Repeater of Text fields for tags, and URL for externally hosted videos.
+
+## Repeaters and groups
+
+Nested definitions use `subfields`, not `fields`:
+
+```yaml fields.yaml
+- name: cards
+  label: Cards
+  type: repeater
+  subfields:
+    - name: title
+      label: Title
+      type: text
+    - name: link
+      label: Link
+      type: link
 ```
 
-**Fields to create:**
-- `content` (Rich Text) - The main content
-- `alignment` (Select) - Options: "left", "center", "right"
-
-### Image Block
-
-An image with caption:
-
-```svelte
-<figure>
-  {#if image?.url}
-    <img src={image.url} alt={image.alt} />
-  {/if}
-  {#if caption}
-    <figcaption>{caption}</figcaption>
-  {/if}
-</figure>
+```yaml content.yaml
+cards:
+  - title: Visit our studio
+    link:
+      url: /about
+      label: About us
 ```
 
-**Fields to create:**
-- `image` (Image) - The image (includes URL and alt text)
-- `caption` (Text, optional) - Image caption
-
-### Card Grid Block
-
-A grid of cards using a repeater:
-
-```svelte
-<div class="grid cols-{columns}">
-  {#each cards as card}
-    <div class="card">
-      {#if card.image?.url}
-        <img src={card.image.url} alt={card.image.alt || card.title} />
-      {/if}
-      <h3>{card.title}</h3>
-      <p>{card.description}</p>
+```svelte component.svelte
+<div class="cards">
+  {#each cards ?? [] as card}
+    <article>
+      <h2 data-key="title">{card.title}</h2>
       {#if card.link?.url}
-        <a href={card.link.url}>{card.link.label || "Learn more"}</a>
+        <a href={card.link.url} data-key="link">{card.link.label}</a>
       {/if}
-    </div>
+    </article>
   {/each}
 </div>
 ```
 
-**Fields to create:**
-- `cards` (Repeater) with nested fields:
-  - `title` (Text)
-  - `description` (Text)
-  - `image` (Image, optional)
-  - `link` (Link, optional)
-- `columns` (Number) - Number of columns
+For a Group, use the same `subfields` structure with `type: group`. Its value is one object rather than an array. Guard optional nested values before accessing them.
 
-## Template Syntax Guide
+## Reference site and page fields
 
-Primo blocks use Svelte 5 syntax. Here's the essential syntax you'll use most often when working with fields.
+A field named `logo` in a block does not automatically read the site's `logo`. Add a **Site Field** reference and select the source field. Use **Page Field** to reference a field on the current page.
 
-### Basic Interpolation
+- Site Field references are available in page types and blocks.
+- Page Field references are available in blocks.
+- Editing a reference through the content form updates its source value. A site-field change can affect many pages; a page-field change affects that page and listings that reference it.
+- Reference fields do not support inline editing. Use the content form or edit the source field.
 
-Display field values in your template:
-
-```svelte
-<h1>{headline}</h1>
-<p>{description}</p>
-
-<!-- Image fields have .url and .alt properties -->
-<img src={image.url} alt={image.alt} />
+```yaml fields.yaml
+- name: logo
+  label: Site logo
+  type: site-field
+  config:
+    field: logo
+- name: title
+  label: Page title
+  type: page-field
+  config:
+    field: blog-post--title
 ```
 
-### Fallback Values
+Create the site Image field `logo` and a Text field `title` on a `blog-post` page type before adding these references. In file-authored blocks, a Page Field target uses `<page-type-folder>--<field-key>`. In the browser, select the page type and source field.
 
-Provide default values when fields are empty:
+### Watch: Connect site and page field references
 
-```svelte
-<!-- Using || operator -->
-<h1>{headline || "Welcome"}</h1>
+This custom example shows the source of each reference and which pages an edit affects.
 
-<!-- Using ?? for null/undefined only -->
-<p>{description ?? "No description available"}</p>
+<video
+  controls
+  playsInline
+  preload="none"
+  className="w-full rounded-xl"
+  aria-label="Connect site and page field references"
+  poster="/videos/demos/field-references.jpg"
+>
+  <source src="/videos/demos/field-references.mp4" type="video/mp4" />
+  <track kind="captions" src="/videos/demos/field-references.vtt" srcLang="en" label="English" />
+  Your browser does not support embedded video. [Download this demonstration](/videos/demos/field-references.mp4).
+</video>
+
+[Download video](/videos/demos/field-references.mp4) · [Download captions](/videos/demos/field-references.vtt)
+
+<Accordion title="Read the walkthrough">
+1. This custom Navigation block reads shared site fields.
+2. Brand name is a Site Field reference to the source field in Site content.
+3. Editing the reference in the content form updates that source value.
+4. The header and footer now display the same shared brand name.
+5. The custom Post Content block reads this post’s page fields.
+6. Its Title is a Page Field reference to the Blog Post title field.
+7. Save a new title for this post.
+8. The listing reads the updated title. The second post keeps its own title.
+</Accordion>
+
+## Conditional fields
+
+Use **Set condition** in a field's menu to show it only when another value matches. The controlling field must precede the dependent field at the same nesting level. Comparisons are **Equals** (`=`) and **Doesn't equal** (`!=`).
+
+For example, put a Toggle named `show_image` before an Image field and show the image field only when the toggle is true. This is a condition you configure; it changes which fields the editor sees. Add `{#if show_image}` in your block if you also want to hide the image on the published page.
+
+## Defaults, instructions, and validation
+
+Set default values in the block's content, not a `default` property in its field schema. In files, defaults belong in `content.yaml`. Use template fallbacks for empty values and an Info field to explain content requirements.
+
+Primo's browser field editor does not offer required-field enforcement, regex patterns, or text-length limits. Image fields provide maximum file size and maximum dimension options. Schema validation through the CLI checks file structure and value shapes; it does not replace content review or a backend validator for visitor-submitted forms.
+
+```yaml fields.yaml
+- name: image_help
+  type: info
+  config:
+    info: "Choose a landscape image and add a descriptive alt text."
 ```
 
-### Conditionals
+## Derived values and interactions
 
-Show or hide elements based on field values:
+Use Svelte 5 runes for computed values. In a block with a `cards` Repeater containing `featured` (Toggle) and `title` (Text), you can filter the displayed cards:
 
-```svelte
-<!-- Simple if -->
-{#if image?.url}
-  <img src={image.url} alt={image.alt} />
-{/if}
-
-<!-- If/else -->
-{#if featured}
-  <span class="badge">Featured</span>
-{:else}
-  <span class="badge">Standard</span>
-{/if}
-
-<!-- Multiple conditions -->
-{#if variant === "primary"}
-  <button class="btn-primary">{cta_text}</button>
-{:else if variant === "secondary"}
-  <button class="btn-secondary">{cta_text}</button>
-{:else}
-  <button class="btn-default">{cta_text}</button>
-{/if}
-```
-
-### Loops (Repeater Fields)
-
-Iterate over repeater field arrays:
-
-```svelte
-<!-- Basic loop -->
-{#each items as item}
-  <div class="item">
-    <h3>{item.title}</h3>
-    <p>{item.description}</p>
-  </div>
-{/each}
-
-<!-- With index -->
-{#each features as feature, index}
-  <div class="feature">
-    <span class="number">{index + 1}</span>
-    <h3>{feature.title}</h3>
-  </div>
-{/each}
-
-<!-- With else (when array is empty) -->
-{#each items as item}
-  <div>{item.name}</div>
-{:else}
-  <p>No items to display</p>
-{/each}
-```
-
-### HTML Rendering
-
-Render HTML from rich text or markdown fields:
-
-```svelte
-<!-- Rich text content -->
-<div class="content">
-  {@html content}
-</div>
-
-<!-- Markdown content (processed automatically) -->
-<article class="markdown">
-  {@html markdown_content}
-</article>
-```
-
-<Info>
-Rich text and markdown fields render HTML using `{@html}`. Since content comes from trusted editors (not site visitors), this is safe to use.
-</Info>
-
-### Reactive Statements
-
-Compute derived values from fields:
-
-```svelte
+```svelte component.svelte
 <script>
-  // Computed value based on fields
-  $: fullName = `${firstName} ${lastName}`;
-
-  // Computed array from repeater
-  $: featuredItems = items.filter(item => item.featured);
-
-  // Multiple statements
-  $: {
-    const total = items.reduce((sum, item) => sum + item.price, 0);
-    console.log('Total:', total);
-  }
+  let featured_cards = $derived((cards ?? []).filter(card => card.featured));
 </script>
 
-<h1>Welcome, {fullName}</h1>
-
-{#each featuredItems as item}
-  <div>{item.title}</div>
+{#each featured_cards as card}
+  <h2>{card.title}</h2>
 {/each}
 ```
 
-### Event Handlers
+Use `$state` for interactive state and `onclick` for event handlers. Do not mix runes with legacy `$:` statements or `export let` declarations.
 
-Handle user interactions:
+## Verify field behavior
 
-```svelte
-<script>
-  function handleClick() {
-    console.log('Button clicked');
-    // Analytics, tracking, etc.
-  }
+Test empty values, long text, missing images, empty repeaters, and optional group content. Add two instances of the block to ensure their section content is independent. Test shared references on more than one page, then [publish](/content-management/publishing) and check the public result.
 
-  function handleSubmit(event) {
-    event.preventDefault();
-    // Handle form submission
-  }
-</script>
+<Warning>
+Render only trusted content with `{@html}`. It inserts HTML without escaping; do not assume that imported Markdown or HTML is sanitized.
+</Warning>
 
-<button on:click={handleClick}>{cta_text}</button>
-
-<form on:submit={handleSubmit}>
-  <!-- form fields -->
-</form>
-```
-
-### Class Directives
-
-Apply classes conditionally:
-
-```svelte
-<!-- Single class -->
-<div class:active={isActive}>Content</div>
-
-<!-- Multiple classes -->
-<div
-  class:primary={variant === "primary"}
-  class:large={size === "large"}
-  class:featured={featured}
->
-  Content
-</div>
-
-<!-- Shorthand (when variable matches class name) -->
-<div class:featured>Content</div>
-```
-
-### Style Directives
-
-Apply inline styles dynamically:
-
-```svelte
-<!-- Single style -->
-<div style:color={textColor}>Colored text</div>
-
-<!-- Multiple styles -->
-<div
-  style:background-color={backgroundColor}
-  style:color={textColor}
-  style:padding="{spacing}rem"
->
-  Styled content
-</div>
-
-<!-- CSS custom properties -->
-<div style:--theme-color={themeColor}>
-  Content with CSS variable
-</div>
-```
-
-### Snippets (Reusable Templates)
-
-Create reusable template chunks within a block:
-
-```svelte
-{#snippet card(title, description)}
-  <div class="card">
-    <h3>{title}</h3>
-    <p>{description}</p>
-  </div>
-{/snippet}
-
-<!-- Use the snippet -->
-{@render card("First Card", "Description here")}
-{@render card("Second Card", "Another description")}
-
-<!-- Use in loops -->
-{#each items as item}
-  {@render card(item.title, item.description)}
-{/each}
-```
-
-### What You Won't Need
-
-These Svelte features are **not relevant** for Primo blocks:
-
-- **Stores** - No need for cross-component state; fields are globally available within each block
-- **Context API** - Use relational fields instead (Page Field, Site Field, Page, Page List) to reference data from elsewhere
-- **$bindable** - Only for component authoring, not block templates
-- **Custom elements** - Blocks compile to standard components
-- **SvelteKit features** - Routing, load functions, etc. (Primo handles this)
-- **Component slots** - Blocks don't accept slotted content
-
-### Learn More
-
-For advanced Svelte features and patterns, see the [Svelte 5 documentation](https://svelte.dev/docs/svelte/overview).
-
-## Field Configuration
-
-### Required Fields
-
-Mark fields as required when they're essential:
-
-<Example>
-A Hero block's `headline` field should be required—a hero without a headline doesn't make sense.
-</Example>
-
-**When to require:**
-- Essential content (headlines, titles)
-- Fields that affect functionality
-- Fields needed for proper display
-
-**When not to require:**
-- Optional enhancements (images, captions)
-- Fields with sensible defaults
-- Decorative elements
-
-### Default Values
-
-You can set default values in the field configuration, or handle empty values in your template:
-
-```svelte
-<!-- Option 1: Use field defaults (set in field config) -->
-<h1>{headline}</h1>
-
-<!-- Option 2: Provide fallback values in template -->
-<h1>{headline || "Welcome"}</h1>
-
-<!-- Option 3: Conditionally render -->
-{#if headline}
-  <h1>{headline}</h1>
-{/if}
-```
-
-**Best practices:**
-- Set sensible defaults in field configuration
-- Handle empty/missing values gracefully
-- Make components functional even with minimal content
-
-### Help Text
-
-Add help text to guide editors:
-
-<Example>
-**Field**: `background_image`
-**Help text**: "Optional background image. Recommended size: 1920x1080px. Will be used as a fallback if no image is provided."
-</Example>
-
-**Good help text:**
-- Explains what the field is for
-- Provides guidance on content
-- Mentions any requirements (size, format, etc.)
-
-### Placeholders
-
-Use placeholders to show example content:
-
-- **Headline field**: "Enter your headline here"
-- **Description field**: "Describe your product or service"
-- **Link field**: "/about" or "https://example.com"
-
-<Tip>
-Placeholders help editors understand what to enter, especially for fields like URLs or slugs.
-</Tip>
-
-## Advanced Field Patterns
-
-<AccordionGroup>
-<Accordion title="Conditional Fields">
-### Conditional Fields
-
-Some fields should only appear when others have values:
-
-<Example>
-A "Video" block might have:
-- `video_type` (Select): "Upload" or "Embed"
-- `video_file` (Video): Show only when `video_type` is "Upload"
-- `video_url` (Text): Show only when `video_type` is "Embed"
-</Example>
-
-**Setting up conditionals:**
-1. Create the control field (e.g., `video_type`)
-2. Configure dependent fields to show/hide based on the control field
-3. Test with different values
-</Accordion>
-
-<Accordion title="Repeater Fields">
-### Repeater Fields
-
-Repeaters let editors add multiple items:
-
-<Steps>
-<Step title="Create the repeater field">
-  Add a Repeater field (e.g., `features`).
-</Step>
-
-<Step title="Add nested fields">
-  Inside the repeater, add fields for each item:
-  - `title` (Text)
-  - `description` (Text)
-  - `icon` (Image, optional)
-</Step>
-
-<Step title="Use in component">
-  Reference the repeater field as an array:
-
-  ```svelte
-  {#each features as feature}
-    <div class="feature">
-      <h3>{feature.title}</h3>
-      <p>{feature.description}</p>
-    </div>
-  {/each}
-  ```
-</Step>
-</Steps>
-</Accordion>
-
-<Accordion title="Group Fields">
-### Group Fields
-
-Groups organize related fields:
-
-<Steps>
-<Step title="Create a group field">
-  Add a Group field (e.g., `author`).
-</Step>
-
-<Step title="Add fields to the group">
-  Inside the group, add related fields:
-  - `name` (Text)
-  - `email` (Email)
-  - `bio` (Textarea)
-</Step>
-
-<Step title="Use in component">
-  Reference the group field as an object:
-
-  ```svelte
-  <div class="author">
-    <h3>{author.name}</h3>
-    <p>{author.bio}</p>
-    <a href="mailto:{author.email}">Contact</a>
-  </div>
-  ```
-</Step>
-</Steps>
-</Accordion>
-</AccordionGroup>
-
-## Field Validation
-
-### Text Validation
-
-Add validation rules to text fields:
-
-- **Min length**: Minimum character count
-- **Max length**: Maximum character count
-- **Pattern**: Regex pattern for format validation
-
-<Example>
-An email field might use pattern: `^[^\s@]+@[^\s@]+\.[^\s@]+$`
-</Example>
-
-### Number Validation
-
-For number fields:
-
-- **Min value**: Minimum allowed number
-- **Max value**: Maximum allowed number
-- **Step**: Increment/decrement step
-
-<Example>
-A "Price" field might have:
-- Min: 0
-- Max: 10000
-- Step: 0.01 (for cents)
-</Example>
-
-### File Validation
-
-For image and file fields:
-
-- **Allowed formats**: File extensions (jpg, png, pdf, etc.)
-- **Max file size**: Maximum upload size in MB
-- **Dimensions**: Min/max width and height (for images)
-
-## Testing Fields
-
-### Test with Empty Values
-
-Always test your components with empty fields:
-
-```svelte
-{#if headline}
-  <h1>{headline}</h1>
-{/if}
-
-{#if image?.url}
-  <img src={image.url} alt={image.alt} />
-{/if}
-```
-
-### Test with Default Values
-
-Verify defaults work (if you set them in field configuration):
-
-1. Create a page with your block
-2. Don't fill in any fields
-3. Check that the component displays correctly with default values
-
-### Test Edge Cases
-
-Try:
-- Very long text
-- Special characters
-- Empty arrays (for repeaters)
-- Missing nested fields (for groups)
-
-## Best Practices
-
-### 1. Start Simple
-
-Begin with essential fields, add more as needed:
-
-```yaml
-Simple Hero:
-  Fields: headline, subheadline, cta_text
-
-Enhanced Hero:
-  Fields: headline, subheadline, cta_text, background_image, overlay_color
-```
-
-### 2. Use Descriptive Labels
-
-Labels are what editors see:
-
-- ✅ "Featured Image"
-- ✅ "Publication Date"
-- ✅ "Author Name"
-- ❌ "Field 1"
-- ❌ "Data"
-
-### 3. Provide Helpful Defaults
-
-Set defaults in field configuration to make components work immediately:
-
-- **Number fields**: Set sensible defaults (e.g., `columns` defaults to 3)
-- **Boolean fields**: Set appropriate defaults (e.g., `show_title` defaults to true)
-- **Select fields**: Pre-select the most common option (e.g., `alignment` defaults to "left")
-
-### 4. Group Related Fields
-
-Use Groups or organize fields logically:
-
-- **Content fields**: headline, description, content
-- **Media fields**: image, video, background
-- **Settings fields**: alignment, columns, variant
-
-### 5. Validate Input
-
-Add validation to prevent errors:
-
-- Required fields for essential content
-- Format validation for emails, URLs
-- Size limits for files and text
-
-## Common Mistakes
-
-### Mismatched Names
-
-Field names must match how you reference them in code:
-
-```svelte
-<!-- If field is named "ctaText" in field config -->
-<button>{ctaText}</button>
-
-<!-- Not "cta_text" - field names are case-sensitive -->
-```
-
-### Not Handling Empty Values
-
-Always handle missing or empty field values:
-
-```svelte
-<!-- Bad: Breaks if headline is empty -->
-<h1>{headline}</h1>
-
-<!-- Good: Handles empty values -->
-{#if headline}
-  <h1>{headline}</h1>
-{/if}
-
-<!-- Also good: Provides fallback -->
-<h1>{headline || "Welcome"}</h1>
-```
-
-### Over-Complicating
-
-Start simple, add complexity later:
-
-```yaml
-# Start here
-Fields: title, description
-
-# Add later if needed
-Fields: title, description, image, link, category, tags, featured
-```
-
-## Next Steps
+## Next steps
 
 <CardGroup cols={2}>
-<Card title="Field Types Reference" icon="book" href="/reference/field-types">
-  Complete reference of all available field types.
-</Card>
-
-<Card title="Writing Components" icon="code" href="/building-sites/writing-components">
-  Learn how to write components that work well with fields.
-</Card>
-
-<Card title="Building from Scratch" icon="rocket" href="/building-sites/your-first-site">
-  See fields in action with a complete site example.
-</Card>
-
-<Card title="Defining Page Types" icon="layer-group" href="/building-sites/defining-page-types">
-  Add page-level fields to page types.
-</Card>
+  <Card title="Field types" icon="book" href="/reference/field-types">Look up supported types and value shapes.</Card>
+  <Card title="Writing blocks" icon="code" href="/building-sites/writing-components">Build responsive blocks with Svelte.</Card>
 </CardGroup>
-
-<Tip>
-The best fields are the ones editors actually use. Start with essential fields, then add more based on feedback from content editors.
-</Tip>

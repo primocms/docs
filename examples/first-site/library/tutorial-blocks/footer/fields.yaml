@@ -1,0 +1,13 @@
+- name: copyright_text
+  label: Copyright text
+  type: text
+- name: links
+  label: Links
+  type: repeater
+  subfields:
+    - name: label
+      label: Label
+      type: text
+    - name: url
+      label: Url
+      type: url

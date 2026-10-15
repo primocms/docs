@@ -1,0 +1,19 @@
+WEBVTT
+
+00:00:00.000 --> 00:00:07.000
+Enabling available blocks lets editors change the body structure.
+
+00:00:07.000 --> 00:00:15.000
+Disable the last available block: Primo confirms that the page type becomes static.
+
+00:00:15.000 --> 00:00:22.000
+Existing body sections remain. Editors can change content, but structure is fixed.
+
+00:00:22.000 --> 00:00:29.000
+Enable a block again to restore flexible layout controls, including reordering.
+
+00:00:29.000 --> 00:00:36.000
+This Blog Post type stays fixed: Post Content uses the first post’s own fields.
+
+00:00:36.000 --> 00:00:43.000
+Another post keeps the same structure, with its own title and body.

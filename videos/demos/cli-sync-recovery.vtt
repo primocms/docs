@@ -1,0 +1,16 @@
+WEBVTT
+
+00:00:00.000 --> 00:00:08.000
+Pull from the server to record a baseline. Here PRIMO_SERVER points to an isolated local demo.
+
+00:00:08.000 --> 00:00:18.000
+After a local code edit and a server edit, push refuses to overwrite the newer server version.
+
+00:00:18.000 --> 00:00:27.000
+Save the edited file outside sites/, then pull the latest server copy.
+
+00:00:27.000 --> 00:00:36.000
+Reapply the saved code edit and push again. The server change is preserved.
+
+00:00:36.000 --> 00:00:44.000
+The pushed headline appears in the CMS. On a hosted server, review and Publish to update the public site.

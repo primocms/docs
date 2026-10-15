@@ -1,0 +1,5 @@
+- name: posts
+  label: Posts
+  type: page-list
+  config:
+    page_type: blog-post

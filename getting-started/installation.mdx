@@ -1,229 +1,92 @@
 ---
 title: 'Installation'
-description: 'Self-host Primo on your own infrastructure or wait for Primo Cloud.'
+description: 'Choose local development or a deployed Primo CMS, then follow the matching setup guide.'
 ---
 
-Primo offers two installation options: self-hosting for full control over your infrastructure, or our upcoming managed cloud platform.
+Start locally if you want to build on your computer. Deploy a server first if other people need browser access to the CMS. You can move from local development to a deployed server later.
 
-<Tabs>
-	<Tab title="Self-Hosted">
-		## Self-Hosted Installation
-
-		Run Primo on your own infrastructure for complete control. Ideal for teams with specific security, compliance, or customization requirements.
-
-		Primo's architecture is intentionally simple—a single monolithic application with a SQLite database. This means self-hosting requires minimal operational overhead. No complex microservices, separate database servers, or distributed systems to manage.
-
-		<Warning>
-			**Persistent Storage Required**: Primo stores uses a SQLite database that requires persistent disk storage. It will NOT work on some serverless platforms like Vercel, Netlify, or Cloudflare Pages.
-		</Warning>
-
-		### Choose Your Hosting Path
-
-		Select the approach that matches your technical comfort level and requirements. All options can run Primo for **$5-7/month**.
-
-		<Tip>
-		**New to self-hosting?** Start with [Railway](https://railway.com/?referralCode=RCPU7k) or [Fly.io](https://fly.io) for the easiest setup. If you need more control or lower costs at scale, consider VPS hosting.
-		</Tip>
-
-		<Tabs>
-			<Tab title="Managed Platforms (Easiest)">
-				**What you get:** One-click deployment, automatic SSL, managed infrastructure. No server management required.
-
-				**[Railway](https://railway.com/deploy/palacms?referralCode=RCPU7k)** (Recommended)
-				- Click deploy button, done in 5 minutes
-				- From $5/month with persistent volumes included
-				- Automatic deployments and SSL certificates
-				- **What you need:** Just a Railway account
-
-				**[Fly.io](https://fly.io)**
-				- Free tier includes 3GB persistent volume
-				- Global edge deployment
-				- Good for testing or small production sites
-				- **What you need:** [Fly.io](https://fly.io) account + CLI installation
-			</Tab>
-
-			<Tab title="VPS Hosting (Most Control)">
-				**What you get:** Full server access, complete customization, lowest cost at scale. Manage your own infrastructure.
-
-				**[Hetzner Cloud](https://cloud.hetzner.com)**
-				- From €4/month (CX22: 2 vCPU, 4GB RAM, 40GB disk)
-				- Best price/performance ratio
-				- European data centers (GDPR-friendly)
-				- **What you need:** Docker, SSH, and Linux knowledge
-
-				**[DigitalOcean](https://www.digitalocean.com)**
-				- From $6/month for basic droplets
-				- Excellent documentation and tutorials
-				- One-click Docker droplet available
-				- **What you need:** Basic Docker and command line knowledge
-			</Tab>
-		</Tabs>
-
-		<Info>
-			**Quick start:** If you just want to try Primo, click the [Railway deploy button](https://railway.com/deploy/palacms?referralCode=RCPU7k) for instant setup. For production sites or when you need full control, choose the VPS path.
-		</Info>
-
-		<Accordion title="Local Development (Optional)">
-			For contributing to Primo or testing locally:
-
-			- **devenv** ([install here](https://devenv.sh/)) or **Dev Container** compatible environment (VS Code)
-			- **Git**
-
-			**Local Development Steps:**
-
-			<Steps>
-				<Step title="Clone the repository">
-					```bash
-					git clone https://github.com/primocms/primo.git
-					cd primo
-					```
-				</Step>
-
-				<Step title="Open the devenv shell">
-					```bash
-					devenv shell
-					```
-					<Info>
-					  If you have configured direnvto automatically open the devenv shell, you may ignore this step.
-					</Info>
-				</Step>
-
-				<Step title="Install dependencies">
-					```bash
-					npm install
-					```
-				</Step>
-
-				<Step title="Build the application">
-					```bash
-					npm run build
-					```
-					<Info>
-						Initial build is required before starting the dev server.
-					</Info>
-				</Step>
-
-				<Step title="Start development server">
-					```bash
-					npm run dev
-					```
-				</Step>
-
-				<Step title="Access the application">
-					- Main app (dev): [http://localhost:5173](http://localhost:5173)
-					- Built app: [http://localhost:8090](http://localhost:8090)
-					- PocketBase Admin: [http://localhost:8090/_](http://localhost:8090/_)
-				</Step>
-			</Steps>
-
-			<Warning>
-				Local development is for testing only. All code and content is stored in local database under `pb_data` directory.
-			</Warning>
-		</Accordion>
-
-		### Manual Deployment (VPS & Custom Infrastructure)
-
-		<Info>
-			**Using [Railway](https://railway.com/?referralCode=RCPU7k) or [Fly.io](https://fly.io)?** You can skip this section - those platforms handle Docker deployment automatically.
-		</Info>
-
-		For VPS hosting (Hetzner, DigitalOcean, etc.) or custom infrastructure, deploy Primo as a Docker container using Docker Compose or by running Docker commands directly. See the [PocketBase production deployment guide](https://pocketbase.io/docs/going-to-production/) for additional information.
-
-		<Steps>
-			<Step title="Point your domain to the server">
-				Configure your DNS to point your domain name to the server where you'll host Primo.
-			</Step>
-
-			<Step title="Prepare Docker deployment">
-				Use Docker Compose (recommended) or run Docker commands directly. Use `ghcr.io/primocms/primo:latest` as the image.
-
-				**Required volume**: Add a volume for the path `/app/pb_data`. This is where all files and the database will be stored.
-
-				**Optional environment variables** (only take effect on first start):
-				- `PRIMO_APP_URL` - Sets base URL used for generating links in the backend (e.g., emails)
-				- `PRIMO_SUPERUSER_EMAIL` + `PRIMO_SUPERUSER_PASSWORD` - Creates initial superuser account for accessing PocketBase dashboard.
-				- `PRIMO_USER_EMAIL` + `PRIMO_USER_PASSWORD` - Creates initial user account for accessing Primo.
-
-				<CodeGroup>
-					```yaml compose.yaml
-					services:
-					  primo:
-					    image: ghcr.io/primocms/primo:latest
-					    restart: always
-					    ports:
-					      - 8080:8080
-					    volumes:
-					      - primo-data:/app/pb_data
-					    # Optional environment variables:
-					    # environment:
-					    #   - PRIMO_APP_URL=https://example.com
-					    #   - PRIMO_SUPERUSER_EMAIL=admin@example.com
-					    #   - PRIMO_SUPERUSER_PASSWORD=secure-password
-					    #   - PRIMO_USER_EMAIL=user@example.com
-					    #   - PRIMO_USER_PASSWORD=secure-password
-
-					volumes:
-					  primo-data:
-					```
-
-					```bash docker run
-					docker run -d \
-					  --name primo \
-					  --restart always \
-					  -p 8080:8080 \
-					  -v primo-data:/app/pb_data \
-					  ghcr.io/primocms/primo:latest
-					```
-				</CodeGroup>
-			</Step>
-
-			<Step title="Complete setup">
-				Navigate to your domain name to complete setup. Setup only starts if a superuser was not created using environment variables in the previous step.
-			</Step>
-
-			<Step title="Configure PocketBase">
-				Configure PocketBase settings by navigating to `https://your-domain.com/_/` (replace with your domain).
-			</Step>
-
-			<Step title="Create your first site">
-				Create your first site by navigating to `https://your-domain.com/admin` (replace with your domain). Note that the site is created using the domain name used to access the CMS.
-			</Step>
-		</Steps>
-
-		### Usage analytics
-
-		Starting with CMS v3.3.1, usage analytics are enabled by default. Primo sends instance counts and selected editor operations to PostHog to help improve the CMS. Automatic click capture and session recording are disabled.
-
-		To opt out, set [`PRIMO_ENABLE_USAGE_STATS=false`](/reference/environment-variables#primo_enable_usage_stats) in your CMS service's environment, then restart or redeploy it. This disables both server heartbeats and editor analytics. Development mode (`PRIMO_DEV_MODE=1`) always disables analytics.
-	</Tab>
-
-	<Tab title="Cloud">
-		## Primo Cloud
-
-		<Note>
-			**Coming Soon** — Primo Cloud is currently in development. We recommend [self-hosting](#self-hosted) for now, which takes just a few minutes with platforms like Railway or Fly.io.
-		</Note>
-
-		Primo Cloud will be a fully managed hosting solution that handles all the infrastructure for you—no installation, setup, or server management required.
-
-		### Planned Features
-
-		- Dedicated server instance for your account
-		- Automatic SSL certificates
-		- Global CDN hosting
-		- Automatic deployments when you publish changes
-		- Built-in collaboration tools
-		- Direct support for setup and troubleshooting
-	</Tab>
-</Tabs>
-
-## Next Steps
+## Choose your starting point
 
 <CardGroup cols={2}>
-	<Card title="Core Concepts" icon="lightbulb" href="/getting-started/core-concepts">
-		Learn the fundamental concepts behind Primo
-	</Card>
-	<Card title="Quickstart" icon="bolt" href="/getting-started/quickstart">
-		Build your first site in minutes
-	</Card>
+  <Card title="Build locally" icon="laptop-code" href="/getting-started/quickstart">
+    Install the Primo CLI, create a workspace, and open the local CMS. No hosting account or domain is needed.
+  </Card>
+  <Card title="Run a shared CMS" icon="server" href="/reference/deployment">
+    Deploy Primo to Railway, Fly.io, or a VPS with persistent storage. Collaborators use the hosted browser editor.
+  </Card>
 </CardGroup>
+
+| You want to… | Follow this guide |
+| --- | --- |
+| Build on your computer before choosing a host | [Quickstart: start local](/getting-started/quickstart) |
+| Deploy from a hosting template | [Railway deployment](/reference/deployment#quick-deploy-railway) |
+| Manage your own server with Docker | [VPS deployment](/reference/deployment#vps-deployment) |
+| Deploy a local workspace to Railway or Fly.io | [Deploy with the CLI](/cli/deploy) |
+| Host generated files without an editable CMS | [Static builds and their limitations](/cli/deploy#static-build-limitations) |
+
+## Build locally
+
+You need a supported Node.js LTS release, version 22.13 or later. Check with `node --version`, then install the CLI and create a workspace:
+
+```bash
+npm install -g primo-cli
+primo init my-workspace
+cd my-workspace
+primo new my-site
+```
+
+The interactive `primo new` command starts the local CMS and prints your editor URL. Open that URL to verify the site loaded. From a script, start the CMS separately with `primo dev`.
+
+<Note>
+The default author mode uses files as the source of truth, so the CMS editor is read-only. To edit in the browser, stop the running server with **Ctrl+C**, then run `primo dev --author cms`. See [Author modes](/cli/local-development#author-modes) before switching between files and browser editing.
+</Note>
+
+### Watch: Start Primo locally
+
+The walkthrough starts after Node.js and the Primo CLI are installed. It uses `--no-mcp` and `--skip-dev` to show each setup step separately.
+
+<video
+  controls
+  playsInline
+  preload="none"
+  className="w-full rounded-xl"
+  aria-label="Start Primo locally"
+  poster="/videos/demos/start-local.jpg"
+>
+  <source src="/videos/demos/start-local.mp4" type="video/mp4" />
+  <track kind="captions" src="/videos/demos/start-local.vtt" srcLang="en" label="English" />
+  Your browser does not support embedded video. [Download this demonstration](/videos/demos/start-local.mp4).
+</video>
+
+[Download video](/videos/demos/start-local.mp4) · [Download captions](/videos/demos/start-local.vtt)
+
+<Accordion title="Read the walkthrough">
+1. With Node.js and the CLI installed, create a workspace. This demo skips MCP setup.
+2. Inside the workspace, create a site. `--skip-dev` leaves starting the server to you.
+3. Validate the site files before starting Primo.
+4. Run `primo dev --author files`. Open its editor URL: Browse mode keeps local files authoritative.
+5. Stop with Ctrl+C, then run `primo dev --author cms` to edit in the browser.
+</Accordion>
+
+Follow the [Quickstart](/getting-started/quickstart) for editing and deployment.
+
+## Run a shared CMS
+
+Primo runs as one application with a SQLite database. Your host must preserve `/app/pb_data` across restarts and redeployments.
+
+<Warning>
+An editable Primo CMS needs persistent disk storage. A static host such as Netlify, Vercel, or Cloudflare Pages can serve the output of `primo build`, but cannot run this CMS installation.
+</Warning>
+
+Use the [Deployment guide](/reference/deployment) for provider setup, account creation, HTTPS, and backups. After deployment, create a site in the dashboard and [connect its domain](/dashboard/connecting-domains). You can edit the site before connecting a public hostname.
+
+The browser workflow does not require the CLI. Install it later if you want to pull the site into files.
+
+## Usage analytics
+
+In the v3.3.1 source, self-hosted instances default to usage analytics off, while hosted mode defaults to on. To disable analytics explicitly, set [`PRIMO_ENABLE_USAGE_STATS=false`](/reference/environment-variables#primo_enable_usage_stats), then restart or redeploy. Verify the effective setting through `telemetry_enabled` at `/api/primo/info`.
+
+## Other setup paths
+
+- **Contributing to Primo itself:** [Run the CMS from source](/reference/deployment#run-the-cms-from-source). This develops the application rather than a website.
+- **Managed Primo hosting:** Check [Primo's website](https://primo.build) for availability. Railway, Fly.io, and VPS installations are instances you manage yourself.

@@ -3,255 +3,118 @@ title: 'Site Configuration'
 description: 'Configure site-wide settings, design systems, and global content.'
 ---
 
-Site configuration controls global settings that apply across your entire site. This includes design variables, global content fields, and custom HTML for scripts and analytics.
+Define site fields for shared content, such as a logo and navigation links. Use Head HTML for metadata and shared styles, and Body Footer HTML for static markup or scripts before the closing body tag. The field names, metadata tags, and CSS variables below are examples you add yourself.
 
-## Site Fields
+## Create site fields
 
-**Site Fields** are global content that appears across multiple pages. They're perfect for content that needs to be consistent site-wide but may change over time.
-
-### Common Use Cases
-
-- **Logo**: Site logo that appears in the header
-- **Navigation**: Main navigation menu items
-- **Footer Content**: Footer links, copyright, social media
-- **Contact Information**: Phone, email, address
-- **Social Links**: Twitter, Facebook, LinkedIn profiles
-- **SEO Defaults**: Default meta description, Open Graph image
-
-### Creating Site Fields
+You need developer access to define fields.
 
 <Steps>
-  <Step title="Open site settings">
-    Navigate to your site and click "Site" in the toolbar
+  <Step title="Open the site editor">
+    Choose **Site** in the toolbar and open its Content fields.
   </Step>
-
-  <Step title="Add a field">
-    Click "Add Field" and choose your field type
+  <Step title="Add global content">
+    Add `site_name` as Text and `logo` as Image. For navigation, use a Repeater with nested Link fields. Set default content and save.
   </Step>
-
-  <Step title="Configure the field">
-    - **Name**: Internal identifier (e.g., `logo`, `nav_items`)
-    - **Label**: Display name for editors
-    - **Type**: Field type (text, image, repeater, etc.)
-  </Step>
-
-  <Step title="Use in blocks">
-    Reference site fields in your blocks using Site Field fields:
-
-    1. Add a Site Field field to your block
-    2. Set the field key (e.g., `logo`)
-    3. Select which site field to reference
+  <Step title="Reference a field from a block">
+    Add a **Site Field** to the block, set its key to `logo`, and select the site's `logo` field. Render it like any Image field:
 
     ```svelte
-    <!-- logo is a Site Field referencing the site's logo field -->
     {#if logo?.url}
-      <img src={logo.url} alt={logo.alt} />
+      <img src={logo.url} alt={logo.alt || ""} />
     {/if}
     ```
+
+    A block field with the same name does not connect automatically to a site field.
+  </Step>
+  <Step title="Verify and publish">
+    Save the dialog and check more than one page. Referenced site content updates across the editor; publish the site to update public pages.
   </Step>
 </Steps>
 
-<Info>
-Site fields are reactive. When you update them, all blocks using them update automatically across your entire site.
-</Info>
-
 ## Head HTML
 
-The **Head HTML** section lets you add custom HTML to the `<head>` of every page on your site. Use this for analytics, fonts, meta tags, and other site-wide scripts.
+The site's Head HTML and page type's Head HTML are compiled together as Svelte. Both receive site fields merged with the current page's fields; page fields take precedence when names overlap. In a CLI export, these fragments live in `site/head.svelte` and `page-types/<type>/head.svelte`.
 
-<Info>
-Head HTML supports Svelte syntax and has access to site fields, allowing you to dynamically generate content based on your site configuration.
-</Info>
+Primo inserts the fragment inside `<svelte:head>`. Do not add your own `<svelte:head>` wrapper. Head fragments must contain head elements such as `<title>`, `<meta>`, `<link>`, `<style>`, and external scripts.
 
-### Common Use Cases
+### Branding metadata
 
-**CSS Variables (Design System):**
+After creating the Text field `site_name` and Image field `logo`, add:
 
-Define a design system for your site using CSS Custom Properties. Define colors, typography, spacing, and other design tokens once, then use them across all your blocks.
+```svelte head.svelte
+{#if site_name}
+  <meta property="og:site_name" content={site_name} />
+{/if}
+{#if logo?.url}
+  <link rel="icon" href={logo.url} />
+{/if}
+```
 
-```html
+### Page metadata
+
+Create `meta_title` and `meta_description` Text page fields, then add this to the **page type's** Head HTML:
+
+```svelte head.svelte
+<title>{meta_title || "My Site"}</title>
+{#if meta_description}
+  <meta name="description" content={meta_description} />
+{/if}
+```
+
+Head fragments use markup and bare field names; do not declare `$props()` or component logic in a `<script>` block here.
+
+Field names do not generate metadata automatically. Check the published page source to verify the title and meta tags. Put `<title>` only in the page type fragment: the site fragment is processed first, and its title can suppress a later page title.
+
+### Shared styles and fonts
+
+Define CSS custom properties (variables) in the site's Head HTML and reuse them in block styles. Names such as `--color-primary` are defined by this example, not supplied by Primo:
+
+```html head.svelte
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
 <style>
   :root {
-    /* Colors */
-    --color-primary: #ff6b35;
-    --color-secondary: #004e89;
+    --color-primary: #004e89;
     --color-text: #1a1a1a;
-    --color-background: #ffffff;
-
-    /* Typography */
     --font-primary: 'Inter', sans-serif;
-    --font-heading: 'Poppins', sans-serif;
-    --font-size-base: 16px;
-    --font-size-lg: 1.25rem;
-    --font-size-xl: 1.5rem;
-
-    /* Spacing */
-    --spacing-sm: 0.5rem;
-    --spacing-md: 1rem;
     --spacing-lg: 2rem;
-    --spacing-xl: 4rem;
-
-    /* Layout */
-    --max-width: 1200px;
-    --border-radius: 8px;
   }
+  body { font-family: var(--font-primary); color: var(--color-text); }
 </style>
 ```
 
-Then reference these variables in your block CSS:
-```svelte
+```svelte component.svelte
+<section class="hero"><h1>{headline}</h1></section>
+
 <style>
-  .hero {
-    background: var(--color-primary);
-    color: var(--color-background);
-    padding: var(--spacing-xl) var(--spacing-md);
-    border-radius: var(--border-radius);
-  }
-
-  h1 {
-    font-family: var(--font-heading);
-    font-size: var(--font-size-xl);
-  }
+  .hero { padding: var(--spacing-lg); }
+  h1 { color: var(--color-primary); }
 </style>
 ```
 
-<Tip>
-Use semantic naming (e.g., `--color-primary`) rather than descriptive names (e.g., `--color-orange`) so you can change values without renaming variables.
-</Tip>
-
-**Using Svelte:**
-
-You can use Svelte syntax to dynamically inject content based on your site configuration.
-
-```html
-<!-- Reference site fields -->
-{#if logo?.url}
-  <link rel="icon" href={logo.url}>
-{/if}
-
-{#if site_name}
-  <meta property="og:site_name" content={site_name}>
-{/if}
-
-<!-- Conditional analytics -->
-{#if ga_id}
-  <script async src="https://www.googletagmanager.com/gtag/js?id={ga_id}"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', '{ga_id}');
-  </script>
-{/if}
-```
-
-<Tip>
-To use site fields in Head HTML, first create the fields in Site → Fields, then reference them by name in your Head HTML code.
-</Tip>
-
-**Analytics & Tracking:**
-```html
-<!-- Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'GA_MEASUREMENT_ID');
-</script>
-
-<!-- Plausible Analytics -->
-<script defer data-domain="yourdomain.com" src="https://plausible.io/js/script.js"></script>
-```
-
-<Tip>
-**Filter admin routes from analytics:** Prevent `/admin` routes from being tracked:
-```html
-<!-- Only load analytics on public pages -->
-{#if !window.location.pathname.startsWith('/admin')}
-  <script defer data-domain="yourdomain.com" src="https://plausible.io/js/script.js"></script>
-{/if}
-```
-</Tip>
-
-**Custom Fonts:**
-```html
-<!-- Google Fonts -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-
-<!-- Adobe Fonts -->
-<link rel="stylesheet" href="https://use.typekit.net/abc1234.css">
-```
-
-**Meta Tags:**
-```html
-<!-- Open Graph -->
-<meta property="og:site_name" content="Your Site Name">
-<meta property="og:type" content="website">
-
-<!-- Twitter Card -->
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:site" content="@yourhandle">
-```
-
-**Favicon:**
-```html
-<link rel="icon" type="image/png" href="/favicon.png">
-<link rel="apple-touch-icon" href="/apple-touch-icon.png">
-```
-
-<Warning>
-Head HTML is added to every page. Keep it minimal to avoid slowing down your site. Non-critical scripts (analytics, chat widgets, etc.) should be placed in Body Footer HTML instead to improve page load speed.
-</Warning>
+Add a Text field named `headline` to the block before using it. Preview and publish a page to verify both the shared styles and scoped block styles.
 
 ## Body Footer HTML
 
-The **Body Footer HTML** section lets you add custom HTML before the closing `</body>` tag of every page. Use this for scripts that should load after the page content.
+Body Footer HTML is inserted verbatim before `</body>`. It does not resolve Svelte expressions or field references. In CLI files, it lives in `site/foot.html` or `page-types/<type>/foot.html`. CMS v3.3.1 publishing and CLI 0.2.1 static builds include both fragments. Older CLI 0.2.0 builds include only the site fragment.
 
-<Warning>
-Body Footer HTML only supports static HTML - it does not support Svelte syntax or access to site fields. If you need dynamic content, use the Head HTML section instead.
-</Warning>
+Use this area for static provider embed code, such as an analytics script or chat widget. Obtain the snippet from the provider and replace its public site identifiers. Never put API secrets in code delivered to visitors.
 
-### Common Use Cases
+Browser globals such as `window` belong in scripts that execute in the browser. Do not use `{#if window.location...}` in Head HTML: that expression also runs while Primo generates static HTML, when `window` is unavailable.
 
-**Chat Widgets:**
-```html
-<!-- Intercom -->
-<script>
-  window.intercomSettings = {
-    app_id: "YOUR_APP_ID"
-  };
-  (function(){var w=window;var ic=w.Intercom;if(typeof ic==="function"){ic('reattach_activator');ic('update',w.intercomSettings);}else{var d=document;var i=function(){i.c(arguments);};i.q=[];i.c=function(args){i.q.push(args);};w.Intercom=i;var l=function(){var s=d.createElement('script');s.type='text/javascript';s.async=true;s.src='https://widget.intercom.io/widget/YOUR_APP_ID';var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);};if(document.readyState==='complete'){l();}else if(w.attachEvent){w.attachEvent('onload',l);}else{w.addEventListener('load',l,false);}}})();
-</script>
-```
+<Note>
+Custom scripts can execute in previews as well as published pages. Configure your provider to exclude preview or admin traffic as appropriate; do not assume the admin URL is the only preview context.
+</Note>
 
-**Third-party Tools:**
-```html
-<!-- Hotjar -->
-<script>
-  (function(h,o,t,j,a,r){
-    h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
-    h._hjSettings={hjid:YOUR_ID,hjsv:6};
-    a=o.getElementsByTagName('head')[0];
-    r=o.createElement('script');r.async=1;
-    r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
-    a.appendChild(r);
-  })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
-</script>
-```
+## Verify configuration changes
 
-<Info>
-Body Footer HTML loads after page content, making it better for non-critical scripts. This improves perceived page load speed.
-</Info>
+Ensure the page contains at least one rendered block: CMS publishing does not compile custom head content for completely empty pages. Save the Site dialog, preview a page, and check browser DevTools for script or font errors. For file edits, run `primo validate -d sites/my-site`. Publish and inspect the public page's source and Network panel to confirm metadata, styles, and scripts are present.
 
-## Next Steps
+## Next steps
 
 <CardGroup cols={2}>
-  <Card title="Working with Fields" icon="input-text" href="/building-sites/working-with-fields">
-    Learn how to create and use fields in blocks
-  </Card>
-  <Card title="Understanding Slots" icon="table-layout" href="/building-sites/understanding-slots">
-    Master page type slots for consistent layouts
-  </Card>
+  <Card title="Working with fields" icon="pen-to-square" href="/building-sites/working-with-fields">Connect blocks to global content.</Card>
+  <Card title="Publishing" icon="paper-plane" href="/content-management/publishing">Make saved configuration changes public.</Card>
 </CardGroup>

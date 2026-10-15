@@ -15,22 +15,27 @@ The fastest way to deploy Primo to production.
 
 ### Prerequisites
 
-- [Railway account](https://railway.com/?referralCode=RCPU7k) (free to start)
+- [Railway account](https://railway.com/?referralCode=RCPU7k); review [plan and resource pricing](https://docs.railway.com/pricing/plans)
 - Domain name (optional, Railway provides a free subdomain)
 
 ### Deployment Steps
 
 <Steps>
   <Step title="Click deploy button">
-    [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/palacms?referralCode=RCPU7k)
+    <Frame>
+      <a href="https://railway.com/deploy/palacms?referralCode=RCPU7k">
+        <img src="https://railway.com/button.svg" alt="Deploy Primo on Railway" />
+      </a>
+    </Frame>
   </Step>
 
   <Step title="Configure environment (optional)">
     Set environment variables if you want automated setup:
     - `PRIMO_SUPERUSER_EMAIL`
     - `PRIMO_SUPERUSER_PASSWORD`
-    - `PRIMO_APP_URL` (optional, auto-detected)
-    - `PRIMO_DOMAIN_PROVIDER=railway` and `PRIMO_RAILWAY_TOKEN`: connect site domains from the Primo dashboard (see below)
+    - `PRIMO_USER_EMAIL` and `PRIMO_USER_PASSWORD`: create the regular Developer account used for Primo sign-in
+    - `PRIMO_APP_URL`: set the public HTTPS URL used for backend links
+    - `PRIMO_DOMAIN_PROVIDER=railway` and `PRIMO_RAILWAY_TOKEN`: connect custom site domains from the Primo dashboard (see below). Leave these unset when you only use the Railway-generated hostname
   </Step>
 
   <Step title="Wait for deployment">
@@ -42,7 +47,7 @@ The fastest way to deploy Primo to production.
   </Step>
 
   <Step title="Access your instance">
-    Click the generated URL to access Primo. If you didn't set environment variables, you'll see the setup screen.
+    Click the generated URL to access Primo. If you did not create a superuser through environment variables, complete the setup screen. If you did, sign in to Primo with the regular account created by `PRIMO_USER_EMAIL` and `PRIMO_USER_PASSWORD`; the superuser account is for PocketBase at `/_/`.
   </Step>
 
   <Step title="Connect site domains from the dashboard">
@@ -62,10 +67,12 @@ The fastest way to deploy Primo to production.
   </Step>
 </Steps>
 
-**Cost**: From $5/month (includes persistent volume)
+Verify the volume mounts at `/app/pb_data` before creating content. See [Railway volumes](https://docs.railway.com/volumes) for the host controls.
+
+**Cost**: Check [Railway plan and resource pricing](https://docs.railway.com/pricing/plans). Compute, volume storage, and bandwidth contribute to usage.
 
 <Tip>
-  Railway automatically handles SSL certificates, deployments, and scaling. Perfect for production use.
+  Railway manages the infrastructure and certificates. You still configure domains, backups, and access for your Primo instance.
 </Tip>
 
 ## VPS Deployment
@@ -102,14 +109,16 @@ Deploy to any VPS for full control over your infrastructure.
         image: ghcr.io/primocms/primo:latest
         restart: always
         ports:
-          - "8080:8080"
+          - "127.0.0.1:8080:8080"
         volumes:
           - primo-data:/app/pb_data
         environment:
           - PRIMO_APP_URL=https://your-domain.com
           # Optional: automated setup
           # - PRIMO_SUPERUSER_EMAIL=admin@example.com
-          # - PRIMO_SUPERUSER_PASSWORD=<secret>
+          # - PRIMO_SUPERUSER_PASSWORD=${SUPERUSER_PASSWORD:?Set SUPERUSER_PASSWORD}
+          # - PRIMO_USER_EMAIL=developer@example.com
+          # - PRIMO_USER_PASSWORD=${USER_PASSWORD:?Set USER_PASSWORD}
 
     volumes:
       primo-data:
@@ -117,14 +126,16 @@ Deploy to any VPS for full control over your infrastructure.
   </Step>
 
   <Step title="Start the container">
+    Leave the account variables commented out for browser setup. For automated setup, enable both account pairs and set distinct generated passwords in a private `.env` file before starting.
+
     ```bash
-    docker-compose up -d
+    docker compose up -d
     ```
   </Step>
 
   <Step title="Verify it's running">
     ```bash
-    docker-compose logs -f
+    docker compose logs -f
     ```
     You should see logs indicating the server started on port 8080.
   </Step>
@@ -138,7 +149,7 @@ For simpler setups without compose:
 docker run -d \
   --name primo \
   --restart always \
-  -p 8080:8080 \
+  -p 127.0.0.1:8080:8080 \
   -v primo-data:/app/pb_data \
   -e PRIMO_APP_URL=https://your-domain.com \
   ghcr.io/primocms/primo:latest
@@ -146,27 +157,25 @@ docker run -d \
 
 ### Configure Reverse Proxy
 
-Primo runs on port 8080. Use a reverse proxy for SSL and domain routing:
+The VPS examples bind port 8080 to the server's loopback address. Run the reverse proxy on that host and expose ports 80 and 443 for public traffic. Replace `your-domain.com` with a hostname whose DNS points to the VPS.
 
 <Tabs>
   <Tab title="Nginx">
-    ```nginx
+    Install Nginx and Certbot for your operating system using the [Certbot instructions](https://certbot.eff.org/instructions?ws=nginx). On a typical Linux installation, save this initial HTTP configuration as `/etc/nginx/conf.d/primo.conf`:
+
+    ```nginx primo.conf
     server {
         listen 80;
         server_name your-domain.com;
-        return 301 https://$server_name$request_uri;
-    }
-
-    server {
-        listen 443 ssl http2;
-        server_name your-domain.com;
-
-        ssl_certificate /path/to/cert.pem;
-        ssl_certificate_key /path/to/key.pem;
+        client_max_body_size 32m;
 
         location / {
-            proxy_pass http://localhost:8080;
-            proxy_set_header Host $host;
+            proxy_pass http://127.0.0.1:8080;
+            proxy_http_version 1.1;
+            proxy_set_header Connection "";
+            proxy_buffering off;
+            proxy_read_timeout 360s;
+            proxy_set_header Host $http_host;
             proxy_set_header X-Real-IP $remote_addr;
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
             proxy_set_header X-Forwarded-Proto $scheme;
@@ -174,10 +183,23 @@ Primo runs on port 8080. Use a reverse proxy for SSL and domain routing:
     }
     ```
 
-    Get SSL certificates with [Certbot](https://certbot.eff.org/):
+    Test and reload Nginx, then verify the hostname reaches the instance over HTTP. Complete account setup after HTTPS is enabled.
+
     ```bash
-    sudo certbot --nginx -d your-domain.com
+    sudo nginx -t
+    sudo systemctl reload nginx
+    curl -I http://your-domain.com/admin/
     ```
+
+    Obtain a certificate and let Certbot add HTTPS and the HTTP redirect:
+
+    ```bash
+    sudo certbot --nginx --redirect -d your-domain.com
+    sudo nginx -t
+    sudo certbot renew --dry-run
+    ```
+
+    Open `https://your-domain.com/admin/` and verify the certificate before signing in. This sequence starts without certificate paths; Certbot adds them after issuance.
   </Tab>
 
   <Tab title="Caddy">
@@ -196,7 +218,7 @@ Primo runs on port 8080. Use a reverse proxy for SSL and domain routing:
   </Tab>
 
   <Tab title="Traefik">
-    Add labels to docker-compose.yml:
+    Use an existing Traefik installation with its Docker provider, a `websecure` entry point, and a `letsencrypt` certificate resolver configured. Put Traefik and Primo on the same Docker network. Merge these labels into the Primo service from the Compose example:
 
     ```yaml
     services:
@@ -218,7 +240,7 @@ Primo runs on port 8080. Use a reverse proxy for SSL and domain routing:
 
 [Hetzner](https://www.hetzner.com) offers affordable VPS hosting in Europe and the US.
 
-1. Create a VPS (CX22 recommended: €4/month)
+1. Choose a current VPS plan with enough memory and persistent storage for your sites
 2. Install Docker:
    ```bash
    curl -fsSL https://get.docker.com -o get-docker.sh
@@ -231,14 +253,14 @@ Primo runs on port 8080. Use a reverse proxy for SSL and domain routing:
 
 [DigitalOcean](https://www.digitalocean.com) provides simple VPS hosting with excellent documentation.
 
-1. Create a Droplet ($6/month minimum)
+1. Choose a current Droplet plan with persistent storage
 2. Choose "Docker" from one-click apps (or install manually)
 3. Follow VPS deployment steps above
 4. Use DigitalOcean's cloud firewalls for security
 
 ### Fly.io
 
-[Fly.io](https://fly.io) offers a free tier with persistent volumes:
+[Fly.io](https://fly.io) bills compute and persistent volumes by usage. New accounts have a trial, not an ongoing free tier; check [Fly.io pricing](https://fly.io/docs/about/pricing/). Use one Machine for this single-volume SQLite deployment:
 
 <Steps>
   <Step title="Install Fly CLI">
@@ -276,13 +298,14 @@ Primo runs on port 8080. Use a reverse proxy for SSL and domain routing:
 
   <Step title="Create volume">
     ```bash
-    fly volumes create primo_data --size 3
+    fly apps create your-app-name
+    fly volumes create primo_data --app your-app-name --region sjc --size 3
     ```
   </Step>
 
   <Step title="Deploy">
     ```bash
-    fly deploy
+    fly deploy --app your-app-name --ha=false
     ```
   </Step>
 </Steps>
@@ -291,9 +314,9 @@ Primo runs on port 8080. Use a reverse proxy for SSL and domain routing:
 
 Primo uses SQLite, stored in `/app/pb_data`. Back up this directory regularly.
 
-<Info>
-**Cloud users:** Backups are handled automatically. Backup frequency depends on your plan.
-</Info>
+<Note>
+Backups stored on the same volume do not protect against losing that volume. Keep an off-site copy and separately back up uploads stored in S3; PocketBase backups exclude S3-uploaded files.
+</Note>
 
 ### PocketBase Automated Backups (Recommended)
 
@@ -303,7 +326,7 @@ New instances back up daily at 03:00 and keep the 7 most recent backups, stored 
 
 <Steps>
   <Step title="Access PocketBase Admin">
-    Navigate to `https://your-domain.com/_/` and log in with your admin credentials.
+    Navigate to `https://your-domain.com/_/` and sign in with your PocketBase superuser credentials.
   </Step>
 
   <Step title="Go to Settings → Backups">
@@ -324,7 +347,7 @@ New instances back up daily at 03:00 and keep the 7 most recent backups, stored 
   </Step>
 
   <Step title="Set retention policy">
-    Configure how many backups to keep (e.g., keep last 7 days of backups).
+    Configure how many backup files to keep. For example, retaining 7 files gives you about 7 days of history with one successful daily backup.
   </Step>
 </Steps>
 
@@ -332,45 +355,51 @@ New instances back up daily at 03:00 and keep the 7 most recent backups, stored 
 For production sites, configure S3-compatible storage for off-site backups. This protects against server failures.
 </Tip>
 
-### Manual Backups with Docker
+### Manual backups with Docker
 
-```bash
-#!/bin/bash
-# backup-primo.sh
+Prefer PocketBase's built-in backups for a running instance. A raw copy of `pb_data` must be made while Primo is stopped to keep SQLite and its associated files consistent. See [PocketBase backup and restore](https://pocketbase.io/docs/going-to-production/#backup-and-restore).
 
-BACKUP_DIR="/backups/primo"
-DATE=$(date +%Y%m%d_%H%M%S)
+For the container named `primo` created with the Docker Run example:
 
-# Create backup directory
-mkdir -p $BACKUP_DIR
+```bash backup-primo.sh
+#!/usr/bin/env bash
+set -euo pipefail
 
-# Copy pb_data
-docker cp primo:/app/pb_data $BACKUP_DIR/pb_data_$DATE
-
-# Keep only last 7 days
-find $BACKUP_DIR -type d -mtime +7 -exec rm -rf {} +
+task_backup_path="./backups/pb_data_$(date +%Y%m%d_%H%M%S)"
+mkdir -p ./backups
+docker inspect --format '{{.Image}}' primo > "${task_backup_path}.image"
+docker stop primo
+trap 'docker start primo >/dev/null' EXIT
+docker cp primo:/app/pb_data "$task_backup_path"
+printf 'Backup saved to %s\n' "$task_backup_path"
 ```
 
-Add to crontab:
+This briefly stops the site. Run the script on the Docker host and copy the backup and image record off-server. For Compose, use `docker compose stop primo`, get its container ID with `docker compose ps -aq primo`, copy from that ID, and restart with `docker compose start primo`. Do not use `docker compose down` before copying: it removes the container.
+
+### Restore from a backup
+
+For a PocketBase backup ZIP, use **Settings → Backups → Restore** in `/_/`. Test on an isolated instance before restoring production.
+
+For a raw `pb_data` directory made with the script above, restore into a **new** named volume and container. Keep the existing instance and backup until you verify the restored site. Set `task_backup_path` to your actual backup folder; the recorded image must still exist on the Docker host, or you must pull the same version from the registry.
+
 ```bash
-0 2 * * * /path/to/backup-primo.sh
+set -euo pipefail
+task_backup_path=./backups/pb_data_20261011_020000
+task_restore_image=$(cat "${task_backup_path}.image")
+test -f "$task_backup_path/data.db"
+
+docker create --name primo-restored \
+  -p 127.0.0.1:8081:8080 \
+  -v primo-restored-data:/app/pb_data \
+  "$task_restore_image"
+docker cp "$task_backup_path/." primo-restored:/app/pb_data
+docker start primo-restored
 ```
 
-### Restore from Backup
-
-```bash
-# Stop container
-docker-compose down
-
-# Restore backup
-docker cp pb_data_20250101_020000 primo:/app/pb_data
-
-# Start container
-docker-compose up -d
-```
+Use a new container and volume name for each restore attempt. Open `http://localhost:8081/admin/` on the Docker host and check sign-in, pages, content, and uploads before switching your reverse proxy. Hostname routing may require a matching Host header or a temporary domain assignment in the isolated copy. Restore separately stored S3 media too. [Docker supports copying into a stopped container](https://docs.docker.com/reference/cli/docker/container/cp/).
 
 <Warning>
-  Test your backups regularly. A backup you haven't tested is not a backup.
+Restoring replaces the site's state with the backup's state. Keep a backup of the current instance and verify the restore before routing production traffic to it.
 </Warning>
 
 ## Updating Primo
@@ -379,10 +408,10 @@ docker-compose up -d
 
 ```bash
 # Pull latest image
-docker-compose pull
+docker compose pull
 
 # Restart with new image
-docker-compose up -d
+docker compose up -d
 ```
 
 ### Docker Run
@@ -396,8 +425,16 @@ docker rm primo
 docker pull ghcr.io/primocms/primo:latest
 
 # Start new container (same command as initial deploy)
-docker run -d --name primo ...
+docker run -d \
+  --name primo \
+  --restart always \
+  -p 127.0.0.1:8080:8080 \
+  -v primo-data:/app/pb_data \
+  -e PRIMO_APP_URL=https://your-domain.com \
+  ghcr.io/primocms/primo:latest
 ```
+
+Keep the original environment variables and volume when recreating the container.
 
 <Tip>
 Always backup before updating, especially for major version changes.
@@ -420,14 +457,11 @@ gzip_types text/plain text/css application/json application/javascript text/xml 
 encode gzip
 ```
 
-### Add Caching Headers
+### Cache published assets carefully
 
-```nginx
-location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2)$ {
-    expires 1y;
-    add_header Cache-Control "public, immutable";
-}
-```
+Keep `/admin`, `/api`, and authentication traffic out of CDN caches. Use long-lived immutable caching only for assets whose URLs change when their contents change. Fixed image names, HTML, and unversioned scripts need revalidation or short cache lifetimes.
+
+For a reverse proxy, keep asset requests routed to Primo and verify the response headers after publishing. A new Nginx `location` block without `proxy_pass` would try to serve files from Nginx's own filesystem.
 
 ### Use a CDN
 
@@ -470,7 +504,7 @@ Point your domain through Cloudflare (free tier) for:
   <Accordion title="Monitor logs">
     Check Docker logs regularly for suspicious activity:
     ```bash
-    docker-compose logs -f --tail=100
+    docker compose logs -f --tail=100
     ```
   </Accordion>
 </AccordionGroup>
@@ -478,6 +512,66 @@ Point your domain through Cloudflare (free tier) for:
 ## Troubleshooting
 
 See the [Troubleshooting Guide](/reference/troubleshooting) for common deployment issues and solutions.
+
+## Run the CMS from source
+
+<Accordion title="Contributor setup">
+These steps run the CMS application from its source repository. To build a site locally, use [CLI local development](/cli/local-development) instead.
+
+			- **devenv** ([install here](https://devenv.sh/)) or **Dev Container** compatible environment (VS Code)
+			- **Git**
+
+			**Local Development Steps:**
+
+			<Steps>
+				<Step title="Clone the repository">
+					```bash
+					git clone https://github.com/primocms/primo.git
+					cd primo
+					```
+				</Step>
+
+				<Step title="Open the devenv shell">
+					```bash
+					devenv shell
+					```
+					<Info>
+					  If you have configured direnv to automatically open the devenv shell, you may ignore this step.
+					</Info>
+				</Step>
+
+				<Step title="Install dependencies">
+					```bash
+					npm install
+					```
+				</Step>
+
+				<Step title="Build the application">
+					```bash
+					npm run build
+					```
+					<Info>
+						Initial build is required before starting the dev server.
+					</Info>
+				</Step>
+
+				<Step title="Start development server">
+					```bash
+					npm run dev
+					```
+				</Step>
+
+				<Step title="Access the application">
+					- Main app (dev): [http://localhost:5173](http://localhost:5173)
+					- Built app: [http://localhost:8090](http://localhost:8090)
+					- PocketBase Admin: [http://localhost:8090/_](http://localhost:8090/_)
+				</Step>
+			</Steps>
+
+			<Warning>
+				Local development is for testing only. All code and content is stored in local database under `pb_data` directory.
+			</Warning>
+</Accordion>
 
 ## Next Steps
 

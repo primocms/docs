@@ -1,0 +1,8 @@
+copyright_text: © Garden Studio — fictional tutorial site
+links:
+  - label: Home
+    url: /
+  - label: About
+    url: /about
+  - label: Blog
+    url: /blog

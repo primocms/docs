@@ -25,11 +25,11 @@ primo deploy --dry-run       # Show what would be deployed
 
 ### Railway
 
-Railway is the easiest path — one command, automatic SSL, persistent volume included.
+The CLI sets up a Railway project and persistent storage for the CMS.
 
 **Prerequisites:**
 - [Railway CLI](https://docs.railway.com/guides/cli) installed and logged in (`railway login`)
-- A Railway account ($5/month minimum)
+- A Railway account; check [current plan and resource pricing](https://docs.railway.com/pricing/plans)
 
 ```bash
 primo deploy -p railway
@@ -39,7 +39,7 @@ The CLI provisions a Railway project, attaches a persistent volume for `/app/pb_
 
 ### Fly.io
 
-Fly.io has a generous free tier and global edge regions.
+Fly.io offers usage-based hosting in multiple regions. New accounts receive a trial, not an ongoing free tier; see [Fly.io pricing](https://fly.io/docs/about/pricing/).
 
 **Prerequisites:**
 - [Fly CLI](https://fly.io/docs/flyctl/install/) installed (`fly auth login`)
@@ -57,18 +57,18 @@ Once deployed, push subsequent changes with `primo push`:
 primo push https://my-app.up.railway.app
 ```
 
-See [Push and Pull](/cli/sync) for the full sync workflow.
+A push updates the CMS data; publish from the hosted browser editor to update the public site. See [Push and Pull](/cli/sync) for the full sync workflow.
 
 ## `primo build` — Static Site
 
-Build a single site as static HTML/CSS/JS for any static host:
+Build a single site as static HTML and CSS for a static host:
 
 ```bash
-primo build                  # Output to ./dist
-primo build -o ./public      # Custom output directory
+primo build -d sites/my-site             # Output to ./_site
+primo build -d sites/my-site -o ./dist   # Custom output directory
 ```
 
-The output is a self-contained folder you can deploy with any static-host CLI:
+Run from the workspace root and pass the site folder with `-d`. If you run inside the site folder, you can omit `-d`. Use CLI **0.2.1 or later** for interactive blocks and resolved field references. It generates static HTML and CSS plus JavaScript for blocks with a script. The commands below use the custom `./dist` output:
 
 ```bash
 # Netlify
@@ -87,31 +87,52 @@ npx wrangler pages deploy dist
 Static builds have no CMS — collaborators can't edit content through a UI. Use `primo deploy` if you need editor access.
 </Warning>
 
+
+### Static build limitations
+
+CLI 0.2.1 supplies block field props automatically, matching the browser compiler. You can still declare them explicitly in `component.svelte`, which also supports older static builders:
+
+```svelte component.svelte
+<script>
+  let { headline = "Welcome" } = $props();
+</script>
+
+<h1>{headline}</h1>
+```
+
+When you declare `$props()`, include every field the component uses; the browser compiler also leaves field declarations to you in that case.
+
+CLI 0.2.1 resolves Site Field, Page Field, Page, Page List, Markdown, and Rich Text values and includes both site and page type `foot.html`. Earlier 0.2.0 builds omit hydration scripts and some reference resolution, and include only the site footer. Stop a running `primo dev` before updating with `npm install -g primo-cli@latest`.
+
+Static files do not include a CMS or a form-processing backend. Root-relative URLs such as `/_symbols/` and `/about` expect the site at the hostname's root. Preview the generated files through a local HTTP server and test links, images, and interactions before deploying; opening `index.html` directly from disk does not test module loading correctly.
+
+`primo build` replaces its output directory. Choose a dedicated output folder containing only generated files.
+
 ## Choosing a Host
 
 <AccordionGroup>
   <Accordion title="Railway (recommended for most teams)">
     - One-command deploy from the CLI
     - Automatic SSL and persistent storage
-    - From $5/month
+    - Plan fee plus resource usage; check [Railway pricing](https://docs.railway.com/pricing/plans)
     - Best for: production sites with collaborators who edit content
   </Accordion>
 
   <Accordion title="Fly.io">
-    - Free tier with 3GB persistent volume
+    - Usage-based compute and persistent-volume billing
     - Global edge deployment
     - Best for: prototypes, low-traffic sites, regional latency requirements
   </Accordion>
 
   <Accordion title="VPS (Hetzner, DigitalOcean)">
-    - Full control, lowest cost at scale
+    - Full server access; you manage updates, storage, and certificates
     - Manual setup via Docker
     - See the [Deployment Guide](/reference/deployment) for instructions
     - Best for: teams comfortable with Linux and Docker
   </Accordion>
 
   <Accordion title="Netlify / Vercel / Cloudflare Pages (static)">
-    - Free tiers, instant deploys, global CDN
+    - Static file hosting; check your provider's plan and usage limits
     - **No CMS** — use `primo build` and deploy the static output
     - Best for: marketing sites where content is edited locally and shipped via Git
   </Accordion>
@@ -121,7 +142,7 @@ Static builds have no CMS — collaborators can't edit content through a UI. Use
 
 Hosted Primo uses PocketBase's built-in backup system. Configure scheduled backups from `https://your-server.com/_/` under **Settings → Backups**. See the [Deployment Guide](/reference/deployment#database-backups) for details.
 
-For Git-based backups, `primo pull` produces a full snapshot:
+For Git-based content snapshots, `primo pull` exports your sites and shared library. It does not include user accounts, server settings, or database backups, so keep PocketBase backups too:
 
 ```bash
 primo pull https://my-app.up.railway.app ./backup-$(date +%Y%m%d)
