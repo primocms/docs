@@ -378,6 +378,12 @@ If `primo dev` is running locally, stop it before updating and start it again af
 
 **Solution:** Upgrade to 3.3.0 or later.
 
+### CLI publication fails or has an unknown result
+
+CLI publication requires `primo-cli` 0.2.1 or later and a CMS with the publication API. If status is unavailable, verify the server URL and site ID and update the CMS; you can use browser publishing in the meantime. For permission errors, sign in again and check your site access.
+
+If a push succeeded but publication failed, the hosted draft remains saved. Fix the reported problem and retry `primo publish`. If the outcome is uncertain after a connection failure, check `primo status --hosted` and the public site before retrying. See [CLI publishing](/cli/publish) for target selection and publication states.
+
 ## Getting Help
 
 If you're still stuck:

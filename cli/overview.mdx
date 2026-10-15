@@ -3,7 +3,7 @@ title: 'CLI Overview'
 description: 'Develop Primo sites locally with code-first workflows using primo-cli.'
 ---
 
-The Primo CLI (`primo-cli`) lets you build and edit Primo sites from local files using your own editor and version control. It runs a local CMS, syncs according to your chosen author mode, and provides commands for deployment. Pushing files and publishing the public site are separate steps.
+The Primo CLI (`primo-cli`) lets you build and edit Primo sites from local files using your own editor and version control. It runs a local CMS, syncs according to your chosen author mode, and provides commands for deployment. By default, a push saves a hosted draft. Publish it separately with `primo publish`, or combine both steps with `primo push --publish`.
 
 <Note>
 The CLI is optional. You can still build everything in the in-browser editor — the CLI is for developers who prefer working in files and Git.
@@ -67,10 +67,11 @@ Each site is served on its own subdomain in dev: `site-one.localhost:3000`, `sit
 | `primo new [name]` | Create a new site (and start the CMS in an interactive terminal; `--skip-dev` to only create files) |
 | `primo add <site>` | Register a hand-made `sites/` folder with the CMS (stop `primo dev` first) |
 | `primo dev` | Run the local CMS with file/CMS sync |
-| `primo status` | Show the workspace: server state, sites, groups, last sync |
+| `primo status` | Show local workspace state; `--hosted` checks hosted publication status |
 | `primo preview --dir sites/<name>` | Rebuild a site's preview (needs `primo dev` running) |
 | `primo pull <server>` | Pull a hosted server into local files |
-| `primo push <server>` | Push local changes to a hosted server |
+| `primo push <server>` | Upload local changes as a hosted draft; `--publish` also publishes |
+| `primo publish [server]` | Publish the hosted draft without uploading local files |
 | `primo library pull/push` | Sync just the shared block library |
 | `primo login <server>` | Authenticate with a hosted instance |
 | `primo deploy` | Deploy the workspace to Railway or Fly.io |
@@ -85,6 +86,7 @@ Each site is served on its own subdomain in dev: `site-one.localhost:3000`, `sit
 | Let collaborators edit content from a CMS UI | `primo deploy` |
 | Export static HTML and CSS | `primo build` ([limitations](/cli/deploy#static-build-limitations)) |
 | Sync local edits to an existing hosted server | `primo push` |
+| Publish saved changes on a compatible hosted server | [`primo publish`](/cli/publish) |
 | Pull a hosted server's content into Git | `primo pull` |
 
 ## Next Steps

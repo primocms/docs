@@ -80,8 +80,12 @@ Even if you only change one thing, Primo rebuilds the entire site to ensure cons
 </Tip>
 
 <Note>
-Publishing applies to the whole site, including saved changes on other pages. A CLI push updates CMS data without publishing; review it in the hosted editor and publish here when ready.
+Publishing applies to the whole site, including saved changes on other pages. By default, a CLI push updates the hosted draft without publishing. Review it before publishing.
 </Note>
+
+## Publish from the CLI
+
+With CLI 0.2.1 or later and a server that supports the publication API, use `primo publish` to publish saved CMS changes, or `primo push --publish` to upload local files and then publish. Select one site with `--only my-site` when running from a workspace root. See [Publish with the CLI](/cli/publish) for authentication, server requirements, and status checks.
 
 ## Auto-Save Behavior
 

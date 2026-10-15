@@ -40,6 +40,7 @@
           "cli/overview",
           "cli/local-development",
           "cli/sync",
+          "cli/publish",
           "cli/deploy"
         ]
       },

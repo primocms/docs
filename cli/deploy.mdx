@@ -57,7 +57,7 @@ Once deployed, push subsequent changes with `primo push`:
 primo push https://my-app.up.railway.app
 ```
 
-A push updates the CMS data; publish from the hosted browser editor to update the public site. See [Push and Pull](/cli/sync) for the full sync workflow.
+By default, a push updates the CMS draft. Publish from the hosted browser editor, or use `primo publish` with a compatible server. To upload and publish in one command, use `primo push --only my-site --publish` from the workspace root. See [CLI publishing](/cli/publish) for requirements and verification, and [Push and Pull](/cli/sync) for sync safety.
 
 ## `primo build` — Static Site
 

@@ -1,0 +1,147 @@
+---
+title: 'Publish with the CLI'
+description: 'Publish saved CMS changes or upload and publish local files from your terminal.'
+---
+
+Use `primo publish` to make a hosted site's saved changes public. Use `primo push --publish` to upload local files first, then publish them.
+
+| You want to… | Command |
+| --- | --- |
+| Publish changes already saved in the hosted CMS | `primo publish` |
+| Upload local changes and publish them | `primo push --publish` |
+| Upload local changes for review without publishing | `primo push` |
+| Check whether saved changes are live | `primo status --hosted` |
+
+## Before you start
+
+You need:
+
+- **primo-cli 0.2.1 or later**, on a [supported Node.js version](/cli/overview#installation).
+- A deployed Primo server that supports the CLI publication API. CLI version alone does not add this support to an older server; update the CMS if publication status is unavailable.
+- An account with permission to edit and publish the site.
+- A [connected hostname](/dashboard/connecting-domains) to view the published result.
+
+Log in to the server you want to publish to:
+
+```bash
+primo login https://cms.example.com
+```
+
+The CLI reuses credentials saved for that server. For scripts, `--token` supplies an explicit token; the CLI does not automatically read a `PRIMO_TOKEN` environment variable.
+
+<Note>
+Publishing includes the whole site's saved draft, including changes on other pages. Save open CMS dialogs and review collaborators' changes before publishing.
+</Note>
+
+## Publish saved CMS changes
+
+Run these commands from your workspace root. Replace `my-site` with the folder name under `sites/`:
+
+<Steps>
+  <Step title="Check the hosted draft">
+    ```bash
+    primo status --hosted --only my-site
+    ```
+
+    This reads the hosted publication state without uploading files. The CLI uses the server configured in your workspace; pass `--server https://cms.example.com` to select it explicitly.
+  </Step>
+  <Step title="Publish the site">
+    ```bash
+    primo publish --only my-site
+    ```
+
+    The CLI builds the saved hosted draft and activates the result. It does not upload your local files. You do not need to pull CMS edits before publishing them.
+  </Step>
+  <Step title="Verify the result">
+    ```bash
+    primo status --hosted --only my-site
+    ```
+
+    Expect `current` when the saved draft matches the successful publication. Open the site's public hostname and check your changed page, navigation, images, and interactions.
+  </Step>
+</Steps>
+
+To select a site folder directly from the workspace root, use `--dir`:
+
+```bash
+primo publish --dir sites/my-site
+```
+
+From inside the site folder itself, run `primo publish` without `--only` or `--dir`.
+
+Without a local checkout, select the server and site ID explicitly:
+
+```bash
+primo publish --server https://cms.example.com --site YOUR_SITE_ID
+```
+
+Find the site ID in the site's `site.yaml` after a [pull](/cli/sync), or use a known site ID from your CMS.
+
+<Warning>
+From a workspace root, `primo publish` without `--only` selects every site in that workspace. Use `--only my-site` when you intend to publish one site.
+</Warning>
+
+## Upload and publish local changes
+
+After editing local files, run from your workspace root:
+
+```bash
+# Review the import without changing the hosted draft
+primo push --only my-site --preview
+
+# Upload, then publish after the selected pushes succeed
+primo push --only my-site --publish
+```
+
+[Push safety](/cli/sync#push-safety) still applies. A refused push does not publish anything. If a push succeeds but publication fails, the uploaded draft remains saved in the CMS; fix the reported problem and retry with `primo publish --only my-site`.
+
+If someone edits the hosted draft between your upload and publication, the CLI stops instead of publishing a different revision. Review the new changes before retrying.
+
+## Options
+
+`primo publish [server]` accepts:
+
+| Option | Purpose |
+| --- | --- |
+| `-s, --server <url>` | Select the hosted server; overrides the configured URL |
+| `--site <id>` | Select a site ID; pair with `--server` when you have no local checkout |
+| `--only <slug>` | Select one folder under a workspace's `sites/` directory |
+| `-d, --dir <dir>` | Read a workspace or site directory; defaults to the current directory |
+| `-t, --token <token>` | Override saved credentials |
+| `--json` | Return machine-readable publication results |
+
+`primo status --hosted` accepts the same target, directory, token, and JSON options. `--server` also enables hosted status. To combine upload and publication, use the [push options](/cli/sync) with `--publish`.
+
+For an automated check:
+
+```bash
+primo status --hosted --only my-site --json
+primo publish --only my-site --json
+```
+
+Publication failures and uncertain results return a nonzero exit status. Check the result before starting any follow-up deployment steps.
+
+## Understand publication status
+
+| State | Meaning and next step |
+| --- | --- |
+| `never_published` | The site has no successful publication yet. Publish when the draft is ready. |
+| `current` | The saved draft matches the successful publication. |
+| `behind` | The saved draft differs from the published result. Review and publish them. |
+| `publishing` | A publication attempt is in progress. Check status again before starting another. |
+| `failed` | The publication attempt failed. Fix the reported problem and retry. |
+| `unknown` | The CLI cannot confirm the outcome. Check hosted status and the public site before retrying. |
+
+## Troubleshooting
+
+**Publication status is unavailable, or the endpoint returns 404:** Update the CMS to a release that supports the publication API and verify the server URL and site ID. Until then, use [Publish in the browser editor](/content-management/publishing).
+
+**Permission denied:** Run `primo login` again if your saved session expired. Confirm that your account can edit and publish this site.
+
+**The draft changed:** Review the latest hosted changes. If you also have local edits, save them before pulling, then follow [push recovery](/cli/sync#recover-from-a-refused-push). Do not force an overwrite just to publish.
+
+**A build fails:** Fix the block, page, or asset reported in the error. Successfully uploaded files remain in the hosted draft; retry with `primo publish` after the fix.
+
+**The connection drops or the result is unknown:** Run `primo status --hosted` for the same site and inspect the public result before retrying. A lost response does not prove publication failed.
+
+**The build succeeds but no public URL is assigned:** Connect a hostname in the dashboard, then verify the public site there.

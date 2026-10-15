@@ -57,13 +57,15 @@ primo push --force                # Overwrite server changes (asks first, backs 
 - `--yes` — Confirm `--force` without the interactive prompt (for scripts and CI)
 - `--preview` — Ask the server for an import diff without applying changes. Also reports conflicts that would block a normal push; skips library uploads.
 - `--dry-run` — Show planned operations without sending requests
+- `--publish` — Publish the hosted sites after all selected pushes succeed; requires a compatible server
+- `--json` — Return machine-readable push and publication results
 
 <Tip>
 Run `primo push --dry-run` to inspect planned operations. For an authenticated server-side import diff, use `primo push --preview`; review its output before applying changes. Neither option publishes the public site.
 </Tip>
 
 <Note>
-A push updates the hosted CMS data. It does **not** publish the public site. Open the hosted editor and choose **Publish** after reviewing your pushed changes.
+By default, a push updates the hosted CMS draft without publishing. Review it in the hosted editor and choose **Publish**, or use [`primo publish` or `primo push --publish`](/cli/publish) with a compatible server.
 </Note>
 
 ## Push Safety

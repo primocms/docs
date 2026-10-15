@@ -6,7 +6,7 @@ Primo is a Svelte 5 CMS backed by PocketBase. Developers define blocks and field
 
 Check documentation against the versioned CMS, CLI, and MCP source. The October 14, 2026 publication review uses CMS v3.3.1, CLI 0.2.1, and MCP 0.1.10. Uncommitted implementation changes are not evidence of released behavior.
 
-- Hosted content is stored in PocketBase. `primo pull` exports Svelte and YAML files; `primo push` imports them without publishing.
+- Hosted content is stored in PocketBase. `primo pull` exports Svelte and YAML files; `primo push` imports them as a draft by default. CLI 0.2.1 adds `primo publish`, `primo push --publish`, and `primo status --hosted` for servers that support the publication API.
 - Sites can be created before assigning a domain. A homepage is the root page; nested page URLs follow page slugs and ancestry.
 - Library blocks are copied into independent site blocks. Library edits do not update existing site copies.
 - Page types define fields, available blocks, and header/body/footer templates. Header/footer content is shared across pages of that type. Body defaults are copied when a page is created.
