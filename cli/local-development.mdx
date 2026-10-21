@@ -22,12 +22,33 @@ primo dev
 Run from the folder that *contains* a workspace, `primo dev` tells you to `cd` into it rather than creating a new one.
 
 <Tip>
-From scripts or AI agents, run `primo dev` in the background, log to a file, and stop it by its PID when you're done:
+Agents can start `primo dev` in the background or a persistent terminal. Check `primo status --json` or MCP `get_dev_status` first and reuse an existing workspace server. If `process_alive` is true but `running` is false, inspect the logs and wait for startup or diagnose the existing process. Keep the PID and stop only a server your agent started:
 
 ```bash
-primo dev > dev.log 2>&1 &
+primo dev --author files > /dev/null 2>&1 &
+primo_pid=$!
+# Work with the site, then stop this session when finished:
+kill "$primo_pid"
 ```
 </Tip>
+
+### Reading server logs
+
+Primo records CLI messages and the CMS's stdout and stderr in the workspace's `.primo/dev.log`. Output also appears in the server terminal. Logs remain available after shutdown or a failed startup.
+
+```bash
+primo logs                          # Last 100 lines
+primo logs --follow                 # Follow new output until Ctrl+C
+primo logs --dir sites/my-site -n 50 # Read from a site directory
+primo logs --previous               # Read the previous rotated file
+primo logs --json                   # Structured output for agents
+```
+
+Entries identify the timestamp, process, and output stream. Primo rotates the log at 5 MiB and retains one previous file, `.primo/dev.log.1`. Keep `.primo/` out of version control.
+
+Each CLI or MCP read returns at most 1000 lines and 256 KiB. A `truncated` result means earlier output was omitted; read the returned `log_file` directly to inspect the full retained file. `--previous` reads the earlier rotated file and cannot be combined with `--follow`. `--json` also cannot be combined with `--follow`.
+
+With MCP, your agent calls `get_dev_logs` with a site or workspace path and optional `lines` or `previous` arguments. Call it again for updated output, or use `primo logs --follow` in a terminal. These logs contain local CLI and server output; inspect browser console messages separately.
 
 ### Hosted server changes
 
