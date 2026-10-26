@@ -25,7 +25,8 @@ Run from the folder that *contains* a workspace, `primo dev` tells you to `cd` i
 Agents can start `primo dev` in the background or a persistent terminal. Check `primo status --json` or MCP `get_dev_status` first and reuse an existing workspace server. If `process_alive` is true but `running` is false, inspect the logs and wait for startup or diagnose the existing process. Keep the PID and stop only a server your agent started:
 
 ```bash
-primo dev --author files > /dev/null 2>&1 &
+mkdir -p .primo
+primo dev --author files > .primo/startup.log 2>&1 &
 primo_pid=$!
 # Work with the site, then stop this session when finished:
 kill "$primo_pid"
@@ -34,7 +35,7 @@ kill "$primo_pid"
 
 ### Reading server logs
 
-Primo records CLI messages and the CMS's stdout and stderr in the workspace's `.primo/dev.log`. Output also appears in the server terminal. Logs remain available after shutdown or a failed startup.
+Primo records CLI messages and the CMS's stdout and stderr in the workspace's `.primo/dev.log`. Output also appears in the server terminal. Logs remain available after shutdown or a failed startup. If startup fails before `.primo/dev.log` is created, inspect `.primo/startup.log` from the background example, or run `primo dev` in the foreground.
 
 ```bash
 primo logs                          # Last 100 lines
