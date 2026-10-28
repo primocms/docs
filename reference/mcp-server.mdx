@@ -127,6 +127,7 @@ For any other client, `primo mcp print --client <name>` emits the exact snippet 
 | `validate_page` | After editing a `pages/*.yaml` or `page-types/*/config.yaml` |
 | `validate_site` | Check `site/head.svelte` (does not validate the static footer fragment) |
 | `get_dev_status` | Check whether the running dev server imported edits, and inspect dropped-field warnings |
+| `get_dev_logs` | Read persistent local CLI messages and CMS stdout/stderr, including startup failures |
 | `resolve_field_value` | Convert a raw value to the format Primo expects |
 | `scaffold_block` | Creating a new block from scratch |
 | `scaffold_page_type` | Creating a new page type from scratch |
@@ -142,7 +143,10 @@ Ask your agent to follow these steps. Connecting MCP makes the tools available; 
 2. **Scaffold.** Agent calls `scaffold_block` or `scaffold_page_type` to produce a known-valid skeleton.
 3. **Edit.** Agent edits files in the workspace.
 4. **Validate.** Agent calls `validate_block` / `validate_page` / `validate_site` after each edit and addresses every error before moving on.
-5. **Check import and preview.** Agent calls `get_dev_status` after saving, addresses dropped-field warnings, then calls `build_preview` against the already-running dev server and opens the returned URL. The tools do not start `primo dev` for you.
+5. **Start or reuse the server.** Agent calls `get_dev_status`. `running` verifies the live workspace session; `process_alive` also detects startup or a leftover process. Reuse a ready server. If a process is alive but not ready, inspect `get_dev_logs` and wait or diagnose it. When no process is alive, the agent can start `primo dev --author files` from the returned `workspace` in a background process or persistent terminal. Keep its PID and stop only a server the agent started. MCP tools themselves do not spawn servers.
+6. **Check import and preview.** Agent calls `get_dev_status` after saving, addresses dropped-field warnings, then calls `build_preview` and opens the returned URL. Import results survive shutdown, so check `running` as well as the latest import outcome.
+
+`get_dev_logs` accepts `site_path` (a site or workspace directory), optional `lines` (1–1000, default 100), and optional `previous` (read the previous rotated log). It returns recent output, the full `log_file` path, and `truncated` when the response omits earlier history. Reads are capped at 256 KiB. Call again for updated output; `primo logs --follow` streams new output in a terminal. Primo retains `.primo/dev.log` and `.primo/dev.log.1`, each up to 5 MiB. Browser console output is separate.
 
 ## Workspace layout and validation rules
 

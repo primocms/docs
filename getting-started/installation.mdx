@@ -24,7 +24,36 @@ Start locally if you want to build on your computer. Deploy a server first if ot
 | Deploy a local workspace to Railway or Fly.io | [Deploy with the CLI](/cli/deploy) |
 | Host generated files without an editable CMS | [Static builds and their limitations](/cli/deploy#static-build-limitations) |
 
-## Build locally
+## Let your agent set up a local workspace
+
+If you already have a Primo server, open its **Sites** dashboard and select **Develop locally**. You need a coding agent that can run commands and edit files on your computer. You can complete this flow through your agent chat and browser without entering terminal commands yourself.
+
+<Steps>
+  <Step title="Choose how you want to work">
+    Choose **Build with my agent** for file editing, or **Edit in the visual CMS** for browser editing that saves back to local files.
+  </Step>
+  <Step title="Copy the setup prompt to your agent">
+    Select **Copy agent setup prompt**, then paste it into your coding agent. Choose an empty folder and approve any installation or file-access requests. Your agent checks Node.js, installs the matching Primo packages, and connects the Primo MCP tools. If copying is blocked, select and copy the prompt text directly.
+  </Step>
+  <Step title="Approve browser sign-in">
+    Open the approval link your agent provides. Check that the code matches, sign in to Primo, and select **Allow access**. You can decline instead. You do not need to give your agent a password or paste a token into chat.
+  </Step>
+  <Step title="Open the verified local workspace">
+    Your agent pulls the sites and shared library your account can access, checks imports and tool connectivity, and gives you the local CMS link. A local preview can be built after validation. The agent reports any blocker instead of treating installation alone as a finished setup.
+  </Step>
+</Steps>
+
+<Note>
+This flow requires a command-capable local agent and permission to install software. It does not install the agent itself. Remote browser approval requires HTTPS. The CMS, CLI, and MCP versions must all be available; an unpublished release candidate cannot be installed from the public registry. Setup does not push files, publish a site, or change hosted content.
+</Note>
+
+### Switch between agent and visual editing
+
+In **Build with my agent**, your files are authoritative and the visual CMS is read-only. In **Edit in the visual CMS**, visual changes write back to your files. Ask your agent to wait for saves and imports, stop its own local server, and restart in the other mode. Do not edit in both places at once.
+
+If setup is interrupted, ask your agent to check the existing workspace and server status before starting another process. It can inspect startup logs, reuse a healthy server, and choose a free port without stopping another application. A new browser approval request is needed if you declined or the previous request expired.
+
+## Build locally with terminal commands
 
 You need a supported Node.js LTS release, version 22.13 or later. Check with `node --version`, then install the CLI and create a workspace:
 

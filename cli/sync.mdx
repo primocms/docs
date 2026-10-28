@@ -11,10 +11,24 @@ Before pushing or pulling against a hosted server, log in:
 
 ```bash
 primo login https://cms.example.com
-primo login https://cms.example.com -e user@example.com
+primo login                           # Use server: from server.yaml
+primo login --no-browser              # Print an approval link
+primo login --reauth                  # Request fresh approval
 ```
 
-The CLI stores credentials per server and reuses them on subsequent commands.
+Your browser opens a Primo approval page. Sign in if needed, check that the code matches the request shown by your agent or terminal, and select **Allow access**. The CLI continues automatically and stores the approved session privately in `~/.primo/tokens.json`. Agents can run this command for you; you only interact with the browser.
+
+The CLI reuses saved credentials for `pull`, `push`, and `publish`. Running `primo login` again verifies and refreshes a valid saved session without opening the browser. An expired or revoked session needs browser approval again. The CLI receives your existing account permissions and session expiry.
+
+Requests expire after five minutes. Use `--timeout <seconds>` to bound the wait (1–600; default 300), or Ctrl+C to cancel it. `--no-browser` prints the same approval link without opening it automatically. Pending approvals are held in server memory; restart the login if the CMS restarts. Deployments with multiple CMS processes must route the flow to the same process.
+
+Browser login requires the updated CLI and CMS, and HTTPS except on loopback addresses. If an older server does not support it, update the CMS or explicitly use password login in your own terminal:
+
+```bash
+primo login https://cms.example.com --password -e user@example.com
+```
+
+Password login requires an interactive terminal. The CLI does not silently request passwords from unattended agents. If you pull from a hosted server without saved credentials, `primo pull` starts browser approval automatically.
 
 ## `primo pull` — Hosted → Local
 
